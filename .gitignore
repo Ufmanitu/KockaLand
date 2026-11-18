@@ -1,0 +1,3 @@
+dist/
+test/vendor/
+node_modules/
