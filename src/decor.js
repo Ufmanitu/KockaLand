@@ -77,10 +77,9 @@ function decorLifeStart(root) {
 }
 
 /* ---------- modell: felvétel, törlés, kezdő díszek ---------- */
-function starterDecor() {   // kezdő díszek: sárkány-pár az 1. polcon, a többi szétosztva (a polcok száma szerint), hogy az első látogatáskor is "lakott" legyen a könyvtár
-  const link = Engine.uid(), a = newDecor('sarkany-fej', link), b = newDecor('sarkany-farok', link);
-  const k = newDecor('kis-sarkany'), n = newDecor('book-nook'), o = newDecor('bagoly'), c = newDecor('macska'), p = newDecor('noveny');
-  return { decor: [a, b, k, n, o, c, p], place: [[a.id, 'start', 0], [b.id, 'end', 0], [k.id, 'end', 1], [n.id, 'start', 2], [o.id, 'end', 2], [c.id, 'start', 3], [p.id, 'end', 3]] };
+function starterDecor() {   // kezdő díszek: fekvő sárkány az 1. polcon, a többi szétosztva (a polcok száma szerint), hogy az első látogatáskor is "lakott" legyen a könyvtár
+  const a = newDecor('sarkany-fekvo'), k = newDecor('kis-sarkany'), n = newDecor('book-nook'), o = newDecor('bagoly'), c = newDecor('macska'), p = newDecor('noveny');
+  return { decor: [a, k, n, o, c, p], place: [[a.id, 'start', 0], [k.id, 'end', 1], [n.id, 'start', 2], [o.id, 'end', 2], [c.id, 'start', 3], [p.id, 'end', 3]] };
 }
 function placeDecor(pairs, shelfIdx) {
   pairs.forEach(p => {

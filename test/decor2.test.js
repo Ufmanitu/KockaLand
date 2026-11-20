@@ -9,7 +9,7 @@ const { chromium } = require('playwright'); const path = require('path');
     page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED|ERR_BLOCKED/.test(m.text())) errs.push(m.text()); });
     page.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
     await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
-    await page.addInitScript(() => { try { if (!sessionStorage.getItem('dc-seeded')) { sessionStorage.setItem('dc-seeded', '1'); localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } });
+    await page.addInitScript(() => { try { if (window.name !== 'dc-seeded') { window.name = 'dc-seeded'; localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } });
     return { page, errs, ctx };
   };
   let fails = 0; const ok = (c, m) => { console.log((c ? 'OK   ' : 'HIBA ') + m); if (!c) fails++; };
@@ -29,7 +29,7 @@ const { chromium } = require('playwright'); const path = require('path');
   // minden új dísz a 0. polcra
   await page.evaluate(() => { ['szellem', 'lampas', 'uveg-rozsa', 'uveg-var'].forEach(id => addDecorSet(DECOR_SETS.find(s => s.id === id), 0)); persist(); drawLibrary(); });
   await page.waitForTimeout(300);
-  ok((await page.$$('.lb-deco')).length === 11, '11 dísz a polcon (7 kezdő + 4)');
+  ok((await page.$$('.lb-deco')).length === 10, '10 dísz a polcon (6 kezdő + 4)');
   await page.screenshot({ path: out + '-shelf.png', fullPage: true });
 
   // szellem

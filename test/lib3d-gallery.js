@@ -7,7 +7,7 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   page.on('pageerror', e => errs.push(e.message)); page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED|ERR_BLOCKED/.test(m.text())) errs.push(m.text()); });
   await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
   await page.route(/cdn\.jsdelivr\.net\/npm\/three@0\.128\.0\/build\/three\.min\.js/, r => r.fulfill({ contentType: 'application/javascript', body: fs.readFileSync(path.join(__dirname, 'vendor/three.min.js')) }));
-  await page.addInitScript(() => { window.__L3_LOWQ = true; try { localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true } })); } catch (e) { } });
+  const lowq = !process.env.HQ; await page.addInitScript(l => { window.__L3_LOWQ = l; try { localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true } })); } catch (e) { } }, lowq);
   await page.goto('file://' + path.resolve('dist/index.html') + '#polc'); await page.waitForFunction('typeof L3 !== "undefined" && L3.on && L3.items.size > 0', null, { timeout: 40000 }).catch(() => { });
   await page.evaluate(`(() => {
     const want = ${JSON.stringify(types)}.split(','), keep = new Set(want);
@@ -16,7 +16,7 @@ const { chromium } = require('playwright'); const path = require('path'); const 
     S.decor = [];
     DECOR_SETS.forEach(set => { if (want[0] === 'all' || set.parts.some(p => keep.has(p.type))) addDecorSet(set, 0); });
     S.shelves[0].ids = S.shelves[0].ids.filter(id => isDecorId(id) || S.books.some(b => b.id === id)).slice(0, 40);
-    S.shelves[0].ids = S.shelves[0].ids.filter(id => isDecorId(id));
+    const nb = ${+process.env.BOOKS || 0}; const bk = S.books.slice(0, nb).map(b => b.id); S.shelves[0].ids = bk.concat(S.shelves[0].ids.filter(id => isDecorId(id)));
     drawLibrary();
   })()`);
   await page.waitForFunction('L3.on && L3.items.size > 0', null, { timeout: 30000 }).catch(() => { });

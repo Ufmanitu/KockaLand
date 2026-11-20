@@ -1,5 +1,13 @@
 # Változásnapló
 
+## v8 — Új sárkányok + book nook mini világ (2026-11-19)
+- **Fekvő sárkány**: egyetlen, teljes sárkány szunyókál három könyv tetején (pikkelyes test, hasi lemezek, hátgerinc-tüskék, összehajtott szárnyak, szarvak, szemhéjas szem). Orrbökés: füstöl, háromszor egymás után tüzet okád; máshova kattintva dorombol. A régi sárkány-pár (fej + farok) mentései automatikusan egy fekvő sárkánnyá alakulnak.
+- **Repülő sárkány + füstje**: pillanatkép, ahogy épp nagyot fúj a könyvekre; a füstoszlop nekitámaszkodik a könyveknek és „tartja” őket. Kattintásra nagyot fúj (a láng és a füst megduzzad), aztán csapkod; a füstre kattintva megpuffan.
+- **Book nook = berendezett 3D mini szoba**: ívelt ablak holddal és háztetőkkel, csíkos tapéta, deszkapadló, beépített könyvespolc földgömbbel, kandalló párkánnyal és gyertyákkal, fotel párnával, alvó cica, kisasztal lámpával, szőnyeg, növény, függőlámpa, fényfüzér. A lámpa kapcsol (mentődik) és a szoba besötétedik.
+- **Ráközelítés**: a szobára kattintva a kis világ felnagyul a polcról (a kamera belép a szobába), egérrel körbe lehet nézni; kattintható a lámpa, a kandalló (fellobban), az ablak (hullócsillag, függöny), a cica (ébred, szívek), a földgömb (pörög), a növény, a fotel, az óra; gombsor billentyűzetre/érintésre; Esc/×/háttér zár. Bezáráskor a saját vászon és minden GPU-erőforrás felszabadul.
+- Súgó frissítve; új teszt: `nookzoom`; a decor-tesztek seed-jelzője stabilabb; `decor3d` kezeli a zoom megnyitását.
+- A projekt neve KockaLand (repo: Ufmanitu/KockaLand).
+
 ## v6 — 3D Könyvtár (2026-11-18)
 - A Könyvtár valódi 3D-ben (Three.js): fa szekrények, könyvek, fény + árnyék, hover-kihúzás, kattintás, húzás, billentyűzet; 2D tartalék (nincs WebGL / Kímélő mód / kapcsoló)
 - Mind a 11 dísz valódi, procedurális 3D modell egyéni animációkkal: sárkány-fej + farok (doboz, szemöldök, füst, farok-legyintés), lámpás (valódi fény), két üvegablak-lámpa, book-nook, olvasó szellem, kis sárkány + felhő, alvó macska, bagoly, cserepes pozsgás

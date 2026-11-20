@@ -50,7 +50,7 @@ function defaultShelves(books) {
 function syncShelves() {
   if (!S) return;
   const firstTime = !Array.isArray(S.decor);
-  S.decor = (Array.isArray(S.decor) ? S.decor : []).filter(d => d && typeof d.id === 'string' && DECOR[d.type]);
+  S.decor = dragonMigrate(Array.isArray(S.decor) ? S.decor : []).filter(d => d && typeof d.id === 'string' && DECOR[d.type]);
   const have = new Set(S.books.map(b => b.id).concat(S.decor.map(d => d.id))), seen = new Set();
   S.shelves = (Array.isArray(S.shelves) ? S.shelves : []).filter(s => s && Array.isArray(s.ids));
   S.shelves.forEach(s => {

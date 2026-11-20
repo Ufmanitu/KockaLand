@@ -6,7 +6,7 @@ https://ufmanitu.github.io/KockaLand/
 
 ## Fejlesztés
 
-Egyoldalas HTML-játék (vanilla JS/CSS, magyar felület): témás kockadobó sorsoló, szerkeszthető Könyvtár valódi 3D polcokkal és animált díszekkel (Three.js).
+Egyoldalas HTML-játék (vanilla JS/CSS, magyar felület): témás kockadobó sorsoló, szerkeszthető Könyvtár valódi 3D polcokkal és animált díszekkel (Three.js): fekvő és repülő sárkány, ráközelíthető book nook mini szoba, macska, bagoly, lámpák.
 
 - Forrás: `src/`, építés: `node build.js` → `dist/index.html` (Artifact-hoz) és `dist/standalone.html` (önálló oldal).
 - Az aktuális fejlesztői build: `latest/index.html` (a gyökér `index.html` a közzétett oldal).

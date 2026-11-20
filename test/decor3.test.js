@@ -9,7 +9,7 @@ const { chromium } = require('playwright'); const path = require('path');
     page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED|ERR_BLOCKED/.test(m.text())) errs.push(m.text()); });
     page.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
     await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
-    await page.addInitScript(() => { try { if (!sessionStorage.getItem('dc-seeded')) { sessionStorage.setItem('dc-seeded', '1'); localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } });
+    await page.addInitScript(() => { try { if (window.name !== 'dc-seeded') { window.name = 'dc-seeded'; localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } });
     return { page, errs, ctx };
   };
   let fails = 0; const ok = (c, m) => { console.log((c ? 'OK   ' : 'HIBA ') + m); if (!c) fails++; };
@@ -38,15 +38,16 @@ const { chromium } = require('playwright'); const path = require('path');
   const nAnim = await page.evaluate(() => document.getAnimations().filter(a => a.playState === 'running').length);
   ok(nAnim === 0, 'nyugalomban nincs futó animáció (' + nAnim + ')');
 
-  // kis sárkány: prüszköl → csapkod → alszik; felhőre: eső
-  await triple(page, '.dc-kis-sarkany', .35, .6, ['is-sneeze', 'is-flap', 'is-sleep']);
-  await page.waitForTimeout(400);
-  await clickAt(page, '.dc-kis-sarkany', .35, .6); await page.waitForTimeout(110);
-  ok(!(await has(page, '.dc-kis-sarkany', 'is-sleep')) && await has(page, '.dc-kis-sarkany', 'is-sneeze'), 'kis sárkány: alvót megbökve felébred (prüszköl)');
+  // repülő sárkány: nagyot fúj → csapkod; füstoszlopra: puffan
+  await clickAt(page, '.dc-kis-sarkany', .6, .4); await page.waitForTimeout(110);
+  ok(await has(page, '.dc-kis-sarkany', 'is-blast'), 'repülő sárkány: első kattintás is-blast (tüzet fúj)');
+  await page.waitForTimeout(1900);
+  await clickAt(page, '.dc-kis-sarkany', .6, .4); await page.waitForTimeout(110);
+  ok(await has(page, '.dc-kis-sarkany', 'is-flap'), 'repülő sárkány: második kattintás is-flap');
   await page.waitForTimeout(1800);
-  await clickAt(page, '.dc-kis-sarkany', .78, .66); await page.waitForTimeout(110);
-  ok(await has(page, '.dc-kis-sarkany', 'is-rain'), 'kis sárkány: felhőre kattintva is-rain');
-  await page.waitForTimeout(2900);
+  await clickAt(page, '.dc-kis-sarkany', .14, .7); await page.waitForTimeout(110);
+  ok(await has(page, '.dc-kis-sarkany', 'is-puff'), 'repülő sárkány: a füstoszlopra kattintva is-puff');
+  await page.waitForTimeout(1700);
 
   // macska
   await triple(page, '.dc-macska', .5, .5, ['is-wake', 'is-purr', 'is-grump']);

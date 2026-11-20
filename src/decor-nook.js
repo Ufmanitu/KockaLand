@@ -1,7 +1,7 @@
-/* ===== Díszek: book nook – kivilágított éjszakai sikátor (saját rajz) =====
-   Kis, fa dobozba zárt minivilág: éjszakai sikátor boltíves ajtóval, ablakokkal, zászlófüzérrel és utcai lámpával, a háttérben hold és csillagok.
-   A lámpára kattintva fel/le kapcsolod a fényeket (mentődik). A világító jelenetre kattintva kinyílik az ajtó: meleg fény ömlik ki, egy cica kuksol ki, aztán becsukódik.
-   Néha egy árnyék átsétál az ablakban, a zászlók meglibbennek. */
+/* ===== Díszek: book nook – kis, fa dobozba zárt minivilág =====
+   3D nézetben (lib3d-nook.js, lib3d-nookzoom.js) egy valódi, berendezett mini szoba: ablak, könyvespolc, kandalló, fotel, alvó cica, lámpa. Rákattintva felnagyul a kis világ, és bele lehet nézni.
+   Ez a fájl a 2D tartalék (Kímélő mód / WebGL nélkül): kivilágított éjszakai sikátor boltíves ajtóval, ablakokkal, zászlófüzérrel és utcai lámpával.
+   A lámpára kattintva fel/le kapcsolod a fényeket (mentődik). 2D-ben a jelenetre kattintva kinyílik az ajtó: meleg fény ömlik ki, egy cica kuksol ki, aztán becsukódik. */
 'use strict';
 
 /* a sikátor perspektívája: a (65,98) tűnőpont felé; falak: bal x=10..48, jobb x=120..82; u = mélység (0 közel … 1 távol), v = magasság (0 talaj … 1 tető) */
@@ -60,9 +60,9 @@ function nkScene(u) {
 }
 
 registerDecor({
-  id: 'book-nook', name: 'Book nook: éjszakai sikátor', hint: 'A lámpára kattintva fel/le kapcsolod a fényt. A jelenetre kattintva kinyílik az ajtó.', ar: 130 / 170, k: 0.94,
+  id: 'book-nook', name: 'Book nook: mini világ', hint: 'A lámpára kattintva fel/le kapcsolod a fényt. A szobára kattintva felnagyul a kis világ (3D nézetben), és bele lehet nézni. 2D-ben kinyílik az ajtó.', ar: 1.04, k: 0.94,
   svg: u => {
-    return '<svg class="dc-svg nk-svg" viewBox="0 0 130 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>' +
+    return '<svg class="dc-svg nk-svg" viewBox="-24 0 178 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>' +
       '<clipPath id="nc' + u + '"><path d="M10 10H120V158H10Z"/></clipPath>' +
       '<linearGradient id="nw' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8c6338"/><stop offset=".5" stop-color="#5c3a1e"/><stop offset="1" stop-color="#2f1c0e"/></linearGradient>' +
       '<linearGradient id="ns' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121a52"/><stop offset=".55" stop-color="#3d3a8e"/><stop offset="1" stop-color="#cf78a0"/></linearGradient>' +
@@ -97,4 +97,4 @@ registerDecor({
   }
 });
 
-registerSet({ id: 'book-nook', name: 'Book nook: éjszakai sikátor', desc: 'Kis, kivilágított minivilág fa dobozban: boltíves ajtó, ablakok, zászlófüzér és egy utcai lámpa. A lámpával kapcsolod a fényt.', tip: 'Kattints a jelenetre: kinyílik az ajtó, kikukucskál a cica.', parts: [{ type: 'book-nook', at: 'start' }] });
+registerSet({ id: 'book-nook', name: 'Book nook: mini világ', desc: 'Könyvméretű, berendezett mini szoba fa dobozban: ívelt ablak holddal, könyvespolc, pattogó kandalló, fotel, alvó cica, lámpa. Rákattintva felnagyul a kis világ, és bele lehet nézni.', tip: 'Kattints a szobára: ráközelít a mini világra. A lámpával kapcsolod a fényt.', parts: [{ type: 'book-nook', at: 'start' }] });

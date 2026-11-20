@@ -26,7 +26,9 @@ const { chromium } = require('playwright'); const path = require('path'); const 
     for (const it of items) {
       try {
         const parts = it.parts && it.parts.length ? it.parts.map(p => p.userData && p.userData.part) : [];
-        for (let k = 0; k < 3; k++) { l3DecorClick(it, null, null, parts[k % Math.max(1, parts.length)]); await wait(250); }
+        const nook = it.d.type === 'book-nook', mo = S.settings.motion; if (nook) S.settings.motion = false;   // a book nook rákattintva megnyitja a zoom-nézetet: gyors (animáció nélküli) nyitás/zárás
+        for (let k = 0; k < 3; k++) { l3DecorClick(it, null, null, parts[k % Math.max(1, parts.length)]); await wait(250); if (typeof NKZ !== 'undefined' && NKZ.o) { NKZ.o.el.querySelector('.nkz-x').click(); await wait(400); } }
+        if (nook) { if (mo === undefined) delete S.settings.motion; else S.settings.motion = mo; }
         if (it.ctl && it.ctl.idle) it.ctl.idle();
         if (it.ctl && it.ctl.look) { it.ctl.look({ x: 100, y: 100 }); it.ctl.look(null); }
         await wait(200); res.push([it.d.type, 'ok']);

@@ -9,61 +9,51 @@ const { chromium } = require('playwright'); const path = require('path');
     page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED|ERR_BLOCKED/.test(m.text())) errs.push(m.text()); });
     page.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
     await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
-    await page.addInitScript(s => { try { if (!sessionStorage.getItem('dc-seeded')) { sessionStorage.setItem('dc-seeded', '1'); localStorage.setItem('kockazzunk.v1', JSON.stringify(s || { v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } }, seed || null);
+    await page.addInitScript(s => { try { if (window.name !== 'dc-seeded') { window.name = 'dc-seeded'; localStorage.setItem('kockazzunk.v1', JSON.stringify(s || { v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } }, seed || null);
     return { page, errs, ctx };
   };
   let fails = 0; const ok = (c, m) => { console.log((c ? 'OK   ' : 'HIBA ') + m); if (!c) fails++; };
   const url = 'file://' + path.resolve('dist/index.html') + '#polc';
   const has = (page, sel, cls) => page.$eval(sel, (e, c) => e.classList.contains(c), cls);
   const centre = async (page, sel) => { const bb = await (await page.$(sel)).boundingBox(); return { x: bb.x + bb.width / 2, y: bb.y + bb.height / 2 }; };
-  const clickNose = async page => { const c = await centre(page, '.dc-sarkany-fej .d-nose'); await page.mouse.move(c.x, c.y); await page.mouse.click(c.x, c.y); };
+  const clickNose = async page => { const c = await centre(page, '.dc-sarkany-fekvo .d-nose'); await page.mouse.move(c.x, c.y); await page.mouse.click(c.x, c.y); };
 
   /* --- asztali --- */
   let { page, errs } = await mk(1280, 1000, 'light');
-  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForTimeout(900);
+  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(900);
   const nDeco = await page.$$eval('.lb-deco', e => e.length);
-  ok(nDeco === 7, 'kezdő díszek a polcokon (' + nDeco + ')');
-  const pos = await page.evaluate(() => { const s = S.shelves.find(s => s.ids.some(isDecorId)); const d = s.ids.filter(isDecorId); return [s.ids.indexOf(d[0]), s.ids.length - 1 - s.ids.indexOf(d[1]), DECOR[decorById(d[0]).type].id, DECOR[decorById(d[1]).type].id, s.ids.length]; });
-  ok(pos[0] === 0 && pos[1] === 0 && pos[2] === 'sarkany-fej' && pos[3] === 'sarkany-farok', 'fej a polc elején, farok a végén: ' + pos.join(','));
-  ok(await page.evaluate(() => Array.isArray(S.decor) && S.decor.length === 7 && S.decor[0].link === S.decor[1].link), 'S.decor: 7 elem, a sárkány-pár összekötve');
-  const hb = await page.$eval('.dc-sarkany-fej', e => { const r = e.getBoundingClientRect(); return [r.width, r.height]; });
-  ok(hb[0] > 60 && hb[1] > 100, 'a fej látható mérettel: ' + hb.map(Math.round).join('×'));
+  ok(nDeco === 6, 'kezdő díszek a polcokon (' + nDeco + ')');
+  const pos = await page.evaluate(() => { const s = S.shelves.find(s => s.ids.some(isDecorId)); const d = s.ids.filter(isDecorId); return [s.ids.indexOf(d[0]), DECOR[decorById(d[0]).type].id, s.ids.length]; });
+  ok(pos[0] === 0 && pos[1] === 'sarkany-fekvo', 'a fekvő sárkány a polc elején: ' + pos.join(','));
+  ok(await page.evaluate(() => Array.isArray(S.decor) && S.decor.length === 6 && !S.decor.some(d => d.link) && !S.decor.some(d => /sarkany-(fej|farok)/.test(d.type))), 'S.decor: 6 elem, egyetlen sárkány, nincs régi pár');
+  const hb = await page.$eval('.dc-sarkany-fekvo', e => { const r = e.getBoundingClientRect(); return [r.width, r.height]; });
+  ok(hb[0] > 120 && hb[1] > 50, 'a sárkány látható mérettel: ' + hb.map(Math.round).join('×'));
 
   // bökés → szemöldök + farok legyintés
   await clickNose(page); await page.waitForTimeout(120);
-  ok(await has(page, '.dc-sarkany-fej', 'is-boop'), 'orr-bökés: is-boop');
-  await page.waitForTimeout(700);
-  ok(await has(page, '.dc-sarkany-farok', 'is-flick'), 'a farok legyint (is-flick)');
-  await page.waitForTimeout(2200);
-  ok(!(await has(page, '.dc-sarkany-fej', 'is-boop')) && !(await has(page, '.dc-sarkany-farok', 'is-flick')), 'az állapot magától lekerül');
+  ok(await has(page, '.dc-sarkany-fekvo', 'is-boop'), 'orr-bökés: is-boop');
+  await page.waitForTimeout(2500);
+  ok(!(await has(page, '.dc-sarkany-fekvo', 'is-boop')), 'az állapot magától lekerül');
   // 3× gyors bökés → düh
   for (let i = 0; i < 3; i++) { await clickNose(page); await page.waitForTimeout(160); }
-  ok(await has(page, '.dc-sarkany-fej', 'is-rage'), 'háromszori bökés: is-rage');
+  ok(await has(page, '.dc-sarkany-fekvo', 'is-rage'), 'háromszori bökés: is-rage');
   await page.waitForTimeout(600);
-  ok(await has(page, '.dc-sarkany-farok', 'is-slam'), 'a farok csap (is-slam)');
   await page.screenshot({ path: out + '-rage.png', clip: { x: 0, y: 120, width: 1280, height: 500 } });
   await page.waitForTimeout(2800);
-  ok(!(await has(page, '.dc-sarkany-fej', 'is-rage')), 'a düh elmúlik');
+  ok(!(await has(page, '.dc-sarkany-fekvo', 'is-rage')), 'a düh elmúlik');
   // simogatás (nem az orr)
-  const hbb = await (await page.$('.dc-sarkany-fej')).boundingBox();
-  await page.mouse.click(hbb.x + hbb.width * 0.62, hbb.y + hbb.height * 0.45); await page.waitForTimeout(150);
-  ok(await has(page, '.dc-sarkany-fej', 'is-pet'), 'fejtetőn kattintás: is-pet (simogatás)');
+  const hbb = await (await page.$('.dc-sarkany-fekvo')).boundingBox();
+  await page.mouse.click(hbb.x + hbb.width * 0.6, hbb.y + hbb.height * 0.4); await page.waitForTimeout(150);
+  ok(await has(page, '.dc-sarkany-fekvo', 'is-pet'), 'testen kattintás: is-pet (simogatás)');
   await page.waitForTimeout(2800);
-  // farok kattintás
-  const tbb = await (await page.$('.dc-sarkany-farok')).boundingBox();
-  await page.mouse.click(tbb.x + tbb.width * 0.7, tbb.y + tbb.height * 0.62); await page.waitForTimeout(150);
-  ok(await has(page, '.dc-sarkany-farok', 'is-wag'), 'farok-kattintás: is-wag');
-  await page.waitForTimeout(500);
-  ok(await has(page, '.dc-sarkany-fej', 'is-glance'), 'a fej hátranéz (is-glance)');
-  await page.waitForTimeout(2200);
   // billentyű: Enter a fejen → bökés (nincs egér)
-  await page.focus('.dc-sarkany-fej'); await page.keyboard.press('Enter'); await page.waitForTimeout(150);
-  ok(await has(page, '.dc-sarkany-fej', 'is-boop'), 'Enter a fejen: is-boop (billentyűzettel is játszható)');
-  ok(!!(await page.$eval('.dc-sarkany-fej', e => e.getAttribute('aria-label'))), 'van aria-label a díszen');
+  await page.focus('.dc-sarkany-fekvo'); await page.keyboard.press('Enter'); await page.waitForTimeout(150);
+  ok(await has(page, '.dc-sarkany-fekvo', 'is-boop'), 'Enter a fejen: is-boop (billentyűzettel is játszható)');
+  ok(!!(await page.$eval('.dc-sarkany-fekvo', e => e.getAttribute('aria-label'))), 'van aria-label a díszen');
   await page.waitForTimeout(2400);
   // szemkövetés
   await page.mouse.move(900, 300); await page.waitForTimeout(150); await page.mouse.move(120, 700); await page.waitForTimeout(250);
-  const ex = await page.$eval('.dc-sarkany-fej', e => [e.style.getPropertyValue('--ex'), e.style.getPropertyValue('--ey')]);
+  const ex = await page.$eval('.dc-sarkany-fekvo', e => [e.style.getPropertyValue('--ex'), e.style.getPropertyValue('--ey')]);
   ok(ex[0] !== '' && ex[1] !== '', 'a szem követi az egeret (' + ex.join(',') + ')');
 
   // díszek hozzáadása / eltávolítása
@@ -74,9 +64,9 @@ const { chromium } = require('playwright'); const path = require('path');
   const before = await page.evaluate(() => S.decor.length);
   await page.click('.dc-modal .dc-card:nth-of-type(1) .btn.primary'); await page.waitForTimeout(500);
   const after = await page.evaluate(() => S.decor.length);
-  ok(after === before + 2, 'hozzáadás: +2 elem (' + before + '→' + after + ')');
-  ok(await page.evaluate(() => { const s = S.shelves[1]; return isDecorId(s.ids[0]) && isDecorId(s.ids[s.ids.length - 1]); }), 'a választott polcra kerültek (eleje/vége)');
-  ok((await page.$$('.lb-deco')).length === 9, '9 dísz látszik (7 kezdő + 2)');
+  ok(after === before + 1, 'hozzáadás: +1 elem (' + before + '→' + after + ')');
+  ok(await page.evaluate(() => { const s = S.shelves[1]; return isDecorId(s.ids[0]); }), 'a választott polcra került (eleje)');
+  ok((await page.$$('.lb-deco')).length === 7, '7 dísz látszik (6 kezdő + 1)');
   // szerkesztő módban a dísz kattintása a kezelő ablakot nyitja
   await page.click('button:has-text("Átrendezés")'); await page.waitForTimeout(200);
   ok(!(await page.$('.lb-deco.is-boop')), 'szerkesztő módban nincs animáció-bökés');
@@ -109,36 +99,48 @@ const { chromium } = require('playwright'); const path = require('path');
 
   /* --- „minden díszt levettem” → újratöltés után sem jön vissza --- */
   ({ page, errs } = await mk(1280, 900, 'light'));
-  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForTimeout(800);
+  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(800);
   await page.evaluate(() => { S.decor = []; S.shelves.forEach(s => { s.ids = s.ids.filter(i => !isDecorId(i)); }); persistNow(); });
-  await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForTimeout(800);
+  await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(800);
   ok((await page.$$('.lb-deco')).length === 0, 'üres S.decor: nem jönnek vissza a kezdő díszek');
   ok(await page.$('.lb') != null, 'üres díszekkel is rendben a polc');
   ok(errs.length === 0, 'nincs konzolhiba (üres)' + (errs.length ? ': ' + errs.join(' | ') : ''));
   await page.context().close();
 
+  /* --- régi mentés: sárkány-pár → egy fekvő sárkány (migráció) --- */
+  ({ page, errs } = await mk(1280, 900, 'light'));
+  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(800);
+  await page.evaluate(() => { S.decor = [{ id: 'd_fej', type: 'sarkany-fej', link: 'L1' }, { id: 'd_farok', type: 'sarkany-farok', link: 'L1' }, { id: 'd_cat', type: 'macska' }]; S.shelves = [{ id: 's1', name: 'Polc', ids: ['d_fej', 'd_cat', 'd_farok'].concat(S.books.map(b => b.id)) }]; persistNow(); });
+  await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(900);
+  const mig = await page.evaluate(() => ({ types: S.decor.map(d => d.type), link: S.decor.some(d => d.link), ids: S.shelves[0].ids.slice() }));
+  ok(mig.types.join() === 'sarkany-fekvo,macska' && !mig.link, 'régi sárkány-pár → egy fekvő sárkány, a farok kiesett: ' + mig.types.join());
+  ok(mig.ids.slice(0, 2).join() === 'd_fej,d_cat' && mig.ids.indexOf('d_farok') < 0, 'a polc sorrendje megmaradt, a farok kikerült: ' + mig.ids.slice(0, 3).join());
+  ok((await page.$$('.dc-sarkany-fekvo')).length === 1, 'a fekvő sárkány megjelenik');
+  ok(errs.length === 0, 'nincs konzolhiba (migráció)' + (errs.length ? ': ' + errs.join(' | ') : ''));
+  await page.context().close();
+
   /* --- Kímélő mód: nincs szemkövetés, de a kattintás-animáció megy --- */
   ({ page, errs } = await mk(1280, 900, 'light', { v: 1, themes: [], settings: { seen: true, lite: true } }));
-  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForTimeout(800);
+  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(800);
   await page.mouse.move(900, 300); await page.waitForTimeout(150); await page.mouse.move(120, 700); await page.waitForTimeout(250);
-  const ex2 = await page.$eval('.dc-sarkany-fej', e => e.style.getPropertyValue('--ex'));
+  const ex2 = await page.$eval('.dc-sarkany-fekvo', e => e.style.getPropertyValue('--ex'));
   ok(ex2 === '', 'Kímélő mód: nincs szemkövetés');
   await clickNose(page); await page.waitForTimeout(150);
-  ok(await has(page, '.dc-sarkany-fej', 'is-boop'), 'Kímélő módban is reagál a kattintásra');
+  ok(await has(page, '.dc-sarkany-fekvo', 'is-boop'), 'Kímélő módban is reagál a kattintásra');
   ok(errs.length === 0, 'nincs konzolhiba (lite)' + (errs.length ? ': ' + errs.join(' | ') : ''));
   await page.context().close();
 
   /* --- sötét + mobil --- */
   for (const [w, hh, sch] of [[390, 800, 'dark'], [360, 740, 'light']]) {
     ({ page, errs } = await mk(w, hh, sch));
-    await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForTimeout(900);
+    await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(900);
     const sw = await page.evaluate(() => document.documentElement.scrollWidth), cw = await page.evaluate(() => document.documentElement.clientWidth);
     ok(sw <= cw, w + 'px: nincs vízszintes görgetés (' + sw + '/' + cw + ')');
-    ok((await page.$$('.lb-deco')).length === 7, w + 'px: a díszek megvannak');
-    const tb = await page.$eval('.dc-sarkany-fej', e => { const r = e.getBoundingClientRect(); return [r.width, r.height]; });
-    ok(tb[0] >= 44 && tb[1] >= 44, w + 'px: a dísz elég nagy az érintéshez: ' + tb.map(Math.round).join('×'));
-    await page.tap('.dc-sarkany-fej .d-nose').catch(() => { }); await page.waitForTimeout(150);
-    ok(await has(page, '.dc-sarkany-fej', 'is-boop'), w + 'px: érintésre is bökés');
+    ok((await page.$$('.lb-deco')).length === 6, w + 'px: a díszek megvannak');
+    const tb = await page.$eval('.dc-sarkany-fekvo', e => { const r = e.getBoundingClientRect(); return [r.width, r.height]; });
+    ok(tb[0] >= 44 && tb[1] >= 30, w + 'px: a dísz elég nagy az érintéshez: ' + tb.map(Math.round).join('×'));
+    await page.tap('.dc-sarkany-fekvo .d-nose').catch(() => { }); await page.waitForTimeout(150);
+    ok(await has(page, '.dc-sarkany-fekvo', 'is-boop'), w + 'px: érintésre is bökés');
     await page.screenshot({ path: out + '-m' + w + '.png' });
     await page.click('button:has-text("Átrendezés")'); await page.waitForTimeout(200);
     const sw2 = await page.evaluate(() => document.documentElement.scrollWidth); ok(sw2 <= cw, w + 'px szerkesztő módban sincs túlcsordulás');

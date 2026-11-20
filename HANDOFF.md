@@ -8,7 +8,7 @@ cd /home/claude/kockazzunk
 NODE_PATH=/opt/npm-tools/node_modules node build.js     # src/* → dist/index.html (CSS+JS beágyazva)
 ```
 Publikálás: Artifact eszköz, `file_path` = `dist/index.html`, **`url` = https://claude.ai/artifact/NrfUS3HYq9NG5ietvtecjL** (új munkamenetben előbb `action:read`). A MjaWwfEnKYSitkmHXx4pKj artifact duplikátum, a user kérésére törölhető.
-Tesztek (Playwright, Chromium): `NODE_PATH=/opt/npm-tools/node_modules node test/<név>.test.js <kimenet-előtag>`; a teljes csomag: engine, lint, faces, editor, shelf, misc, mobile, nostorage, library, decor, decor2, decor3 — mind zöld legyen publikálás előtt. 3D-hez még: `decor3d` (11 típus modellje + kattintás-sorozat + szivárgás + lassúság-őr + beállítás-kapcsoló; ~5 perc), `lib3d` (3D Könyvtár: hover, kattintás, húzás, 2D tartalék, mobil; ~5 perc). Szoftveres GL-ben (nincs GPU) egy képkocka 150–450 ms, ezért a 3D tesztek lassúak; a `window.__L3_LOWQ=true` seed kell, a three-t a `test/vendor/three.min.js`-ből szolgáljuk (route). Gyors rész: `ONLY=macska node test/decor3d.test.js`.
+Tesztek (Playwright, Chromium; a 3D-sek szoftveres GL-en lassúak, sorban futtasd őket — `decor3d`, `lib3d`, `nookzoom`): `NODE_PATH=/opt/npm-tools/node_modules node test/<név>.test.js <kimenet-előtag>`; a teljes csomag: engine, lint, faces, editor, shelf, misc, mobile, nostorage, library, decor, decor2, decor3 — mind zöld legyen publikálás előtt. 3D-hez még: `decor3d` (11 típus modellje + kattintás-sorozat + szivárgás + lassúság-őr + beállítás-kapcsoló; ~5 perc), `lib3d` (3D Könyvtár: hover, kattintás, húzás, 2D tartalék, mobil; ~5 perc). Szoftveres GL-ben (nincs GPU) egy képkocka 150–450 ms, ezért a 3D tesztek lassúak; a `window.__L3_LOWQ=true` seed kell, a three-t a `test/vendor/three.min.js`-ből szolgáljuk (route). Gyors rész: `ONLY=macska node test/decor3d.test.js`.
 
 ## GitHub és projekt-név
 - A projekt neve **KockaLand** (az oldal címe: Kockázzunk). Repo: **Ufmanitu/KockaLand** (`main`), oldal: https://ufmanitu.github.io/KockaLand/ (GitHub Pages a repó gyökeréből).
@@ -24,7 +24,7 @@ Tesztek (Playwright, Chromium): `NODE_PATH=/opt/npm-tools/node_modules node test
 - `src/library.js` + `library-ui.js` — polcok (S.shelves), gerincek, megjelenés-szerkesztő, pointer-alapú húzás, Shift+nyíl
 - `src/decor.js` — díszek keretrendszere; `decor-*.js` — az egyes díszek; `css/decor.css`, `css/decor2.css`
 - **3D Könyvtár** (Three.js r128, lusta betöltés jsdelivr-ről; 2D a tartalék: nincs WebGL / Kímélő mód / `S.settings.view3d===false` / script-hiba / context lost):
-  `src/lib3d.js` (központ: színtér, szekrény, könyvek, fény-árnyék, fix viewport-canvas `#l3` scissorral, hover/kattintás/húzás raycast-tal, `.lb-sp` láthatatlan gombréteg billentyűzethez, `l3Anim`/`l3Seq` tween, `l3Idle`, lassúság-őr `l3Perf`/`l3PerfEval`), `lib3d-sdf.js` (SDF-szobrászat: `sdSph/sdEll/sdCone/smin/smax`, `sdfGeo` Surface Nets + csúcsszín, `l3Skin` pikkely/szemcse bump, `l3TubeGeo/Set`), `lib3d-kit.js` (kTex/kSvgPlane/kLight/kBead/kVinyl/kRoot/kLookVec…), díszek: `lib3d-dragon.js` (sárkány-fej+farok), `lib3d-lamps.js` (lámpás, 2 üvegablak), `lib3d-nook.js`, `lib3d-pets.js` (szellem, kis sárkány+felhő), `lib3d-pets2.js` (macska, bagoly, pozsgás).
+  `src/lib3d.js` (központ: színtér, szekrény, könyvek, fény-árnyék, fix viewport-canvas `#l3` scissorral, hover/kattintás/húzás raycast-tal, `.lb-sp` láthatatlan gombréteg billentyűzethez, `l3Anim`/`l3Seq` tween, `l3Idle`, lassúság-őr `l3Perf`/`l3PerfEval`), `lib3d-sdf.js` (SDF-szobrászat: `sdSph/sdEll/sdCone/smin/smax`, `sdfGeo` Surface Nets + csúcsszín, `l3Skin` pikkely/szemcse bump, `l3TubeGeo/Set`), `lib3d-kit.js` (kTex/kSvgPlane/kLight/kBead/kVinyl/kRoot/kLookVec…), díszek: `lib3d-dragon.js` (közös segédek: `drGeoOnce/drMerge/drCone/drMesh/drParticle`), `lib3d-dragons2.js` (**fekvő sárkány** a 3 könyvön + **repülő sárkány** tüzet fúj a füstoszlopra; SDF test/fej/állkapocs, hártyás szárny `dgFan`, láng `dgJet`), `lib3d-lamps.js` (lámpás, 2 üvegablak), `lib3d-nook.js` (**book nook**: `nkRoom(mode)` = berendezett mini szoba: deszkapadló, csíkos tapéta, ívelt ablak holddal, beépített könyvespolc + földgömb, kandalló, fotel, alvó cica SDF-ből, lámpa/függőlámpa, fényfüzér; `nkAssemble` = keret + szoba, a polcon és a zoomban is ez), `lib3d-nookzoom.js` (**ráközelítés**: saját átlátszó WebGL-vászon, FLIP + dolly-zoom, körbenézés, tárgy-kattintások, bezáráskor teljes takarítás; a fő színtér közben `L3.hold`), `lib3d-pets.js` (szellem), `lib3d-pets2.js` (macska, bagoly, pozsgás).
 - `src/misc.js` — napló, súgó, beállítások, túra; `src/app.js` — boot, router (#dobas|#szerkeszto|#polc|#naplo|#sugo)
 
 ## Díszek (S.decor)
@@ -32,7 +32,7 @@ Tesztek (Playwright, Chromium): `NODE_PATH=/opt/npm-tools/node_modules node test
 - `registerDecor({id,name,hint,ar,k,look?,svg(u),onClick(el,ev,A),idle?(el,A)})`; `registerSet({id,name,desc,tip,parts:[{type,at:'start'|'end'}]})`.
 - `A = dcApi(el)`: `play(el,cls,ms)`, `linked`, `at`, `st` (bökés-számláló: `st.n = now-st.last<9000 ? st.n+1 : 1`), `toggle` (tartós `off`), `on`.
 - Animáció: csak transform/opacity, egyszeri osztály-váltás (`dcPlay`), nincs blur/végtelen animáció; idle-tick `decorLifeStart` (Kímélő módban, rejtett fülön, szerkesztéskor, húzáskor nem fut; csak látható díszekre); szemkövetés `--ex/--ey` + `.d-look` (kell `data-look`).
-- Katalógus (10 halmaz): sárkány-pár, olvasó szellem, gyertyás lámpás, üvegablak-rózsa, üvegablak-csillagos vár, kis sárkány+felhő, alvó macska, bagoly, pozsgás, book-nook. Kezdő készlet: `starterDecor()` (decor.js) — 7 dísz szétosztva a polcokon, csak első betöltéskor.
+- Katalógus (10 halmaz): fekvő sárkány (`sarkany-fekvo`; a régi `sarkany-fej`/`-farok` párt a `dragonMigrate` alakítja át), olvasó szellem, gyertyás lámpás, üvegablak-rózsa, üvegablak-csillagos vár, repülő sárkány + füstoszlop (`kis-sarkany`), alvó macska, bagoly, pozsgás, book-nook (3D: mini szoba + zoom; 2D tartalék: éjszakai sikátor). Kezdő készlet: `starterDecor()` (decor.js) — 6 dísz szétosztva a polcokon, csak első betöltéskor.
 - Új dísz: új `src/decor-<név>.js` (+ build.js JS-lista), CSS `decor2.css`-ben (`.dc-<típus>` előtaggal), teszt `test/decor3.test.js` mintájára; közeli kép: `node test/decor-shot.js <előtag> <halmaz> <osztály>@<típus>@<ms>`.
 
 ## 3D díszek (registerDecor3)
@@ -46,7 +46,11 @@ Tesztek (Playwright, Chromium): `NODE_PATH=/opt/npm-tools/node_modules node test
 
 ## Buktatók (tanulságok)
 - Three r128: nincs `CapsuleGeometry`; az `onBeforeCompile`-os anyag (l3Skin) csak `clear`-nél kapjon clearcoat-ot (figyelmeztetés).
-- A színes-csúcsú anyag minden hozzá tartozó geometriához kér `color` attribútumot.
+- A színes-csúcsú anyag minden hozzá tartozó geometriához kér `color` attribútumot (primitíveknek külön, nem-vertexColors anyag kell, különben feketék: macska-fül, sárkány-ujj).
+- Az `Object3D.position` csak olvasható property: `Object.assign(mesh, {position})` strict módban hibát dob; `mesh.position.set()` kell.
+- Két WebGL-renderer között textúra/geometria megosztható, a PMREM környezet-térkép nem (a zoom saját `nkEnv`-et gyárt).
+- Teszt-keret: a `sessionStorage` újratöltéskor néha elvész (file://), ezért a tesztek seed-jelzője `window.name`.
+- A díszek `ar`/`k` értéke közös a 2D és 3D nézetre; a 2D SVG viewBox arányát igazítsd hozzá (book nook: `-24 0 178 170`, ar 1.04).
 - `localStorage` mindig try/catch; a teszt-seed `themes: []` újraindítja az állapotot → tartós állapothoz `persistNow()` + reload.
 - DnD-összeg = könyvek + díszek (különben a drop elbukik). Polc-fejléc darabszám nem számolja a díszeket.
 - `transform-box: view-box` az alap a díszeken; `fill-box` csak ahol kell; `<g transform>` gyerekein `transform-origin: 0 0`.
@@ -54,4 +58,4 @@ Tesztek (Playwright, Chromium): `NODE_PATH=/opt/npm-tools/node_modules node test
 - Az artifact-publikálás új munkamenetben külön artifactot hoz létre, ha nincs `url`.
 
 ## Nyitott
-Lásd ROADMAP.md. GitHub-repó: a user még nem adott `owner/repo`-t (add_repo `access: push` kell).
+Lásd ROADMAP.md. A GitHub-repó (Ufmanitu/KockaLand) csatolva; push: `git -c push.negotiate=true push origin main`.

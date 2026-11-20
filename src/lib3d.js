@@ -268,6 +268,7 @@ function l3Cam() {
   return { cb: cb, sx: sx, sy: sy, vw: vw, vh: vh };
 }
 function l3Render() {
+  if (L3.hold) return;   // egy ráközelítés (pl. book nook) saját vásznon rajzol, közben a polc áll
   const r = L3.r, c = l3Cam(), x0 = Math.max(0, c.cb.left - 30), x1 = Math.min(c.vw, c.cb.right + 90), y0 = Math.max(0, c.cb.top - 20), y1 = Math.min(c.vh, c.cb.bottom + 130);
   r.setScissorTest(false); r.clear(); r.setScissorTest(true);
   if (x1 <= x0 || y1 <= y0) return;

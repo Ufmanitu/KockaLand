@@ -9,89 +9,52 @@
 .lb-deco g, .lb-deco path, .lb-deco circle, .lb-deco ellipse { transform-box: view-box; }
 .lb-deco .d-smoke circle, .lb-deco .d-sparks circle, .lb-deco .d-hearts path { transform-box: fill-box; transform-origin: center; }
 
-/* --- sárkány-fej: nyugalmi állapot --- */
-.dr-head .d-head { transform-origin: 100px 112px; }
-.dr-head .d-jaw { transform-origin: 92px 112px; }
-.dr-head .d-brow { transform-origin: 58px 68px; }
-.dr-head .d-lid { transform-origin: 60px 70px; transform: translateY(-14px); }
-.dr-head .d-pupil { transform-origin: 60.5px 73.4px; }
-.dr-head .d-look { transform: translate(var(--ex, 0px), var(--ey, 0px)); transition: transform .16s ease-out; }
-.dr-head .d-teeth, .dr-head .d-glow { opacity: 0; }
-.dr-head .d-smoke circle { fill: rgba(212, 217, 230, .8); opacity: 0; }
-.dr-head .d-sparks circle { fill: #ffb347; opacity: 0; }
-.dr-head .d-hearts path { fill: #ff7d96; opacity: 0; }
-.dr-head .sm1 { --dx: -15px; --dy: -15px; } .dr-head .sm2 { --dx: -24px; --dy: -7px; } .dr-head .sm3 { --dx: -9px; --dy: -25px; }
-.dr-head .sp1 { --dx: -22px; --dy: -20px; } .dr-head .sp2 { --dx: -30px; --dy: -8px; } .dr-head .sp3 { --dx: -14px; --dy: -30px; } .dr-head .sp4 { --dx: -34px; --dy: -22px; }
 
-/* --- pislogás --- */
-.is-blink .d-lid { animation: drBlink .26s ease-in-out; }
-@keyframes drBlink { 50% { transform: translateY(9px); } }
-
-/* --- bökés: szemöldök ráncol, szem összehúz, füst --- */
-.is-boop .d-head { animation: drRecoil 1.2s ease-out; }
-.is-boop .d-brow { animation: drFrown 2.1s ease-in-out; }
-.is-boop .d-lid { animation: drLidAngry 2.1s ease-in-out; }
-.is-boop .d-pupil { animation: drPupil 2.1s ease-in-out; }
-.is-boop .d-glow { animation: drGlow 2.1s ease-in-out; }
-.is-boop .d-smoke .sm1 { animation: drPuff .95s .1s ease-out; }
-.is-boop .d-smoke .sm2 { animation: drPuff 1.1s .32s ease-out; }
-.is-boop .d-smoke .sm3 { animation: drPuff 1.2s .55s ease-out; }
-@keyframes drRecoil { 0% { transform: none; } 10% { transform: translate(6px, 1.5px) rotate(1.6deg); } 32% { transform: translate(2px, .5px) rotate(.4deg); } 100% { transform: none; } }
-@keyframes drFrown { 0%, 100% { transform: none; } 12%, 76% { transform: translate(-1px, 3px) rotate(-9deg) scaleY(1.12); } }
-@keyframes drLidAngry { 0%, 100% { transform: translateY(-14px); } 12%, 76% { transform: translateY(-1.5px) rotate(-17deg); } }
-@keyframes drPupil { 0%, 100% { transform: none; } 12%, 76% { transform: scaleX(.5); } }
-@keyframes drGlow { 0%, 100% { opacity: 0; } 20%, 60% { opacity: .55; } }
-@keyframes drPuff { 0% { opacity: 0; transform: translate(0, 0) scale(.4); } 16% { opacity: .85; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(3.4); } }
-
-/* --- dühös (3. bökés): fogak, szikrák, rázkódás --- */
-.is-rage .d-head { animation: drShake .95s ease-in-out; }
-.is-rage .d-jaw { animation: drJaw 2.6s ease-in-out; }
-.is-rage .d-teeth { animation: drTeeth 2.6s ease-in-out; }
-.is-rage .d-brow { animation: drFrownR 2.6s ease-in-out; }
-.is-rage .d-lid { animation: drLidRage 2.6s ease-in-out; }
-.is-rage .d-pupil { animation: drPupilR 2.6s ease-in-out; }
-.is-rage .d-glow { animation: drGlowR 2.6s ease-in-out; }
-.is-rage .d-smoke .sm1 { animation: drPuffBig 1.2s .05s ease-out; }
-.is-rage .d-smoke .sm2 { animation: drPuffBig 1.3s .25s ease-out; }
-.is-rage .d-smoke .sm3 { animation: drPuffBig 1.4s .45s ease-out; }
-.is-rage .d-sparks .sp1 { animation: drSpark 1s .1s ease-out; } .is-rage .d-sparks .sp2 { animation: drSpark 1.1s .22s ease-out; }
-.is-rage .d-sparks .sp3 { animation: drSpark .95s .35s ease-out; } .is-rage .d-sparks .sp4 { animation: drSpark 1.15s .5s ease-out; }
-@keyframes drShake { 0%, 100% { transform: none; } 8% { transform: translate(5px, 1px) rotate(2deg); } 20% { transform: translate(-2px, 0) rotate(-2.5deg); } 32% { transform: translate(3px, 1px) rotate(2deg); } 44% { transform: translate(-2px, 0) rotate(-1.6deg); } 58% { transform: translate(1.5px, 0) rotate(1deg); } 75% { transform: translate(-.5px, 0) rotate(-.4deg); } }
-@keyframes drJaw { 0%, 100% { transform: none; } 10%, 74% { transform: rotate(6deg); } }
-@keyframes drTeeth { 0%, 100% { opacity: 0; } 10%, 74% { opacity: 1; } }
-@keyframes drFrownR { 0%, 100% { transform: none; } 10%, 78% { transform: translate(-2px, 4px) rotate(-14deg) scaleY(1.2); } }
-@keyframes drLidRage { 0%, 100% { transform: translateY(-14px); } 10%, 78% { transform: translateY(1px) rotate(-25deg); } }
-@keyframes drPupilR { 0%, 100% { transform: none; } 10%, 78% { transform: scaleX(.38) scaleY(1.05); } }
-@keyframes drGlowR { 0%, 100% { opacity: 0; } 15%, 70% { opacity: .95; } }
-@keyframes drPuffBig { 0% { opacity: 0; transform: translate(0, 0) scale(.5); } 14% { opacity: .9; } 100% { opacity: 0; transform: translate(calc(var(--dx) * 1.5), calc(var(--dy) * 1.4)) scale(5); } }
-@keyframes drSpark { 0% { opacity: 0; transform: translate(0, 0) scale(1); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.3); } }
-
-/* --- simogatás: dorombol --- */
-.is-pet .d-head { animation: drNuzzle 2.6s ease-in-out; }
-.is-pet .d-lid { animation: drLidPet 2.6s ease-in-out; }
-.is-pet .d-brow { animation: drBrowPet 2.6s ease-in-out; }
-.is-pet .d-smoke .sm1 { animation: drPuffSoft 1.8s .3s ease-out; }
-.is-pet .d-hearts .h1 { animation: drHeart 1.9s .15s ease-out; }
-.is-pet .d-hearts .h2 { animation: drHeart 1.9s .65s ease-out; }
-@keyframes drNuzzle { 0%, 100% { transform: none; } 20%, 78% { transform: translate(-1px, 2px) rotate(-2.4deg); } }
-@keyframes drLidPet { 0%, 100% { transform: translateY(-14px); } 24%, 76% { transform: translateY(8px); } }
-@keyframes drBrowPet { 0%, 100% { transform: none; } 24%, 76% { transform: translateY(1.5px) rotate(3deg); } }
-@keyframes drPuffSoft { 0% { opacity: 0; transform: translate(0, 0) scale(.4); } 20% { opacity: .6; } 100% { opacity: 0; transform: translate(-6px, -18px) scale(2.2); } }
-@keyframes drHeart { 0% { opacity: 0; transform: translateY(8px) scale(.4); } 20% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-24px) scale(1.15); } }
-
-/* --- oldalpillantás a farok felé --- */
-.is-glance .d-look { transform: translate(2.6px, .9px); }
-.is-glance .d-lid { animation: drSide 1.5s ease-in-out; }
-@keyframes drSide { 0%, 100% { transform: translateY(-14px); } 20%, 78% { transform: translateY(-5px) rotate(-6deg); } }
-
-/* --- farok --- */
-.dr-tail .d-tailg { transform-origin: 46px 126px; }
-.is-flick .d-tailg { animation: drFlick 1.05s ease-in-out; }
-.is-slam .d-tailg { animation: drSlam 1.5s ease-in-out; }
-.is-wag .d-tailg { animation: drWag 1.3s ease-in-out; }
-@keyframes drFlick { 0%, 100% { transform: none; } 16% { transform: rotate(-20deg); } 38% { transform: rotate(9deg); } 58% { transform: rotate(-11deg); } 78% { transform: rotate(4deg); } }
-@keyframes drSlam { 0%, 100% { transform: none; } 13% { transform: rotate(-28deg); } 26% { transform: rotate(9deg); } 42% { transform: rotate(-26deg); } 55% { transform: rotate(10deg); } 72% { transform: rotate(-6deg); } 86% { transform: rotate(2deg); } }
-@keyframes drWag { 0%, 100% { transform: none; } 16% { transform: rotate(-9deg); } 36% { transform: rotate(7deg); } 56% { transform: rotate(-6deg); } 76% { transform: rotate(3deg); } }
+/* --- fekvő sárkány (2D tartalék): nyugalmi állapot + játékok (pislogás, bökés, düh, simogatás) --- */
+.dl-svg .d-head { transform-origin: 70px 56px; }
+.dl-svg .d-jaw { transform-origin: 64px 58px; }
+.dl-svg .d-brow { transform-origin: 53px 31px; }
+.dl-svg .d-lid { transform: translateY(-20px); }
+.dl-svg .d-look { transform: translate(var(--ex, 0px), var(--ey, 0px)); transition: transform .16s ease-out; }
+.dl-svg .d-wing { transform-origin: 104px 40px; }
+.dl-svg .d-smoke circle { fill: rgba(222, 226, 236, .85); opacity: 0; }
+.dl-svg .d-sparks circle { fill: #ffb347; opacity: 0; }
+.dl-svg .d-hearts path { fill: #ff7d96; opacity: 0; }
+.dl-svg .sm1 { --dx: -12px; --dy: -14px; } .dl-svg .sm2 { --dx: -20px; --dy: -6px; } .dl-svg .sm3 { --dx: -7px; --dy: -22px; }
+.dl-svg .sp1 { --dx: -26px; --dy: -8px; } .dl-svg .sp2 { --dx: -34px; --dy: 2px; } .dl-svg .sp3 { --dx: -20px; --dy: -16px; }
+.is-blink .dl-svg .d-lid { animation: dlBlink .26s ease-in-out; }
+.is-boop .dl-svg .d-head { animation: dlRecoil 1.2s ease-out; }
+.is-boop .dl-svg .d-brow { animation: dlFrown 2.1s ease-in-out; }
+.is-boop .dl-svg .d-lid { animation: dlLidAngry 2.1s ease-in-out; }
+.is-boop .dl-svg .d-glow { animation: dlGlow 2.1s ease-in-out; }
+.is-boop .dl-svg .d-smoke .sm1 { animation: dlPuff .95s .1s ease-out; }
+.is-boop .dl-svg .d-smoke .sm2 { animation: dlPuff 1.1s .32s ease-out; }
+.is-boop .dl-svg .d-smoke .sm3 { animation: dlPuff 1.2s .55s ease-out; }
+.is-rage .dl-svg .d-head { animation: dlShake .95s ease-in-out; }
+.is-rage .dl-svg .d-jaw { animation: dlJaw 2.6s ease-in-out; }
+.is-rage .dl-svg .d-brow { animation: dlFrown 2.6s ease-in-out; }
+.is-rage .dl-svg .d-lid { animation: dlLidAngry 2.6s ease-in-out; }
+.is-rage .dl-svg .d-glow { animation: dlGlow 2.6s ease-in-out; }
+.is-rage .dl-svg .d-wing { animation: dlWing 2.6s ease-in-out; }
+.is-rage .dl-svg .d-smoke circle { animation: dlPuff 1.3s .1s ease-out; }
+.is-rage .dl-svg .d-sparks .sp1 { animation: dlSpark 1s .12s ease-out; } .is-rage .dl-svg .d-sparks .sp2 { animation: dlSpark 1.1s .26s ease-out; } .is-rage .dl-svg .d-sparks .sp3 { animation: dlSpark .95s .4s ease-out; }
+.is-pet .dl-svg .d-head { animation: dlNuzzle 2.6s ease-in-out; }
+.is-pet .dl-svg .d-lid { animation: dlLidPet 2.6s ease-in-out; }
+.is-pet .dl-svg .d-hearts .h1 { animation: dlHeart 1.9s .15s ease-out; }
+.is-pet .dl-svg .d-hearts .h2 { animation: dlHeart 1.9s .65s ease-out; }
+@keyframes dlBlink { 50% { transform: translateY(0); } }
+@keyframes dlRecoil { 0% { transform: none; } 10% { transform: translate(-4px, 1px) rotate(-1.6deg); } 32% { transform: translate(-1px, 0) rotate(-.4deg); } 100% { transform: none; } }
+@keyframes dlFrown { 0%, 100% { transform: none; } 12%, 76% { transform: translateY(2px) rotate(8deg) scaleY(1.15); } }
+@keyframes dlLidAngry { 0%, 100% { transform: translateY(-20px); } 12%, 76% { transform: translateY(-3px) rotate(14deg); } }
+@keyframes dlGlow { 0%, 100% { opacity: 0; } 20%, 70% { opacity: .6; } }
+@keyframes dlShake { 0%, 100% { transform: none; } 10% { transform: translate(-4px, 1px) rotate(-3deg); } 24% { transform: translate(2px, 0) rotate(2deg); } 38% { transform: translate(-3px, 1px) rotate(-2.5deg); } 52% { transform: translate(1.5px, 0) rotate(1.2deg); } 70% { transform: translate(-.5px, 0); } }
+@keyframes dlJaw { 0%, 100% { transform: none; } 10%, 74% { transform: rotate(-16deg); } }
+@keyframes dlWing { 0%, 100% { transform: none; } 14%, 70% { transform: translateY(-6px) rotate(-8deg) scale(1.1); } }
+@keyframes dlPuff { 0% { opacity: 0; transform: translate(0, 0) scale(.4); } 16% { opacity: .9; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(3.4); } }
+@keyframes dlSpark { 0% { opacity: 0; transform: translate(0, 0) scale(1); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.3); } }
+@keyframes dlNuzzle { 0%, 100% { transform: none; } 20%, 78% { transform: translate(1px, 2px) rotate(2.4deg); } }
+@keyframes dlLidPet { 0%, 100% { transform: translateY(-20px); } 24%, 76% { transform: translateY(0); } }
+@keyframes dlHeart { 0% { opacity: 0; transform: translateY(8px) scale(.4); } 20% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-22px) scale(1.15); } }
 
 /* --- díszek ablaka --- */
 .dc-list { display: flex; flex-direction: column; gap: 12px; }
