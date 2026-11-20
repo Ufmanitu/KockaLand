@@ -6605,7 +6605,7 @@ function nkZoomOpen(it, A) {
   const tip = document.createElement('div'); tip.className = 'nkz-tip'; tip.hidden = true; stage.appendChild(tip);
   const x = document.createElement('button'); x.type = 'button'; x.className = 'nkz-x'; x.setAttribute('aria-label', 'Bezárás'); x.textContent = '×';
   const bar = document.createElement('div'); bar.className = 'nkz-bar';
-  const hint = document.createElement('div'); hint.className = 'nkz-hint'; hint.textContent = 'Mozgasd az egeret: körbenézhetsz · kattints a tárgyakra · Esc: vissza a polcra';
+  const hint = document.createElement('div'); hint.className = 'nkz-hint'; hint.textContent = 'Mozgasd az egeret (vagy húzd az ujjad): körbenézhetsz · kattints a tárgyakra · Esc: vissza a polcra';
   el.appendChild(bg); el.appendChild(stage); el.appendChild(bar); el.appendChild(hint); el.appendChild(x); document.body.appendChild(el); document.documentElement.classList.add('nkz-open');
 
   const Z = { ctl: ctl, r: r, el: el, p: 0, pt: 1, t: 0, lx: 0, ly: 0, tx: 0, ty: 0, closing: false, loop: null }; NKZ.o = Z;
