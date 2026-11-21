@@ -45,7 +45,7 @@ const { chromium } = require('playwright'); const path = require('path');
   await clickAt(page, '.dc-kis-sarkany', .6, .4); await page.waitForTimeout(110);
   ok(await has(page, '.dc-kis-sarkany', 'is-flap'), 'repülő sárkány: második kattintás is-flap');
   await page.waitForTimeout(1800);
-  await clickAt(page, '.dc-kis-sarkany', .14, .7); await page.waitForTimeout(110);
+  await clickAt(page, '.dc-kis-sarkany', .43, .73); await page.waitForTimeout(110);
   ok(await has(page, '.dc-kis-sarkany', 'is-puff'), 'repülő sárkány: a füstoszlopra kattintva is-puff');
   await page.waitForTimeout(1700);
 

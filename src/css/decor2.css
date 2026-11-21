@@ -10,7 +10,7 @@
 .gh-svg .d-arml { transform-origin: 25px 68px; }
 .gh-svg .d-armr { transform-origin: 95px 68px; }
 .gh-svg .d-bookg { transform-origin: 60px 110px; }
-.gh-svg .d-pg { transform-origin: 60px 108px; }
+.gh-svg .d-pg { transform-origin: 60px 90px; }
 .gh-svg .d-excl { transform-origin: 60px -2px; }
 .is-blink .gh-svg .d-lid { animation: ghBlink .3s ease-in-out; }
 @keyframes ghBlink { 0%, 100% { transform: scaleY(0); } 45%, 60% { transform: scaleY(1); } }
@@ -71,7 +71,9 @@
 /* lapoz */
 .is-turn .d-pg { animation: ghTurn 1.5s ease-in-out; }
 .is-turn .d-look { animation: ghRead 1.5s ease-in-out; }
-@keyframes ghTurn { 0% { opacity: 0; transform: scaleX(1); } 6% { opacity: 1; } 50% { opacity: 1; transform: scaleX(0) translateY(-3px); } 90% { opacity: 1; transform: scaleX(-1); } 100% { opacity: 0; transform: scaleX(-1); } }
+@keyframes ghTurn { 0% { opacity: 0; transform: translateY(4px); } 18%, 70% { opacity: 1; transform: translateY(-6px) rotate(-6deg); } 100% { opacity: 0; transform: translateY(4px); } }
+@keyframes ghScan { 0% { transform: translateX(-1.8px); } 50% { transform: translateX(1.8px); } 100% { transform: translateX(0); } }
+.is-turn .gh-svg .d-eyes { animation: ghScan 1.5s ease-in-out; }
 @keyframes ghRead { 0%, 100% { transform: translate(var(--ex, 0px), var(--ey, 0px)); } 14% { transform: translate(-1.8px, 2.8px); } 52%, 84% { transform: translate(1.8px, 2.8px); } }
 
 /* --- gyertyás lámpás --- */
@@ -151,31 +153,36 @@
 @keyframes glTwink { 0%, 100% { transform: none; opacity: 1; } 40% { transform: scale(1.55) rotate(20deg); } 70% { transform: scale(.8); opacity: .75; } }
 @keyframes glWin { 0%, 100% { opacity: 1; } 20% { opacity: .45; } 40% { opacity: 1; } 60% { opacity: .55; } 80% { opacity: 1; } }
 
-/* --- repülő sárkány + füstoszlop (2D tartalék) --- */
-.fd-svg .d-wing { transform-box: fill-box; transform-origin: 8% 85%; }
-.fd-svg .d-flame { transform-box: fill-box; transform-origin: 100% 40%; }
-.fd-svg .d-head { transform-box: fill-box; transform-origin: 90% 80%; }
-.fd-svg .d-pcap, .fd-svg .d-pillar { transform-box: fill-box; transform-origin: 50% 100%; }
-.fd-svg .d-body { transform-box: fill-box; transform-origin: 50% 50%; }
+/* --- repülő sárkány + füstoszlop (2D kép; a rétegek a rajz csoportjai) --- */
+.fd-svg .fd-wingF { transform-box: view-box; transform-origin: 62px 171px; }
+.fd-svg .fd-wingB { transform-box: view-box; transform-origin: 64px 169px; }
+.fd-svg .d-flame { transform-box: view-box; transform-origin: 92px 182px; }
+.fd-svg .d-pillar { transform-box: view-box; transform-origin: 118px 188px; }
+.fd-svg .d-pcap { transform-box: view-box; transform-origin: 230px 188px; }
+.fd-svg .d-body, .fd-svg .d-eyeg { transform-box: view-box; transform-origin: 50px 188px; }
+.fd-svg .d-wisp { transform-box: view-box; }
 .fd-svg .d-lid { transform-box: fill-box; transform-origin: 50% 0; transform: scaleY(0); }
 .fd-svg .d-look { transform: translate(var(--ex, 0px), var(--ey, 0px)); transition: transform .16s ease-out; }
-.fd-svg .d-puffs circle { fill: #e9ecf6; stroke: rgba(110, 125, 175, .5); stroke-width: .8; opacity: 0; transform-box: fill-box; transform-origin: center; }
-.fd-svg .pf1 { --dx: -4px; --dy: -22px; } .fd-svg .pf2 { --dx: 10px; --dy: -26px; } .fd-svg .pf3 { --dx: -14px; --dy: -16px; }
+.fd-svg .d-puffs circle { fill: #fff2d8; stroke: rgba(190, 168, 120, .6); stroke-width: .8; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.fd-svg .pf1 { --dx: -4px; --dy: -26px; } .fd-svg .pf2 { --dx: 12px; --dy: -30px; } .fd-svg .pf3 { --dx: -14px; --dy: -18px; }
 .is-blink .fd-svg .d-lid { animation: ghBlink .3s ease-in-out; }
 .is-blast .fd-svg .d-flame { animation: fdFlame 1.7s ease-in-out; }
-.is-blast .fd-svg .d-head { animation: fdShake 1.7s ease-in-out; }
-.is-blast .fd-svg .d-pcap { animation: fdSwell 1.7s ease-in-out; }
-.is-blast .fd-svg .d-puffs circle { animation: fdPuff 1.1s .35s ease-out; }
-.is-blast .fd-svg .pf2 { animation-delay: .5s; } .is-blast .fd-svg .pf3 { animation-delay: .65s; }
-.is-flap .fd-svg .d-wing { animation: fdFlap 1.6s ease-in-out; }
+.is-blast .fd-svg .d-body, .is-blast .fd-svg .fd-wingF, .is-blast .fd-svg .fd-wingB { animation: fdShake 1.7s ease-in-out; }
+.is-blast .fd-svg .d-pillar { animation: fdSwell 1.7s ease-in-out; }
+.is-blast .fd-svg .d-pcap { animation: fdWob 1.6s ease-out; }
+.is-blast .fd-svg .d-puffs circle { animation: fdPuff 1.2s .3s ease-out; }
+.is-blast .fd-svg .pf2 { animation-delay: .45s; } .is-blast .fd-svg .pf3 { animation-delay: .6s; }
+.is-flap .fd-svg .fd-wingF { animation: fdFlap 1.6s ease-in-out; }
+.is-flap .fd-svg .fd-wingB { animation: fdFlap 1.6s .06s ease-in-out; }
 .is-flap .fd-svg .d-body { animation: fdBob 1.6s ease-in-out; }
-.is-puff .fd-svg .d-pillar, .is-puff .fd-svg .d-pcap { animation: fdSquash 1.5s ease-in-out; }
+.is-puff .fd-svg .d-pillar { animation: fdSquash 1.5s ease-in-out; }
 .is-puff .fd-svg .d-puffs circle { animation: fdPuff 1.2s ease-out; }
 .is-puff .fd-svg .pf2 { animation-delay: .15s; } .is-puff .fd-svg .pf3 { animation-delay: .3s; }
-@keyframes fdFlame { 0%, 100% { transform: none; } 12%, 62% { transform: scale(1.35, 1.25); } 24% { transform: scale(1.2, 1.4); } 40% { transform: scale(1.4, 1.15); } }
+@keyframes fdFlame { 0%, 100% { transform: none; } 12%, 62% { transform: scale(1.6, 1.35); } 24% { transform: scale(1.45, 1.5); } 40% { transform: scale(1.7, 1.25); } }
 @keyframes fdShake { 0%, 100% { transform: none; } 10% { transform: translate(-1.5px, 1px) rotate(-3deg); } 22% { transform: translate(1px, 0) rotate(2deg); } 36% { transform: translate(-1px, .5px) rotate(-2deg); } 52% { transform: translate(.5px, 0); } }
 @keyframes fdSwell { 0%, 100% { transform: none; } 20%, 60% { transform: scale(1.18, 1.12); } }
-@keyframes fdFlap { 0%, 100% { transform: none; } 15% { transform: rotate(-18deg) scaleY(.78); } 35% { transform: rotate(8deg) scaleY(1.06); } 55% { transform: rotate(-16deg) scaleY(.8); } 75% { transform: rotate(5deg); } }
+@keyframes fdFlap { 0%, 100% { transform: none; } 15% { transform: rotate(24deg); } 35% { transform: rotate(-10deg); } 55% { transform: rotate(22deg); } 75% { transform: rotate(-6deg); } }
+@keyframes fdWob { 0%, 100% { transform: none; } 12% { transform: rotate(.9deg); } 28% { transform: rotate(-.7deg); } 44% { transform: rotate(.5deg); } 62% { transform: rotate(-.3deg); } }
 @keyframes fdBob { 0%, 100% { transform: none; } 15%, 55% { transform: translateY(-2px); } 35%, 75% { transform: translateY(1px); } }
 @keyframes fdSquash { 0%, 100% { transform: none; } 15% { transform: scale(1.1, .92); } 30% { transform: scale(.94, 1.07); } 50% { transform: scale(1.05, .97); } 70% { transform: none; } }
 @keyframes fdPuff { 0% { opacity: 0; transform: translate(0, 0) scale(.4); } 20% { opacity: .95; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(2.4); } }

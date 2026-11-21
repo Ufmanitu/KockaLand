@@ -1,13 +1,13 @@
-/* ===== 3D díszek: fekvő sárkány a könyvhalmon (sarkany-fekvo) + repülő, füstöt/tüzet okádó sárkány (kis-sarkany) =====
-   Közös stílus: puha, „gyanta-figura” hatás, teal-zöld test krém hassal, narancs tüskék/szarvak, korall szárnyhártya, nagy, fényes szem.
+/* ===== 3D dísz: fekvő sárkány a könyvhalmon (sarkany-fekvo). A repülő sárkány (kis-sarkany) 2D kép: lib3d-flyimg.js =====
+   Stílus: puha, „gyanta-figura” hatás; fekete hát, vörös oldal és has, fekete szarvak/tüskék, sötétvörös szárnyhártya, borostyán szem.
    Modell-egységek: a dísz alja a polcon, X jobbra, Y fel, Z a néző felé; kRoot(it, 100) skáláz. */
 'use strict';
 
 const dgC = {};
 function dgColInit() {
   if (dgC.back) return;
-  Object.assign(dgC, { back: lc('#0f5c55'), body: lc('#1f8a76'), belly: lc('#f4dc94'), bellyD: lc('#e2b95a'), mem0: lc('#b02a2e'), mem1: lc('#ef6048'), jawIn: lc('#8f2b3a'),
-    fBack: lc('#611109'), fBody: lc('#b02a17'), fBelly: lc('#ffcc84'), fMem0: lc('#6e1a4a'), fMem1: lc('#d6407c') });
+  Object.assign(dgC, { back: lc('#0d0607'), body: lc('#8c1016'), belly: lc('#d03e2e'), bellyD: lc('#e5683f'), mem0: lc('#1d0409'), mem1: lc('#a5161f'), jawIn: lc('#6a1424'),
+    });
 }
 const dgMix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
 const dgSm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -15,7 +15,7 @@ const dgSm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))
 function dgNormY(f, x, y, z) { const e = 0.9; const gx = f(x + e, y, z) - f(x - e, y, z), gy = f(x, y + e, z) - f(x, y - e, z), gz = f(x, y, z + e) - f(x, y, z - e), l = Math.hypot(gx, gy, gz) || 1; return [gx / l, gy / l, gz / l]; }
 function dgShade(f, cs) {   // cs = {back, body, belly, bellyD}; a fv. (x,y,z)→[r,g,b]
   return (x, y, z) => {
-    const n = dgNormY(f, x, y, z), up = dgSm(0.05, 0.85, n[1]), dn = dgSm(0.12, 0.62, -n[1]);
+    const n = dgNormY(f, x, y, z), up = dgSm(-0.2, 0.5, n[1]), dn = dgSm(0.12, 0.62, -n[1]);
     let c = dgMix(cs.body, cs.back, up);
     const plate = 0.5 + 0.5 * Math.sin(x * 1.05 + z * 0.4);
     c = dgMix(c, dgMix(cs.belly, cs.bellyD, dgSm(0.55, 0.95, plate) * 0.55), dn);
@@ -105,7 +105,7 @@ function dgLieBody(x, y, z) {
   d = smin(d, sdEll(x + 82, y - 38, z - 31, 9.5, 5.2, 10), 4);           // bal mancs
   return d;
 }
-const DG_TAIL = [[66, 49, -6, 11.5], [88, 44, -2, 9.8], [98, 31, 4, 8.2], [100, 17, 12, 6.8], [93, 7, 22, 5.4], [79, 5.4, 32, 4.4], [65, 5.8, 35, 3.6], [55, 6.8, 33, 3.2]];
+const DG_TAIL = [[66, 49, -6, 11.5], [84, 46, -3.5, 9.4], [96, 43.5, 3, 7.6], [99, 41.2, 15, 6.1], [92, 39.8, 26, 4.9], [79, 38.8, 32, 4], [66, 38.2, 33, 3.4], [56, 38, 31, 3.1]];
 function dgLieTail(x, y, z) { return dgChain(x, y, z, DG_TAIL, 4); }
 function dgLieBodyGeo() { dgColInit(); return drGeoOnce('dgLieBody', () => sdfGeo(dgLieBody, [-94, 22, -30], [78, 72, 52], 1.7, dgShade(dgLieBody, { back: dgC.back, body: dgC.body, belly: dgC.belly, bellyD: dgC.bellyD }))); }
 function dgLieTailGeo() { dgColInit(); const P = DG_TAIL[0], f = (x, y, z) => dgLieTail(x + P[0], y + P[1], z + P[2]); return drGeoOnce('dgLieTail', () => sdfGeo(f, [-14, -50, -18], [44, 18, 46], 1.5, dgShade(f, { back: dgC.back, body: dgC.body, belly: dgC.belly, bellyD: dgC.bellyD }))); }
@@ -130,17 +130,17 @@ function dgMats() {
   const T = THREE;
   const M = {
     body: l3Skin({ color: '#ffffff', kind: 'scale', cell: 4.6, amt: 0.34, rough: 0.5, env: 0.6, vcol: true, clear: 0.4, clearR: 0.42 }),
-    skin: l3Skin({ color: '#1f8a76', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.42 }),
-    horn: kVinyl('#f3c681', { roughness: 0.36 }), spike: kVinyl('#f08b4a', { roughness: 0.4 }), claw: kVinyl('#f7efd9', { roughness: 0.35 }), tooth: kVinyl('#fff7e6', { roughness: 0.3 }),
+    skin: l3Skin({ color: '#8c1016', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.42 }),
+    horn: kVinyl('#2a1a1d', { roughness: 0.3, clearcoat: 0.6 }), spike: kVinyl('#17090b', { roughness: 0.32, clearcoat: 0.5 }), claw: kVinyl('#efe3cc', { roughness: 0.35 }), tooth: kVinyl('#fff4dc', { roughness: 0.3 }),
     iris: new T.MeshStandardMaterial({ color: l3Col('#ffb722'), roughness: 0.22, emissive: l3Col('#ff9a10'), emissiveIntensity: 0.32 }), rim: new T.MeshStandardMaterial({ color: l3Col('#7b3a10'), roughness: 0.5 }),
-    pupil: new T.MeshBasicMaterial({ color: 0x120a06 }), glint: new T.MeshBasicMaterial({ color: 0xffffff }), line: new T.MeshBasicMaterial({ color: 0x0f3a33 }),
-    lid: l3Skin({ color: '#2f9c85', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6 }),
+    pupil: new T.MeshBasicMaterial({ color: 0x120a06 }), glint: new T.MeshBasicMaterial({ color: 0xffffff }), line: new T.MeshBasicMaterial({ color: 0x1a0507 }),
+    lid: l3Skin({ color: '#5e0d12', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6 }),
     mem: new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.55, side: T.DoubleSide, envMapIntensity: 0.6 }),
-    bone: kVinyl('#2a8f7d', { roughness: 0.45 }),
+    bone: kVinyl('#1a0c0e', { roughness: 0.4 }),
     nos: new T.MeshBasicMaterial({ color: 0x0c1a17 }), mouth: new T.MeshStandardMaterial({ color: l3Col('#8f2b3a'), roughness: 0.6 }), tongue: new T.MeshStandardMaterial({ color: l3Col('#ef7f95'), roughness: 0.5 }),
-    brow: kVinyl('#f08b4a', { roughness: 0.4 }),
+    brow: kVinyl('#17090b', { roughness: 0.35 }),
     pages: new T.MeshStandardMaterial({ map: dgPagesTex(), roughness: 0.9 }), gold: kVinyl('#d9ae4e', { roughness: 0.3, metalness: 0.4 }),
-    cov: [l3Skin({ color: '#a8403d', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 }), l3Skin({ color: '#33618f', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 }), l3Skin({ color: '#c79d45', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 })]
+    cov: [l3Skin({ color: '#2e4a78', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 }), l3Skin({ color: '#2f6b52', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 }), l3Skin({ color: '#c79d45', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 })]
   };
   return M;
 }
@@ -150,7 +150,7 @@ function dgLieBuild(it) {
   const M = dgMats();
   const P = (m, part) => { m.userData.part = part; parts.push(m); return m; };
   // könyvhalom
-  dgBook(root, M, 124, 13, 80, 0, 4, 6.5, 0, 0.0); dgBook(root, M, 106, 11, 70, 1, -4, 19.5, 2, 0.07); dgBook(root, M, 92, 10, 62, 2, 3, 30, -2, -0.06);
+  dgBook(root, M, 212, 13, 112, 0, 2, 6.5, 10, 0.0); dgBook(root, M, 206, 11, 104, 1, 0, 19.5, 9, 0.03); dgBook(root, M, 204, 10, 98, 2, 6, 30, 8, -0.025);
   const dg = new T.Group(); root.add(dg);   // a sárkány (lélegzik)
   const body = new T.Mesh(dgLieBodyGeo(), M.body); body.castShadow = true; body.receiveShadow = true; dg.add(P(body, 'body'));
   // farok (a csípőnél forog)
@@ -158,7 +158,7 @@ function dgLieBuild(it) {
   const tail = new T.Mesh(dgLieTailGeo(), M.body); tail.castShadow = true; tail.receiveShadow = true; tailG.add(P(tail, 'tail'));
   const tl = []; const ts = (t, rr) => { const q = t * (DG_TAIL.length - 1), i = Math.min(DG_TAIL.length - 2, Math.floor(q)), f = q - i, a = DG_TAIL[i], b = DG_TAIL[i + 1]; return [a[0] + (b[0] - a[0]) * f - TP[0], a[1] + (b[1] - a[1]) * f - TP[1], a[2] + (b[2] - a[2]) * f - TP[2], a[3] + (b[3] - a[3]) * f]; };
   // farok-hegy: levél alakú lapát
-  const e = DG_TAIL[DG_TAIL.length - 1], tipG = new T.Group(); tipG.position.set(e[0] - TP[0] - 2, e[1] - TP[1] + 0.4, e[2] - TP[2] - 0.5); tailG.add(tipG);
+  const e = DG_TAIL[DG_TAIL.length - 1], tipG = new T.Group(); tipG.position.set(e[0] - TP[0] - 2, e[1] - TP[1] - 0.9, e[2] - TP[2] - 0.5); tailG.add(tipG);
   const tipM = new T.Mesh(new T.SphereGeometry(1, 16, 10), M.spike); tipM.scale.set(9, 1.8, 5); tipM.rotation.y = 0.1; tipM.position.set(-6, 0, 0); tipM.castShadow = true; tipG.add(P(tipM, 'tail'));
   // hátgerinc: narancs tüskék a hát felszínén
   const spine = [[-50, 20], [-42, 14], [-34, 9], [-25, 5], [-14, 0], [-2, -2], [10, -3], [22, -4], [34, -4], [46, -4]];
@@ -257,161 +257,5 @@ registerDecor3({
     if (part === 'nose') { st.n = now - st.last < 9000 ? st.n + 1 : 1; st.last = now; if (st.n >= 3) { c.rage(); st.n = 0; } else c.boop(); return; }
     st.n = 0;
     if (part === 'tail') c.wag(); else if (part === 'wing') c.flap(); else if (part === 'body' || part === 'book') c.yawn(); else c.pet();
-  }
-});
-
-
-/* =====================================================================================================================
-   Repülő sárkány (kis-sarkany): pillanatkép – a sárkány épp egy nagy adag tüzet/füstöt fúj a polc szélén álló könyvekre,
-   a füstoszlop nekitámaszkodik a könyveknek és „tartja” őket. Egységek: vh = 110 (modell-magasság), x ≈ −70 … +66; a füstoszlop a BAL szélen áll (a könyvek felől).
-   ===================================================================================================================== */
-const FL_BODY = [[-27, 90, 4, 7.4], [-19, 83, 3.5, 9.2], [-10, 74, 3, 13], [2, 68, 1, 15], [14, 62, 0, 13], [25, 54, 1, 10], [35, 47, 2, 7.2], [44, 42, 3, 5], [52, 37, 1, 3.6], [57, 30, -2, 2.6]];
-const FL_DX = 18, FL_DY = 16;
-function flBody(x, y, z) {
-  let d = dgChain(x, y, z, FL_BODY, 6);
-  d = smin(d, sdEll(x - 15, y - 56, z - 7, 11, 9.5, 8), 5);                   // comb
-  d = smin(d, sdCone(x, y, z, 14, 54, 7, 19, 43, 9, 4.8, 3.6), 3);            // hátsó láb: lábszár
-  d = smin(d, sdEll(x - 23, y - 41, z - 9.5, 7, 3.2, 4.6), 2.6);              // hátsó láb: talp
-  d = smin(d, sdCone(x, y, z, 9, 52, -7, 12, 42, -8, 4.4, 3.4), 3);           // túlsó hátsó láb
-  d = smin(d, sdEll(x - 16, y - 40, z + 8.5, 6.4, 3, 4.2), 2.6);
-  d = smin(d, sdCone(x, y, z, -7, 64, 9, -17, 55, 11, 5.4, 3.9), 4);          // mellső láb
-  d = smin(d, sdEll(x + 20, y - 53, z - 11.5, 5.6, 3.1, 4.6), 2.4);           // mancs
-  d = smin(d, sdCone(x, y, z, -2, 62, -8, -10, 54, -10, 4.4, 3.4), 3);        // túlsó mellső láb
-  d = smin(d, sdEll(x + 13, y - 53, z + 10.5, 5, 2.9, 4.2), 2.4);
-  return d;
-}
-function flBodyGeo() {
-  dgColInit(); const pal = { back: dgC.fBack, body: dgC.fBody, belly: dgC.fBelly, bellyD: lc('#f4b873') };
-  return drGeoOnce('flBody', () => sdfGeo(flBody, [-40, 20, -22], [72, 104, 30], 1.6, dgShade(flBody, pal)));
-}
-function flHeadGeo() { dgColInit(); const pal = { back: dgC.fBack, body: dgC.fBody, belly: dgC.fBelly, bellyD: lc('#f4b873') }; return drGeoOnce('flHead', () => sdfGeo(dgHeadF, [-26, -17, -20], [26, 20, 28], 1.2, dgShade(dgHeadF, pal))); }
-function flJawGeo() { dgColInit(); const pal = { back: dgC.fBody, body: dgC.fBelly, belly: dgC.fBelly, bellyD: lc('#f4b873') }; return drGeoOnce('flJaw', () => sdfGeo(dgJawF, [-12, -7, -4], [12, 7, 24], 1.0, dgShade(dgJawF, pal))); }
-
-/* felhő-bázis + füstoszlop (egy SDF): bal oldalon a magas oszlop (a könyvekhez támaszkodik), jobbra alacsony felhő-ágy, amibe a farok belelóg */
-const FL_CL = [[-46, 9, 5, 15], [-36, 12, 9, 12.5], [-56, 14, 8, 11], [-44, 24, 5, 13.5], [-52, 33, 8, 11.5], [-42, 38, 3, 11], [-50, 47, 6, 11], [-43, 56, 3, 9.5], [-52, 60, 6, 7.5], [-60, 62, 8, 9.5], [-62, 50, 8, 11], [-61, 73, 1, 11.5], [-68, 79, 1, 9], [-55, 82, 1, 9.5], [-63, 88, 2, 7], [-71, 70, 2, 8], [-40, 28, 12, 10],
-  [-24, 8, 7, 12], [-8, 9, 8, 13], [8, 8, 5, 12], [24, 9, 4, 12], [38, 10, 2, 10.5], [50, 11, 0, 8.5], [60, 9, -3, 6.5], [-30, 16, 2, 9], [4, 15, 2, 8.5], [30, 17, 0, 7.5]];
-function flCloud(x, y, z) {
-  let d = 1e9; for (let i = 0; i < FL_CL.length; i++) { const c = FL_CL[i]; d = Math.min(d, 0) === d && i === 0 ? sdSph(x - c[0], y - c[1], z - c[2], c[3]) : smin(d, sdSph(x - c[0], y - c[1], z - c[2], c[3]), 6.5); }
-  d -= 1.25 * Math.abs(Math.sin(x * 0.33 + 1) * Math.sin(y * 0.38) * Math.sin(z * 0.31 + 2));   // gomolyag-dudorok
-  return smax(d, -y + 1.5, 1.5);   // alul levágva (a polcon fekszik)
-}
-function flCloudGeo() {
-  const c0 = lc('#c3cce6'), c1 = lc('#ffffff'), cs = lc('#d9936a'), cd = lc('#4c4650');
-  return drGeoOnce('flCloud', () => sdfGeo(flCloud, [-80, 0, -18], [72, 96, 30], 2.0, (x, y, z) => {
-    const n = dgNormY(flCloud, x, y, z), up = dgSm(-0.2, 0.9, n[1]);
-    let c = dgMix(c0, c1, up * 0.9 + 0.1);
-    if (x < -30) { const k = dgSm(30, 66, y) * (0.7 + 0.25 * Math.sin(x * 0.7 + z)); c = dgMix(c, dgMix(cs, cd, dgSm(50, 74, y)), k); }   // a láng körül sötétedik/melegszik
-    return c;
-  }));
-}
-function flWingSpec() { return { R: [0, 0, 0], E: [13, 22, 0], Wr: [36, 31, 0], F: [[60, 29, 0], [71, 9, 0], [68, -13, 0], [54, -25, 0]], hip: [17, -15, 0] }; }
-function flBuildWing(parent, M, near) {
-  const T = THREE, sp = flWingSpec(), g = new T.Group(), R = sp.R, E = sp.E, Wr = sp.Wr, F = sp.F;
-  const edge = [Wr, [(Wr[0] + F[0][0]) / 2, (Wr[1] + F[0][1]) / 2 - 5, 0.8], F[0], [(F[0][0] + F[1][0]) / 2 - 9, (F[0][1] + F[1][1]) / 2 - 3, 1.2], F[1], [(F[1][0] + F[2][0]) / 2 - 10, (F[1][1] + F[2][1]) / 2, 1.6], F[2], [(F[2][0] + F[3][0]) / 2 - 8, (F[2][1] + F[3][1]) / 2 + 3, 2], F[3], [36, -22, 2], sp.hip];
-  const mm = dgFan(R, edge, dgMix(dgC.fMem0, dgC.fBack, 0.35), dgC.fMem1, M.mem, g); mm.userData.part = 'wing'; mm.position.z = -1.8;
-  dgBone(R, E, 2.6, 2.1, M.bone, g, [0, 2, 0]); dgBone(E, Wr, 2.1, 1.6, M.bone, g, [0, 3, 0]); F.forEach((f, i) => dgBone(Wr, f, 1.5, 0.5, M.bone, g, [0, i ? -2 : 3, 0]));
-  const cl = new T.Mesh(new T.ConeGeometry(1.5, 5, 6), M.claw); cl.position.set(Wr[0] + 0.5, Wr[1] + 3, 0); g.add(cl);
-  parent.add(g); return { g: g, mem: mm };
-}
-function flBuild(it) {
-  dgColInit(); const T = THREE, K = kRoot(it, 125), root = K.r, parts = [];
-  const M = dgMats();
-  M.mem2 = M.mem.clone(); M.bone2 = kVinyl('#5e1620', { roughness: 0.45 }); M.bone = kVinyl('#7a1f2a', { roughness: 0.45 });
-  M.skin = l3Skin({ color: '#e2573c', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.42 });
-  M.spike = kVinyl('#ffd98a', { roughness: 0.4 });
-  M.lid = l3Skin({ color: '#d84b36', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6 });
-  M.cloud = new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.96, emissive: new T.Color(0xdfe8ff), emissiveIntensity: 0.04 }); M.cloud.color.setRGB(0.52, 0.54, 0.6);
-  M.flameO = new T.MeshBasicMaterial({ color: 0xe8280a, transparent: true, opacity: 0.62, depthWrite: false, toneMapped: false });
-  M.flameM = new T.MeshBasicMaterial({ color: 0xff8a12, transparent: true, opacity: 0.85, depthWrite: false, toneMapped: false });
-  M.flameI = new T.MeshBasicMaterial({ color: 0xffd23a, transparent: true, opacity: 1, depthWrite: false, toneMapped: false });
-  const P = (m, part) => { m.userData.part = part; parts.push(m); return m; };
-  // felhő-bázis + füstoszlop
-  const cloud = new T.Mesh(flCloudGeo(), M.cloud); cloud.castShadow = true; cloud.receiveShadow = true; root.add(P(cloud, 'cloud'));
-  // a sárkány (lebeg: a csoport enyhén billen)
-  const dg = new T.Group(); dg.position.set(FL_DX, FL_DY, 0); root.add(dg);
-  const body = new T.Mesh(flBodyGeo(), M.body); body.castShadow = true; body.receiveShadow = true; dg.add(P(body, 'body'));
-  // hátgerinc + farok-lapát
-  const spine = FL_BODY.slice(1, 9).map(b => b);
-  for (let i = 0; i < 12; i++) {
-    const q = i / 11, k = q * (FL_BODY.length - 3), j = Math.min(FL_BODY.length - 2, Math.floor(k)), f = k - j, a = FL_BODY[j + 1], b = FL_BODY[j + 2] || a;
-    const x = a[0] + (b[0] - a[0]) * f, z = a[2] + (b[2] - a[2]) * f, r = dgTop(flBody, x, z, 110, 20); if (!r) continue;
-    const h = 6.2 - i * 0.28, cm = new T.Mesh(new T.ConeGeometry(Math.max(1.2, 3.1 - i * 0.14), Math.max(2, h), 6), M.spike); cm.position.set(r.p[0], r.p[1] + h * 0.3, r.p[2]); dgOrient(cm, [r.n[0] * 0.5, r.n[1] + 0.3, r.n[2] * 0.5]); cm.castShadow = true; dg.add(cm);
-  }
-  const TL = FL_BODY[FL_BODY.length - 1], tip = new T.Mesh(new T.SphereGeometry(1, 16, 10), M.spike); tip.scale.set(8.5, 1.8, 5); tip.position.set(TL[0] + 2.5, TL[1] - 3.2, TL[2]); tip.rotation.z = -0.9; tip.castShadow = true; dg.add(P(tip, 'tail'));
-  // karmok
-  const claw = (px, py, pz, sx, sz, ry, rz) => { const g = new T.Group(); g.position.set(px, py, pz); g.rotation.set(0, ry, rz || 0); const t = new T.Mesh(new T.SphereGeometry(1, 10, 8), M.skin); t.scale.set(sx, 2.2, sz); t.castShadow = true; g.add(t); const c = new T.Mesh(new T.ConeGeometry(1, 3.2, 6), M.claw); c.rotation.x = Math.PI / 2 + 0.2; c.position.set(0, -0.4, sz + 1); g.add(c); dg.add(g); };
-  [-1, 0, 1].forEach(k => { claw(26 - Math.abs(k) * 0.5, 40.5, 9.5 + k * 3.2, 4.2, 2.1, 0, 0); claw(19, 39.5, -8.5 + k * 2.8, 3.8, 2, 0, 0); claw(-17 - Math.abs(k) * 0.6, 51.5, 12 + k * 2.6, 3.2, 2, 0, 0.1); });
-  // szárnyak: közel (nagy, elöl) + túlsó (kisebb, hátrébb, kicsit följebb) – a váll körül forgathatók
-  const SH = [-1, 77, 9], shN = new T.Group(); shN.position.set(SH[0], SH[1], SH[2]); dg.add(shN); const wn = flBuildWing(shN, M, true);
-  const shF = new T.Group(); shF.position.set(-6, 79, -10); dg.add(shF);
-  const mf = flBuildWing(shF, { mem: M.mem2, bone: M.bone2, claw: M.claw }, false); shF.scale.set(0.9, 0.9, 1); shF.rotation.z = 0.42; shN.rotation.z = -0.1; shN.scale.set(0.88, 0.88, 1);
-  M.mem2.color.setRGB(0.78, 0.7, 0.78);
-  // fej (a láng felé fordul: a pofa balra-le néz)
-  const HP = [-19, 91, 6], hg = new T.Group(); hg.position.set(HP[0], HP[1], HP[2]); dg.add(hg); const head = new T.Group(); head.scale.setScalar(1.2); hg.add(head);
-  const hm = new T.Mesh(flHeadGeo(), M.body); hm.castShadow = true; hm.receiveShadow = true; head.add(P(hm, 'head'));
-  const jaw = new T.Group(); jaw.position.set(0, -6.8, 2); head.add(jaw);
-  const jm = new T.Mesh(flJawGeo(), M.body); jm.castShadow = true; jaw.add(P(jm, 'head'));
-  const mo = new T.Mesh(new T.SphereGeometry(1, 14, 8), M.mouth); mo.scale.set(6.6, 1.2, 9); mo.position.set(0, 3.4, 11); jaw.add(mo);
-  const tg = new T.Mesh(new T.SphereGeometry(1, 12, 8), M.tongue); tg.scale.set(3.6, 1.3, 6); tg.position.set(0, 3.2, 12); jaw.add(tg);
-  [-1, 1].forEach(sx => { const t = new T.Mesh(new T.ConeGeometry(0.9, 2.8, 5), M.tooth); t.position.set(sx * 4.6, 2.6, 19); t.rotation.x = Math.PI; jaw.add(t); const u = new T.Mesh(new T.ConeGeometry(1, 3.4, 5), M.tooth); u.position.set(sx * 4.4, -9.6, 18.5); u.rotation.x = Math.PI; head.add(u); });
-  [-1, 1].forEach(sx => { const n = new T.Mesh(new T.SphereGeometry(1, 8, 6), M.nos); n.scale.set(1.2, 0.8, 0.7); n.position.set(sx * 3.9, 1.6, 26.4); head.add(n); });
-  const eyes = [-1, 1].map(sx => dgEye(head, sx * 9.6, 4.2, 9.8, 6.1, M));
-  const brows = [-1, 1].map(sx => { const b = new T.Mesh(new T.SphereGeometry(1, 12, 8), M.spike); b.scale.set(6.4, 1.7, 2.4); b.position.set(sx * 9.6, 11.4, 11.2); b.castShadow = true; head.add(b); b.userData.sx = sx; return b; });
-  [-1, 1].forEach(sx => {
-    const g = l3TubeGeo(18, 10), cv = l3CatmullPts([[sx * 8, 11, -4], [sx * 11, 19, -9], [sx * 13.5, 25.5, -18], [sx * 12.5, 28, -29]]);
-    l3TubeSet(g, cv, t => 3.9 * Math.pow(1 - t, 0.85) + 0.25, (t, a) => 1 + 0.07 * Math.sin(t * 34), [0, 0, 1]);
-    const m = new T.Mesh(g, M.horn); m.castShadow = true; head.add(P(m, 'head'));
-    const fin = new T.Group(); head.add(fin); const ed = [[sx * 15, 8, -5], [sx * 26, 13, -9], [sx * 30, 8, -11], [sx * 32, 1, -12], [sx * 28, -5, -10], [sx * 16, -4, -4]];
-    dgFan([sx * 14, 2, -4], ed, dgMix(dgC.fMem0, dgC.fBack, 0.5), dgC.fMem1, M.mem, fin);
-  });
-  kHit(head, 13, 0, 0, 10, 'head');
-  // láng: 3 egymásba ágyazott cső (a szájtól a füstoszlop teteje felé), a fej-csoport tengelyén kívül, a gyökérben (a láng helye állandó)
-  const fl = new T.Group(); root.add(fl);
-  const mk = new T.Object3D(); mk.position.set(0, -2, 26); head.add(mk); hg.rotation.z = 0.42; head.rotation.y = -1.2; root.updateMatrixWorld(true);
-  const P0 = root.worldToLocal(mk.getWorldPosition(new T.Vector3())).toArray(), P1 = root.worldToLocal(head.localToWorld(new T.Vector3(0, -2, 36))).toArray(), fw = [P1[0] - P0[0], P1[1] - P0[1], P1[2] - P0[2]], fl_ = Math.hypot(fw[0], fw[1], fw[2]) || 1;
-  const EE = [-57, 71, 14], A1 = [P0[0] + fw[0] / fl_ * 9, P0[1] + fw[1] / fl_ * 9, P0[2] + fw[2] / fl_ * 9];
-  fl.position.set(P0[0], P0[1], P0[2]);
-  const rel = p => [p[0] - P0[0], p[1] - P0[1], p[2] - P0[2]], FLP = [P0, A1, [(A1[0] + EE[0]) / 2, (A1[1] + EE[1]) / 2 + 3, (A1[2] + EE[2]) / 2], EE].map(rel);
-  const flameMesh = (mat, rk, wob) => { const g = l3TubeGeo(20, 12); l3TubeSet(g, l3CatmullPts(FLP), t => (1.8 + 12.5 * Math.pow(t, 1.2)) * rk, (t, a) => 1 + wob * Math.sin(a * 3 + t * 11) * t, [0, 0, 1]); const m = new T.Mesh(g, mat); m.renderOrder = 6; fl.add(m); return m; };
-  const f0 = flameMesh(M.flameO, 1.18, 0.2), f1 = flameMesh(M.flameM, 0.82, 0.16), f2 = flameMesh(M.flameI, 0.44, 0.1);
-  [[0.08, 8, 0xffc24a, 0.7], [0.3, 13, 0xff8a1a, 0.55], [0.55, 19, 0xff5a12, 0.4], [0.85, 26, 0xff4010, 0.3]].forEach(q => { const c = l3CatmullPts(FLP)(q[0]), g2 = kGlowSprite(q[2], q[1], q[3], true); g2.position.set(c[0], c[1], c[2] + 4); fl.add(g2); });
-  const glow = kGlowSprite(0xff6a14, 30, 0.35, true); const er = rel(EE); glow.position.set(er[0] + 4, er[1] + 2, er[2]); fl.add(glow);
-  const lamp = kLight(fl, 0xff8a3a, 1.2, 150, er[0] + 8, er[1] + 6, 8);
-  fl.userData.part = 'flame'; [f0, f1, f2].forEach(m => { m.userData.part = 'flame'; parts.push(m); });
-  // állapot
-  const S = kState({ flap: 0, hx: 0, jaw: 0.62, lid: 0.45, brow: 0.7, blast: 0, bob: 0, wob: 0, tail: 0, lx: 0, ly: 0, fx: 1 }, S => {
-    dg.position.set(FL_DX, FL_DY + S.bob * 2.2, 0); dg.rotation.z = S.bob * 0.016 + S.wob * 0.03;
-    hg.rotation.z = 0.42 + S.hx + S.wob * 0.05; head.rotation.set(0, -1.2 + S.lx * 0.18, 0); jaw.rotation.x = S.jaw * 0.55;
-    eyes.forEach(e => { e.lid.rotation.x = -0.35 + Math.min(1, Math.max(0, S.lid)) * (Math.PI / 2 + 0.35); e.pg.position.x = S.lx * 1.9; e.pg.position.y = -S.ly * 1.3; });
-    brows.forEach(b => { b.rotation.z = b.userData.sx * -S.brow * 0.45; b.position.y = 11.4 - S.brow * 2.1; });
-    shN.rotation.x = S.flap * 0.55; shN.scale.y = 0.88 * (1 - Math.abs(S.flap) * 0.12); shF.rotation.x = -S.flap * 0.5 + 0.0;
-    fl.scale.set(1 + S.blast * 0.28, 1 + S.blast * 0.34, 1 + S.blast * 0.28); glow.material.opacity = 0.35 + S.blast * 0.4; if (lamp) lamp.intensity = 1.2 + S.blast * 1.6;
-    f0.scale.x = f0.scale.z = S.fx;
-  });
-  S.__apply();
-  const puffAt = (x, y, z, n, big, vx) => { for (let i = 0; i < n; i++) setTimeout(() => { if (L3.on) drParticle(root, 'smoke', new T.Vector3(x + (Math.random() - 0.5) * 12, y, z + (Math.random() - 0.5) * 6), { vx: (vx || 0) + (Math.random() - 0.5) * 5, vy: 8 + Math.random() * 7, vz: 4, life: 1.9, big: big || 1.3 }); }, i * 140); };
-  const ctl = {
-    S: S, root: root, busy: false,
-    look(p) { if (ctl.busy) return; const v = kLookVec(head, p, 220); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
-    blast() {
-      crStop(ctl); ctl.busy = true;
-      ctl.seq = l3Seq().to(S, { blast: 1, hx: 0.08, jaw: 1, brow: 1.1, lid: 0.62 }, 0.2, 'out').call(() => { dgJet(root, new T.Vector3(P0[0], P0[1], P0[2]), new T.Vector3(EE[0] - P0[0], EE[1] - P0[1], EE[2] - P0[2]), 36, 1.2); puffAt(-52, 58, 8, 6, 1.7, -4); }).to(S, { flap: 0.8 }, 0.25, 'io').to(S, { flap: -0.2 }, 0.25, 'io').to(S, { flap: 0.6 }, 0.25, 'io').wait(0.3)
-        .to(S, { blast: 0, hx: 0, jaw: 0.62, brow: 0.7, lid: 0.45, flap: 0 }, 0.6, 'io').call(() => { ctl.busy = false; }).play();
-      l3Anim(1.5, u => { S.wob = Math.sin(u * 40) * (1 - u) * 1.2; S.__apply(); }, () => { S.wob = 0; S.__apply(); });
-    },
-    flap() { crStop(ctl); ctl.busy = true; l3Anim(1.5, u => { S.flap = Math.sin(u * Math.PI * 6) * 0.9 * Math.min(1, u * 6, (1 - u) * 4); S.bob = Math.sin(u * Math.PI * 3) * 1.2; S.__apply(); }, () => { S.flap = 0; S.bob = 0; S.__apply(); ctl.busy = false; }); },
-    puff() { crStop(ctl); const sq = l3Anim(1.3, u => { S.fx = 1 + Math.sin(u * Math.PI * 8) * 0.12 * (1 - u); S.__apply(); }, () => { S.fx = 1; S.__apply(); }); puffAt(-50, 62, 8, 7, 1.5, -3); puffAt(-46, 40, 12, 3, 1.2, -6); },
-    blink() { l3Seq().to(S, { lid: 1 }, 0.08, 'out').to(S, { lid: 0.45 }, 0.14, 'io').play(); },
-    idle() { if (ctl.busy) return; const r = Math.random(); if (r < 0.4) ctl.blink(); else if (r < 0.75) puffAt(-50, 62, 8, 2, 1.2, -3); else l3Anim(1.4, u => { S.bob = Math.sin(u * Math.PI * 2); S.flap = Math.sin(u * Math.PI * 2) * 0.18; S.__apply(); }, () => { S.bob = 0; S.flap = 0; S.__apply(); }); }
-  };
-  return { grp: K.g, parts: parts, mats: kMatsAll(M).concat(M.cov || []), d: 60, ctl: ctl };
-}
-registerDecor3({
-  id: 'kis-sarkany', build: flBuild,
-  onClick(it, A, e, part) {
-    const c = it.ctl, st = A.st, now = Date.now();
-    if (part === 'cloud' || part === 'flame') { c.puff(); st.n = 0; return; }
-    st.n = now - st.last < 9000 ? st.n + 1 : 1; st.last = now;
-    if (st.n % 2 === 1) c.blast(); else c.flap();
   }
 });

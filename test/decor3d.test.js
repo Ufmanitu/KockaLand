@@ -17,8 +17,9 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   const missing = await page.evaluate(ts => ts.filter(t => !(DECOR3[t] && DECOR3[t].build)), types);
   ok(missing.length === 0, 'minden dísz-típushoz van 3D modell (' + types.length + ' típus' + (missing.length ? ', hiányzik: ' + missing.join(',') : '') + ')');
   const info = await page.evaluate(() => Array.from(L3.items.values()).filter(i => i.kind !== 'book').map(i => { let tri = 0; i.grp.traverse(o => { if (o.isMesh && o.geometry) { const g = o.geometry; tri += (g.index ? g.index.count : g.attributes.position.count) / 3; } }); return { t: i.d.type, tri: Math.round(tri), parts: i.parts.length, ctl: !!i.ctl }; }));
-  info.forEach(i => ok(i.tri > 800 && i.parts > 0, i.t + ': valódi 3D modell (' + i.tri + ' háromszög, ' + i.parts + ' kattintható rész)'));
-  const lite = info.filter(i => i.tri < 800); ok(lite.length === 0, 'nincs lapos (billboard) tartalék-dísz');
+  const IMG = ['kis-sarkany'];   // a repülő sárkány szándékosan 2D kép (rétegelt síkok), a többi valódi 3D modell
+  info.forEach(i => ok(IMG.includes(i.t) ? (i.tri >= 16 && i.parts > 0) : (i.tri > 800 && i.parts > 0), i.t + (IMG.includes(i.t) ? ': 2D kép-rétegek (' : ': valódi 3D modell (') + i.tri + ' háromszög, ' + i.parts + ' kattintható rész)'));
+  const lite = info.filter(i => i.tri < 800 && !IMG.includes(i.t)); ok(lite.length === 0, 'nincs lapos (billboard) tartalék-dísz a 3D modellek közt');
   // kattintás-sorozat (3×), idle, szem-követés
   const run = await page.evaluate(async () => {
     const wait = ms => new Promise(r => setTimeout(r, ms)); const res = [];

@@ -1,79 +1,93 @@
-/* ===== 3D díszek: olvasó szellem – puha vinyl-figura, gyöngyszemekkel (a sárkányok: lib3d-dragons2.js) ===== */
+/* ===== 3D díszek: olvasó szellem – fehér, harang alakú figura a polc szélén ülve, apró fekete könyvet olvas (a sárkányok: lib3d-dragons2.js, lib3d-flyimg.js) ===== */
 'use strict';
 
 /* közös: „soha ne fusson le üresen” tweenek, amik a ctl.seq-et cserélik */
 const crStop = c => { if (c.seq) c.seq.stop(); };
 
-/* ---------- olvasó szellem ---------- */
-function ghPageTex() {
-  return kTex(256, 320, (g, W, H) => {
-    g.fillStyle = '#f7edd2'; g.fillRect(0, 0, W, H); const rng = dcRng(9);
-    for (let i = 0; i < 14; i++) { const y = 24 + i * 20, w = 150 + rng() * 70; g.strokeStyle = 'rgba(110,80,50,.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(22, y); g.lineTo(22 + w, y); g.stroke(); }
-    const gr = g.createLinearGradient(W, 0, W - 40, 0); gr.addColorStop(0, 'rgba(120,80,40,.35)'); gr.addColorStop(1, 'rgba(120,80,40,0)'); g.fillStyle = gr; g.fillRect(W - 40, 0, 40, H);
-  }, 'ghPage');
+/* ---------- olvasó szellem ----------
+   Referencia: sima, matt fehér harang alakú szellem a polc szélén; két hosszúkás szem-lyuk, rövid, dundi karok, a mellkasánál tartott apró fekete könyvet olvas;
+   az alsó szegélye a polc peremén lóg át, három hullámos csúccsal. Modell-egységek: vh = 130; a polc éle z = −1.5 (a test hátrébb ül). */
+const GH = { Z: -28.5 };     // a test közepe (a mellkas eleje a peremnél)
+function ghF(x, y, z) {
+  const zz = z - 0.11 * Math.max(0, y - 24);                  // a fej enyhén előre dől (a könyv felé)
+  let d = smin(sdCone(x, y, zz * 1.3, 0, 2, 0, 0, 56, 0, 35, 31), sdEll(x, y - 77, zz, 30, 30, 26), 16);
+  return smax(d, -y, 2.2);                                    // lapos alj
 }
-const ghCol = {};
-function ghBodyGeo() {
-  if (!ghCol.top) Object.assign(ghCol, { top: lc('#e9eeff'), bot: lc('#b9c6ee'), arm: lc('#dbe3fb') });
-  return drGeoOnce('ghBody', () => sdfGeo((x, y, z) => smax(sdEll(x, y - 52, z, 33, 52, 29), 7 - y, 4), [-37, 2, -33], [37, 108, 33], 1.7, (x, y, z) => { const t = Math.min(1, Math.max(0, (70 - y) / 62)), a = ghCol.top, b = ghCol.bot; return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }));
+function ghBodyGeo() { return drGeoOnce('ghBody2', () => sdfGeo(ghF, [-42, -3, -38], [42, 112, 46], 1.6, () => [1, 1, 1])); }
+function ghArmGeo() {   // a +x oldali kar a vállhoz képest: könyök kifelé-előre, a kéz a könyv szélén
+  return drGeoOnce('ghArm2', () => sdfGeo((x, y, z) => { let d = smin(sdCone(x, y, z, 0, 0, 0, 4, -14, 18, 8.6, 7.8), sdCone(x, y, z, 4, -14, 18, -10, -23, 31, 7.8, 7.6), 4); return smin(d, sdSph(x + 10, y + 23, z - 31, 8.8), 3); }, [-24, -40, -12], [18, 12, 44], 1.4, () => [1, 1, 1]));
 }
-function ghArmGeo() {   // a bal kar a váll-ponthoz képest
-  ghBodyGeo();
-  return drGeoOnce('ghArm', () => sdfGeo((x, y, z) => { let d = smin(sdCone(x, y, z, 0, 0, 0, -7, -17, 8, 8.2, 7.4), sdCone(x, y, z, -7, -17, 8, 4, -26, 21, 7.4, 7.8), 4); return smin(d, sdSph(x - 4, y + 26, z - 21, 9), 3); }, [-22, -40, -10], [18, 12, 34], 1.4, () => ghCol.arm));
+function ghSurfZ(x, y) { for (let z = 50; z > -40; z -= 0.4) if (ghF(x, y, z) < 0) return z; return 20; }
+function ghHemGeo() {
+  return drGeoOnce('ghHem', () => {
+    const T = THREE, bot = new T.SplineCurve([[30, -8], [28, -15], [22.5, -22], [17, -15], [11, -11.5], [6, -16.5], [0, -17.5], [-5, -12.5], [-11, -10.5], [-16.5, -19], [-22, -25.5], [-27.5, -16], [-30, -9]].map(p => new T.Vector2(p[0], p[1]))).getPoints(64);
+    const sh = new T.Shape(); sh.moveTo(-31, 3); sh.lineTo(31, 3); sh.lineTo(30, -8); bot.forEach(p => sh.lineTo(p.x, p.y)); sh.lineTo(-31, 3);
+    const g = new T.ExtrudeGeometry(sh, { depth: 3.2, bevelEnabled: true, bevelThickness: 1.4, bevelSize: 1.4, bevelSegments: 3, curveSegments: 4 }); g.translate(0, 0, -1.6); g.userData.shared = true; return g;
+  });
+}
+function ghCoverTex() {
+  return kTex(128, 96, (g, W, H) => {
+    g.fillStyle = '#1b1b20'; g.fillRect(0, 0, W, H);
+    g.strokeStyle = 'rgba(120,125,145,.22)'; g.lineWidth = 1; for (let x = 0; x < W; x += 3) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); } for (let y = 0; y < H; y += 3) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+    g.strokeStyle = 'rgba(0,0,0,.35)'; for (let x = 1.5; x < W; x += 3) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+  }, 'ghCover');
 }
 function ghBuild(it) {
-  const T = THREE, K = kRoot(it, 130), root = K.r, parts = [];
+  const T = THREE, K = kRoot(it, 130), root = K.r, parts = [], mats = [];
   const M = {
-    body: new T.MeshPhysicalMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.5, metalness: 0, clearcoat: 0.35, clearcoatRoughness: 0.4, emissive: l3Col('#9fb0ff'), emissiveIntensity: 0.08, envMapIntensity: 0.6 }),
-    cover: kVinyl('#6a2f2a', { roughness: 0.6 }),
-    page: new T.MeshStandardMaterial({ map: ghPageTex(), roughness: 0.85, emissive: new T.Color(0xffe0a0), emissiveMap: ghPageTex(), emissiveIntensity: 0.22, side: T.DoubleSide }),
-    rim: l3Mat({ color: '#6a4a38', roughness: 0.4, metalness: 0.6 }),
-    blush: new T.MeshBasicMaterial({ color: 0xffb6c8, transparent: true, opacity: 0.55, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
-    dark: new T.MeshBasicMaterial({ color: 0x3a2318 })
+    body: new T.MeshStandardMaterial({ color: 0xfbfaf6, roughness: 0.55, metalness: 0, emissive: l3Col('#fff3dc'), emissiveIntensity: 0.07, envMapIntensity: 0.7 }),
+    cover: new T.MeshStandardMaterial({ color: 0xffffff, map: ghCoverTex(), roughness: 0.75, metalness: 0, envMapIntensity: 0.35 }),
+    edge: new T.MeshStandardMaterial({ color: 0x15151a, roughness: 0.6, envMapIntensity: 0.3 }),
+    page: new T.MeshStandardMaterial({ color: 0xf6ecd0, roughness: 0.9, side: T.DoubleSide }),
+    hole: new T.MeshBasicMaterial({ color: 0x1b1720, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }),
+    mouth: new T.MeshBasicMaterial({ color: 0x24202a })
   };
+  mats.push(M.body, M.cover, M.edge, M.page, M.hole, M.mouth);
   const P = (m, part) => { m.userData.part = part || 'body'; parts.push(m); return m; };
-  const halo = kGlowSprite(0xcfd9ff, 190, 0.34); halo.position.set(0, 58, -22); root.add(halo);
-  const bg = new T.Group(); root.add(bg);
-  const body = new T.Mesh(ghBodyGeo(), M.body); body.castShadow = true; body.receiveShadow = true; bg.add(P(body));
-  const arms = [-1, 1].map(sg => { const g = new T.Group(); g.position.set(sg * 30, 50, 4); g.scale.x = -sg; const m = new T.Mesh(ghArmGeo(), M.body); m.castShadow = true; g.add(P(m)); bg.add(g); return g; });
-  const eyes = [-1, 1].map(sg => kBead(bg, sg * 13.5, 66, 25.2, 3.3, 0.8));
-  const lens = [-1, 1].map(sg => { const m = new T.Mesh(new T.TorusGeometry(10.4, 1.15, 8, 32), M.rim); m.position.set(sg * 13.5, 66, 27.4); m.rotation.y = sg * 0.12; m.castShadow = true; bg.add(m); return m; });
-  const br = new T.Mesh(new T.CylinderGeometry(0.9, 0.9, 6, 6), M.rim); br.rotation.z = Math.PI / 2; br.position.set(0, 67.5, 27.6); bg.add(br);
-  [-1, 1].forEach(sg => { const t = new T.Mesh(new T.CylinderGeometry(0.8, 0.8, 11, 6), M.rim); t.rotation.set(0, 0, Math.PI / 2); t.position.set(sg * 29, 68, 20); t.rotation.y = sg * 0.9; bg.add(t); });
-  [-1, 1].forEach(sg => { const b = new T.Mesh(new T.CircleGeometry(5.5, 16), M.blush); b.position.set(sg * 21.5, 57.5, 24.4); b.rotation.y = sg * 0.62; bg.add(b); });
-  const sm = new T.Mesh(new T.TorusGeometry(3.6, 0.55, 6, 14, Math.PI), M.dark); sm.rotation.z = Math.PI; sm.position.set(0, 58.6, 27.7); bg.add(sm);
-  const mo = new T.Mesh(new T.CircleGeometry(4, 16), M.dark); mo.position.set(0, 55.5, 27.9); mo.visible = false; bg.add(mo);
-  // könyv
-  const bk = new T.Group(); bk.position.set(0, 22, 31); bk.rotation.x = -0.3; root.add(bk);
-  P(kBox(68, 40, 3.2, M.cover, bk, 0, 0, -2.4), 'book');
-  const pl = new T.Mesh(new T.PlaneGeometry(31, 36), M.page); pl.position.set(-15.6, 0.4, 0); pl.rotation.y = 0.18; bk.add(P(pl, 'book'));
-  const pr = new T.Mesh(new T.PlaneGeometry(31, 36), M.page); pr.position.set(15.6, 0.4, 0); pr.rotation.y = -0.18; bk.add(P(pr, 'book'));
-  const fp = new T.Group(); fp.position.set(0, 0.4, 0.5); bk.add(fp); const fpm = new T.Mesh(new T.PlaneGeometry(31, 36), M.page); fpm.position.x = 15.6; fp.add(P(fpm, 'book')); fp.visible = false;
-  const S = kState({ blink: 0, hop: 0, hide: 0, grow: 0, eyeW: 1, armUp: 0, flip: 0, lx: 0, ly: 0, mouthO: 0, glow: 0.34, shake: 0 }, S => {
-    bg.position.set(S.shake, S.hop * 12 - S.hide * 40 + S.grow * 12, -S.hop * 4); bg.scale.set(1 + S.grow * 0.22 - S.hop * 0.05, 1 + S.grow * 0.25 + S.hop * 0.1, 1 + S.grow * 0.2);
-    arms[0].rotation.z = -S.armUp; arms[1].rotation.z = S.armUp;
-    eyes.forEach(e => { e.scale.set(S.eyeW, S.eyeW * Math.max(0.06, 1 - S.blink), 0.8); e.position.x += 0; });
-    eyes[0].position.x = -13.5 + S.lx * 1.6; eyes[1].position.x = 13.5 + S.lx * 1.6; eyes.forEach(e => { e.position.y = 66 - S.ly * 1.1; });
-    sm.visible = S.mouthO < 0.4; mo.visible = S.mouthO >= 0.4; mo.scale.setScalar(0.6 + S.mouthO * 0.7);
-    M.body.emissiveIntensity = 0.08 + (S.glow - 0.34) * 1.2; halo.material.opacity = S.glow;
-    fp.visible = S.flip > 0 && S.flip < 1; fp.rotation.y = -0.18 - S.flip * (Math.PI - 0.36); fp.position.z = 0.5 + Math.sin(S.flip * Math.PI) * 5;
+  const halo = kGlowSprite(0xfff0d0, 170, 0.12); halo.position.set(0, 58, -40); root.add(halo); mats.push(halo.material);
+  const bg = new T.Group(); root.add(bg);                       // minden, ami a testtel mozog (a hop/rejtőzés/nő)
+  const body = new T.Mesh(ghBodyGeo(), M.body); body.position.z = GH.Z; body.castShadow = true; body.receiveShadow = true; bg.add(P(body));
+  // szegély a polc peremén
+  const hem = new T.Mesh(ghHemGeo(), M.body); hem.position.set(0, 1.6, -0.6); hem.castShadow = true; hem.receiveShadow = true; bg.add(P(hem));
+  // karok (a vállnál forognak)
+  const arms = [1, -1].map(sg => { const g = new T.Group(); g.position.set(sg * 29.5, 58, GH.Z + 15); g.scale.x = sg; const m = new T.Mesh(ghArmGeo(), M.body); m.castShadow = true; g.add(P(m)); bg.add(g); g.userData.sg = sg; return g; });
+  // szem-lyukak: sötét, hosszúkás matrica a mellkas felszínén (a felület normálja mentén állítva)
+  const ey = 77.5, eyes = [-1, 1].map(sg => {
+    const x = sg * 12.6, zl = ghSurfZ(x, ey), e = 0.8, nx = ghF(x + e, ey, zl) - ghF(x - e, ey, zl), ny = ghF(x, ey + e, zl) - ghF(x, ey - e, zl), nz = ghF(x, ey, zl + e) - ghF(x, ey, zl - e), nl = Math.hypot(nx, ny, nz) || 1;
+    const n = new T.Vector3(nx / nl, ny / nl, nz / nl), g = new T.Group(); g.position.set(x, ey, GH.Z + zl + 0.35); g.quaternion.setFromUnitVectors(new T.Vector3(0, 0, 1), n);
+    const h = new T.Mesh(new T.CircleGeometry(1, 28), M.hole); h.scale.set(4.7, 6.8, 1); h.renderOrder = 6; g.add(h); bg.add(g); g.userData.x = x; g.userData.y = ey; return g;
+  });
+  const mo = new T.Mesh(new T.CircleGeometry(3.6, 16), M.mouth); mo.scale.y = 1.2; mo.position.set(0, 64, GH.Z + ghSurfZ(0, 64) + 0.3); mo.visible = false; bg.add(mo);
+  // apró fekete könyv a mellkas előtt: a hátlapja látszik (szövetes), balról a lapok pereme
+  const bk = new T.Group(); bk.position.set(0, 41, 17); bk.rotation.x = -0.28; root.add(bk);
+  P(kBox(40, 28, 4.6, M.edge, bk, 0, 0, 0), 'book');
+  const cv = new T.Mesh(new T.PlaneGeometry(39.2, 27.4), M.cover); cv.position.z = 2.35; bk.add(P(cv, 'book'));
+  const pgs = kBox(2.6, 25, 3.8, M.page, bk, -18.6, 0.2, 0.8); P(pgs, 'book');
+    const S = kState({ blink: 0, hop: 0, hide: 0, grow: 0, eyeW: 1, armUp: 0, flip: 0, lx: 0, ly: 0, mouthO: 0, glow: 0.12, shake: 0, read: 0 }, S => {
+    bg.position.set(S.shake, S.hop * 12 - S.hide * 62 + S.grow * 8, 0); bg.scale.set(1 + S.grow * 0.22 - S.hop * 0.04, 1 + S.grow * 0.25 + S.hop * 0.08, 1 + S.grow * 0.2);
+    hem.visible = S.hide < 0.2;
+    arms.forEach(g => { g.rotation.z = -g.userData.sg * S.armUp * 1.15; g.rotation.x = -S.armUp * 0.5; });
+    bk.position.set(0, 41 - S.armUp * 22 - S.hide * 62, 17 - S.armUp * 6); bk.rotation.x = -0.28 - S.armUp * 0.5 + S.read * 0.07;
+    eyes.forEach(e => { e.scale.set(S.eyeW, S.eyeW * Math.max(0.06, 1 - S.blink), 1); e.position.x = e.userData.x + S.lx * 1.7; e.position.y = e.userData.y - 1.6 * (1 - S.mouthO) - S.ly * 1.2; });
+    mo.visible = S.mouthO >= 0.4; mo.scale.setScalar(0.6 + S.mouthO * 0.9); mo.scale.y *= 1.2;
+    M.body.emissiveIntensity = 0.07 + (S.glow - 0.12) * 0.9; halo.material.opacity = S.glow;
   });
   S.__apply();
   const ctl = {
     S: S, root: root,
-    look(p) { const v = kLookVec(eyes[0], p, 160); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(eyes[0], p, 160); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
     blink() { l3Seq().to(S, { blink: 1 }, 0.07, 'out').to(S, { blink: 0 }, 0.12, 'io').play(); },
-    turn() { if (S.flip > 0 && S.flip < 1) return; S.flip = 0.001; l3Anim(1.3, u => { S.flip = Math.min(0.999, Math.max(0.001, u)); S.__apply(); }, () => { S.flip = 0; S.__apply(); }); },
-    startle() { crStop(ctl); ctl.seq = l3Seq().to(S, { hop: 1, eyeW: 1.28, armUp: 0.5, glow: 0.8 }, 0.14, 'out').to(S, { hop: 0 }, 0.22, 'bounce').wait(0.5).to(S, { eyeW: 1, armUp: 0, glow: 0.34 }, 0.5, 'io').play(); },
+    turn() { if (ctl.busy) return; ctl.busy = true; l3Anim(1.7, u => { S.lx = -1 + 2 * u; S.ly = 0.7 - Math.sin(u * Math.PI * 2) * 0.2; S.read = Math.sin(u * Math.PI); S.__apply(); }, () => { S.lx = 0; S.ly = 0; S.read = 0; S.__apply(); ctl.busy = false; }); },
+    startle() { crStop(ctl); ctl.seq = l3Seq().to(S, { hop: 1, eyeW: 1.28, armUp: 0.5, glow: 0.5 }, 0.14, 'out').to(S, { hop: 0 }, 0.22, 'bounce').wait(0.5).to(S, { eyeW: 1, armUp: 0, glow: 0.12 }, 0.5, 'io').play(); },
     hide() { crStop(ctl); ctl.seq = l3Seq().to(S, { hide: 1, eyeW: 1.1 }, 0.4, 'in').wait(1.2).to(S, { hide: 0.62 }, 0.35, 'io').wait(0.5).to(S, { hide: 0, eyeW: 1 }, 0.45, 'back').play(); },
     spook() {
       crStop(ctl);
-      ctl.seq = l3Seq().to(S, { grow: 1, eyeW: 1.35, armUp: 1.0, mouthO: 1, glow: 1 }, 0.35, 'out').to(S, { shake: 1.4 }, 0.05).to(S, { shake: -1.4 }, 0.08).to(S, { shake: 1.2 }, 0.08).to(S, { shake: -1 }, 0.08).to(S, { shake: 0 }, 0.08)
-        .wait(0.9).to(S, { grow: 0, eyeW: 1, armUp: 0, mouthO: 0, glow: 0.34 }, 0.6, 'io').play();
+      ctl.seq = l3Seq().to(S, { grow: 1, eyeW: 1.35, armUp: 1.0, mouthO: 1, glow: 0.7 }, 0.35, 'out').to(S, { shake: 1.4 }, 0.05).to(S, { shake: -1.4 }, 0.08).to(S, { shake: 1.2 }, 0.08).to(S, { shake: -1 }, 0.08).to(S, { shake: 0 }, 0.08)
+        .wait(0.9).to(S, { grow: 0, eyeW: 1, armUp: 0, mouthO: 0, glow: 0.12 }, 0.6, 'io').play();
     },
     idle() { if (Math.random() < 0.65) ctl.blink(); else ctl.turn(); },
   };
-  return { grp: K.g, parts: parts, mats: kMatsAll(M), d: 50, ctl: ctl };
+  return { grp: K.g, parts: parts, mats: mats, d: 50, ctl: ctl };
 }
 registerDecor3({
   id: 'szellem', build: ghBuild,

@@ -19,37 +19,37 @@ function dragonMigrate(list) {   // régi sárkány-pár → egy fekvő sárkán
 registerDecor({
   id: 'sarkany-fekvo', name: 'Fekvő sárkány', hint: 'Bökd meg az orrát! Háromszor: tüzet okád. Ha csak megsimogatod, dorombol.', ar: 2.1, k: 0.58, look: true,
   svg: u => {
-    const O = 'stroke="rgba(18,64,56,.6)" stroke-width="1.3" stroke-linejoin="round"';
+    const O = 'stroke="rgba(10,3,4,.75)" stroke-width="1.3" stroke-linejoin="round"';
     const book = (x, y, w, h, c1, c2) => '<g><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="2" fill="' + c1 + '" ' + O + '/><rect x="' + (x + 3) + '" y="' + (y + 2.2) + '" width="' + (w - 5) + '" height="' + (h - 4.4) + '" rx="1" fill="#f6ecd2"/><path d="M' + (x + 5) + ' ' + (y + 4.6) + 'h' + (w - 9) + 'M' + (x + 5) + ' ' + (y + 7.4) + 'h' + (w - 9) + '" stroke="rgba(150,118,70,.45)" stroke-width=".8"/><rect x="' + x + '" y="' + y + '" width="4" height="' + h + '" rx="2" fill="' + c2 + '"/></g>';
     return '<svg class="dc-svg dl-svg" viewBox="0 0 210 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>' +
-      '<linearGradient id="lb' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4cc3a4"/><stop offset=".6" stop-color="#2f9c85"/><stop offset="1" stop-color="#1c7b70"/></linearGradient>' +
-      '<linearGradient id="ll' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbeec2"/><stop offset="1" stop-color="#e9cb78"/></linearGradient>' +
-      '<linearGradient id="lw' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb68c"/><stop offset="1" stop-color="#e9695f"/></linearGradient>' +
+      '<linearGradient id="lb' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#150709"/><stop offset=".42" stop-color="#8c1016"/><stop offset="1" stop-color="#b5251f"/></linearGradient>' +
+      '<linearGradient id="ll' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e5683f"/><stop offset="1" stop-color="#c9362a"/></linearGradient>' +
+      '<linearGradient id="lw' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d12a2c"/><stop offset="1" stop-color="#4a0912"/></linearGradient>' +
       '<radialGradient id="le' + u + '" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff3b8"/><stop offset=".5" stop-color="#ffb722"/><stop offset="1" stop-color="#c0610c"/></radialGradient>' +
       '<clipPath id="lc' + u + '"><ellipse cx="53" cy="39" rx="6.4" ry="6.8"/></clipPath></defs>' +
       '<ellipse cx="104" cy="98" rx="98" ry="3" fill="rgba(0,0,0,.4)"/>' +
-      book(14, 76, 168, 22, '#a8403d', '#7e2c2c') + book(24, 62, 144, 16, '#33618f', '#234566') + book(38, 50, 120, 14, '#c79d45', '#936f23') +
-      /* farok a halom jobb szélén át */
-      '<path d="M150 46C176 44 192 52 192 72C192 86 180 94 164 94" fill="none" stroke="rgba(18,64,56,.6)" stroke-width="15" stroke-linecap="round"/><path d="M150 46C176 44 192 52 192 72C192 86 180 94 164 94" fill="none" stroke="url(#lb' + u + ')" stroke-width="12.500" stroke-linecap="round"/>' +
-      '<path d="M158 94l-8 -6l1 12z" fill="#f08b4a" ' + O + '/>' +
+      book(6, 76, 198, 22, '#2e4a78', '#1d3052') + book(10, 62, 190, 16, '#2f6b52', '#1d4a38') + book(14, 50, 184, 14, '#c79d45', '#936f23') +
+      /* farok: a könyvek tetején fekszik, a vége befordul; fekete gerinc a vörös tetején */
+      '<path d="M148 46C164 42 184 40 192 44C198 48 192 53 180 51" fill="none" stroke="rgba(10,3,4,.75)" stroke-width="14" stroke-linecap="round"/><path d="M148 46C164 42 184 40 192 44C198 48 192 53 180 51" fill="none" stroke="#8c1016" stroke-width="11.500" stroke-linecap="round"/><path d="M148 43C164 39 184 37 191 41" fill="none" stroke="#1a0709" stroke-width="4" stroke-linecap="round" opacity=".9"/>' +
+      '<path d="M181 51.500l-6 -2l1.500 6z" fill="#17090b" ' + O + '/>' +
       /* törzs + has + hátgerinc */
       '<path d="M62 56C56 38 74 26 104 26C134 26 158 32 160 48C162 60 150 66 130 66L84 66C72 66 64 62 62 56Z" fill="url(#lb' + u + ')" ' + O + '/>' +
       '<path d="M76 62C92 68 124 68 144 64C148 60 150 56 150 54C130 62 96 62 76 58Z" fill="url(#ll' + u + ')"/><path d="M92 63v4M104 64v4M116 64v4M128 63v4" stroke="rgba(190,140,60,.5)" stroke-width="1"/>' +
-      '<path d="M84 29l4 -8l5 7M100 26l5 -9l5 8M118 27l5 -9l5 9M136 31l5 -8l4 9" fill="#f08b4a" ' + O + '/>' +
+      '<path d="M84 29l4 -8l5 7M100 26l5 -9l5 8M118 27l5 -9l5 9M136 31l5 -8l4 9" fill="#17090b" ' + O + '/>' +
       '<path class="d-wing" d="M100 34C112 12 138 12 152 24C142 26 140 32 132 34C132 40 122 42 116 42C112 48 104 46 100 40Z" fill="url(#lw' + u + ')" ' + O + '/>' +
       /* mellső mancs */
       '<ellipse cx="50" cy="66" rx="13" ry="6" fill="url(#lb' + u + ')" ' + O + '/><path d="M42 67v3M49 68v3M56 67v3" stroke="#f7efd9" stroke-width="1.6" stroke-linecap="round"/>' +
       /* fej */
       '<g class="d-head">' +
-      '<path d="M44 26C40 16 44 8 52 4C52 12 54 20 56 26Z" fill="#f3c681" ' + O + '/><path d="M70 28C74 18 72 10 66 6C64 14 64 22 62 28Z" fill="#f3c681" ' + O + '/>' +
+      '<path d="M44 26C40 16 44 8 52 4C52 12 54 20 56 26Z" fill="#2a1a1d" ' + O + '/><path d="M70 28C74 18 72 10 66 6C64 14 64 22 62 28Z" fill="#2a1a1d" ' + O + '/>' +
       '<path d="M28 52C24 40 32 28 50 26C70 24 80 34 80 46C80 56 70 62 56 62C44 62 32 60 28 52Z" fill="url(#lb' + u + ')" ' + O + '/>' +
       '<path d="M26 54C24 48 28 44 34 44C34 50 32 54 26 54Z" fill="url(#lb' + u + ')" ' + O + '/>' +
       '<g class="d-jaw"><path d="M32 56C40 64 56 66 68 60C62 66 46 68 34 62Z" fill="#fbeec2" ' + O + '/></g>' +
       '<ellipse class="d-glow" cx="53" cy="39" rx="12" ry="9" fill="#ffb722" opacity="0"/>' +
       '<g class="d-eye"><ellipse cx="53" cy="39" rx="7.2" ry="7.6" fill="#7b3a10"/><g clip-path="url(#lc' + u + ')"><ellipse cx="53" cy="39" rx="6.4" ry="6.8" fill="url(#le' + u + ')"/><g class="d-look"><ellipse cx="53.500" cy="39" rx="2" ry="5" fill="#120a06"/><circle cx="56" cy="36" r="1.700" fill="#fff"/></g>' +
-      '<path class="d-lid" d="M44 30H62V40H44Z" fill="#2f9c85"/></g></g>' +
-      '<g class="d-brow"><path d="M44 31C49 27 58 27 63 31" fill="none" stroke="#f08b4a" stroke-width="3" stroke-linecap="round"/></g>' +
-      '<ellipse class="d-nostril" cx="30" cy="48" rx="1.800" ry="1.200" fill="#0c1a17"/>' +
+      '<path class="d-lid" d="M44 30H62V40H44Z" fill="#5e0d12"/></g></g>' +
+      '<g class="d-brow"><path d="M44 31C49 27 58 27 63 31" fill="none" stroke="#5c1219" stroke-width="3" stroke-linecap="round"/></g>' +
+      '<ellipse class="d-nostril" cx="30" cy="48" rx="1.800" ry="1.200" fill="#000"/>' +
       '<g class="d-smoke"><circle class="sm1" cx="29" cy="46" r="3"/><circle class="sm2" cx="29" cy="46" r="2.500"/><circle class="sm3" cx="29" cy="46" r="3.400"/></g>' +
       '<g class="d-sparks"><circle class="sp1" cx="26" cy="52" r="2"/><circle class="sp2" cx="26" cy="52" r="1.700"/><circle class="sp3" cx="26" cy="52" r="2.200"/></g>' +
       '</g>' +

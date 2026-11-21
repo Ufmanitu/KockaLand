@@ -6,6 +6,7 @@
 - 3D Könyvtár (v6): valódi 3D polcok/könyvek (Three.js), mind a 11 dísz saját 3D modell + animáció, 2D tartalék, lassúság-őr, beállítás-kapcsoló
 - Díszek D1–D3: szellem, lámpás, 2 üvegablak, macska, bagoly, pozsgás (egyéni animációk), kezdő készlet
 - v8 (2026-11-19): fekvő sárkány a könyvhalmon + repülő, tüzet fújó sárkány (a füst tartja a könyveket); book nook = berendezett 3D mini szoba + ráközelítés (zoom-nézet); GitHub: Ufmanitu/KockaLand
+- v9 (2026-11-21): vörös-fekete fekvő sárkány hosszabb könyvhalmon; a repülő sárkány 2D kép (füstcsík → krémszínű felhőoszlop, a könyveket tartja; 3D-ben textúra-síkokon); a szellem újratervezve (fehér harang, ovális szem, fekete könyv)
 
 ## Következő (javaslatok, a user döntése szerint)
 1. Book nook bővítés: több tárgy a szobában (teáscsésze, madaras ablak), szobák cseréje (pl. tetőtér, konyha), hang
