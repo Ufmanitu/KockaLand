@@ -67,7 +67,7 @@ const kVinyl = (color, o) => l3Mat(Object.assign({ color: color, roughness: 0.46
 /* fényes fekete gyöngyszem két fényfolttal; a csoport z-ben lapított */
 function kBead(parent, x, y, z, r, flat) {
   const T = THREE, g = new T.Group(); g.position.set(x, y, z); g.scale.z = flat || 0.7;
-  const b = new T.Mesh(new T.SphereGeometry(r, 16, 12), kBead.mat || (kBead.mat = new T.MeshPhysicalMaterial({ color: 0x07060a, roughness: 0.12, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.6 })));
+  const b = new T.Mesh(new T.SphereGeometry(r, 16, 12), kBead.mat || (kBead.mat = l3Phys({ color: 0x07060a, roughness: 0.12, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.6 })));
   g.add(b);
   const h1 = new T.Mesh(new T.SphereGeometry(r * 0.3, 8, 6), kBead.w || (kBead.w = new T.MeshBasicMaterial({ color: 0xffffff, toneMapped: false }))); h1.position.set(r * 0.34, r * 0.4, r * 0.82 / (flat || 0.7)); g.add(h1);
   const h2 = new T.Mesh(new T.SphereGeometry(r * 0.15, 8, 6), kBead.w); h2.position.set(-r * 0.3, -r * 0.34, r * 0.88 / (flat || 0.7)); g.add(h2);

@@ -22,11 +22,11 @@ function nkZoomOpen(it, A) {
   try { r = new T.WebGLRenderer({ antialias: !L3.lowq, alpha: true, powerPreference: 'high-performance' }); } catch (e) { console.error(e); return; }
   const ctxOK = r.getContext && r.getContext(); if (!ctxOK) return;
   r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
-  r.shadowMap.enabled = !L3.lowq; r.shadowMap.type = T.PCFSoftShadowMap;
+  r.shadowMap.enabled = !L3.lowq; r.shadowMap.type = T.PCFShadowMap;
   const scene = new T.Scene(); scene.environment = nkEnv(r);
   scene.add(new T.HemisphereLight(0xfff0dc, 0x6a4326, 0.55));
   const key = new T.DirectionalLight(0xffe2bc, 0.95); key.position.set(-70, 130, 170); key.target.position.set(0, 40, -40); scene.add(key, key.target);
-  if (!L3.lowq) { key.castShadow = true; key.shadow.mapSize.set(1536, 1536); key.shadow.bias = -0.0006; key.shadow.normalBias = 0.6; const sc = key.shadow.camera; sc.left = -110; sc.right = 110; sc.top = 110; sc.bottom = -110; sc.near = 20; sc.far = 520; sc.updateProjectionMatrix(); }
+  if (!L3.lowq) { key.castShadow = true; key.shadow.mapSize.set(1536, 1536); key.shadow.radius = 1.8; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.6; const sc = key.shadow.camera; sc.left = -110; sc.right = 110; sc.top = 110; sc.bottom = -110; sc.near = 20; sc.far = 520; sc.updateProjectionMatrix(); }
   const fill = new T.DirectionalLight(0xbcd0ff, 0.2); fill.position.set(80, 40, 120); scene.add(fill);
   const root = new T.Group(); scene.add(root);
   const AS = nkAssemble(root, it, 'zoom'), R = AS.R, ctl = R.ctl, parts = AS.parts;
@@ -45,7 +45,7 @@ function nkZoomOpen(it, A) {
   const Z = { ctl: ctl, r: r, el: el, p: 0, pt: 1, t: 0, lx: 0, ly: 0, tx: 0, ty: 0, closing: false, loop: null }; NKZ.o = Z;
   const size = () => {
     const mw = innerWidth - 24, mh = innerHeight - (innerWidth < 640 ? 150 : 120), w = Math.max(240, Math.min(mw, mh * 1.3)), h = Math.round(w / 1.3);
-    stage.style.width = w + 'px'; stage.style.height = h + 'px'; r.setPixelRatio(L3.lowq ? 1 : Math.min(devicePixelRatio || 1, 2)); r.setSize(w, h, false); cv.style.width = w + 'px'; cv.style.height = h + 'px'; cam.aspect = w / h; cam.updateProjectionMatrix(); Z.w = w; Z.h = h;
+    stage.style.width = w + 'px'; stage.style.height = h + 'px'; r.setPixelRatio(L3.lowq ? 1 : Math.min(devicePixelRatio || 1, 1.5)); r.setSize(w, h, false); cv.style.width = w + 'px'; cv.style.height = h + 'px'; cam.aspect = w / h; cam.updateProjectionMatrix(); Z.w = w; Z.h = h;
   };
   size(); Z.b = stage.getBoundingClientRect();
   const flip = rev => {   // a polcon álló doboz helyéről nő ki (vagy oda zsugorodik vissza)

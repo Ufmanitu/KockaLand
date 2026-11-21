@@ -91,11 +91,13 @@ function l3ScaleTex(kind) {
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = Math.min(8, L3.r.capabilities.getMaxAnisotropy()); return (L3.stex[kind] = t);
 }
 const PERTURB = 'vec3 perturbNormalArb2( vec3 surf_pos, vec3 surf_norm, vec2 dHdxy ) { vec3 vSigmaX = dFdx( surf_pos ); vec3 vSigmaY = dFdy( surf_pos ); vec3 R1 = cross( vSigmaY, surf_norm ); vec3 R2 = cross( surf_norm, vSigmaX ); float fDet = dot( vSigmaX, R1 ); fDet *= ( float( gl_FrontFacing ) * 2.0 - 1.0 ); vec3 vGrad = sign( fDet ) * ( dHdxy.x * R1 + dHdxy.y * R2 ); return normalize( abs( fDet ) * surf_norm - vGrad ); }';
+/* „fényes bevonat” olcsón: a MeshPhysicalMaterial clearcoat-ja drága (második tükröződési lebeny + újabb környezet-minta pixelenként; a mérésben a sárkány képkocka-költségének ~egynegyede),
+   ezért MeshStandard, a bevonat mértékével csökkentett érdességgel (a csillogás megmarad, a fényes réteg nem külön lebeny). A clearcoat/clearcoatRoughness opciókat eldobja. */
+function l3Phys(o) { const q = Object.assign({}, o), cc = q.clearcoat || 0; delete q.clearcoat; delete q.clearcoatRoughness; if (cc && q.roughness != null) q.roughness = Math.max(0.1, q.roughness - cc * 0.16); return new THREE.MeshStandardMaterial(q); }
 function l3Skin(o) {   // háromsíkú (felület-ragadó) bump: o = {color, rough, metal, kind:'scale'|'grain', cell (px/pikkely), amt, vcol, clear, env, emissive}
   const T = THREE, tex = l3ScaleTex(o.kind || 'scale'), uni = { uTex: { value: tex }, uK: { value: 1 / (8 * (o.cell || 5)) }, uAmt: { value: o.amt != null ? o.amt : 1.4 } };
-  const M = o.clear ? T.MeshPhysicalMaterial : T.MeshStandardMaterial;
   const po = { color: o.color ? l3Col(o.color) : 0xffffff, roughness: o.rough != null ? o.rough : 0.5, metalness: o.metal || 0, vertexColors: !!o.vcol, envMapIntensity: o.env != null ? o.env : 0.9 }; if (o.clear) { po.clearcoat = o.clear; po.clearcoatRoughness = o.clearR != null ? o.clearR : 0.25; }
-  const m = new M(po);
+  const m = o.clear ? l3Phys(po) : new T.MeshStandardMaterial(po);
   if (o.emissive) { m.emissive = l3Col(o.emissive); m.emissiveIntensity = o.eInt || 1; }
   m.onBeforeCompile = sh => {
     sh.uniforms.uTex = uni.uTex; sh.uniforms.uK = uni.uK; sh.uniforms.uAmt = uni.uAmt;
@@ -107,7 +109,7 @@ function l3Skin(o) {   // háromsíkú (felület-ragadó) bump: o = {color, roug
   m.userData.uni = uni; return m;
 }
 /* sima (nem pikkelyes) anyag gyors készítése */
-const l3Mat = o => { const q = Object.assign({ roughness: 0.5, metalness: 0 }, o); const ph = !!q.clear; delete q.clear; if (q.color != null) q.color = l3Col(q.color); if (q.emissive != null) q.emissive = l3Col(q.emissive); return new (ph ? THREE.MeshPhysicalMaterial : THREE.MeshStandardMaterial)(q); };
+const l3Mat = o => { const q = Object.assign({ roughness: 0.5, metalness: 0 }, o); const ph = !!q.clear; delete q.clear; if (q.color != null) q.color = l3Col(q.color); if (q.emissive != null) q.emissive = l3Col(q.emissive); return ph ? l3Phys(q) : new THREE.MeshStandardMaterial(q); };
 
 /* ---------- cső egy görbe mentén (farok, nyak, ág): profil(t, szög) → sugár; UV: u = hossz, v = kerület ---------- */
 function l3TubeGeo(n, m) {   // n gyűrű, m oldal; a pontokat l3TubeSet tölti

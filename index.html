@@ -5506,11 +5506,13 @@ function l3ScaleTex(kind) {
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = Math.min(8, L3.r.capabilities.getMaxAnisotropy()); return (L3.stex[kind] = t);
 }
 const PERTURB = 'vec3 perturbNormalArb2( vec3 surf_pos, vec3 surf_norm, vec2 dHdxy ) { vec3 vSigmaX = dFdx( surf_pos ); vec3 vSigmaY = dFdy( surf_pos ); vec3 R1 = cross( vSigmaY, surf_norm ); vec3 R2 = cross( surf_norm, vSigmaX ); float fDet = dot( vSigmaX, R1 ); fDet *= ( float( gl_FrontFacing ) * 2.0 - 1.0 ); vec3 vGrad = sign( fDet ) * ( dHdxy.x * R1 + dHdxy.y * R2 ); return normalize( abs( fDet ) * surf_norm - vGrad ); }';
+/* „fényes bevonat” olcsón: a MeshPhysicalMaterial clearcoat-ja drága (második tükröződési lebeny + újabb környezet-minta pixelenként; a mérésben a sárkány képkocka-költségének ~egynegyede),
+   ezért MeshStandard, a bevonat mértékével csökkentett érdességgel (a csillogás megmarad, a fényes réteg nem külön lebeny). A clearcoat/clearcoatRoughness opciókat eldobja. */
+function l3Phys(o) { const q = Object.assign({}, o), cc = q.clearcoat || 0; delete q.clearcoat; delete q.clearcoatRoughness; if (cc && q.roughness != null) q.roughness = Math.max(0.1, q.roughness - cc * 0.16); return new THREE.MeshStandardMaterial(q); }
 function l3Skin(o) {   // háromsíkú (felület-ragadó) bump: o = {color, rough, metal, kind:'scale'|'grain', cell (px/pikkely), amt, vcol, clear, env, emissive}
   const T = THREE, tex = l3ScaleTex(o.kind || 'scale'), uni = { uTex: { value: tex }, uK: { value: 1 / (8 * (o.cell || 5)) }, uAmt: { value: o.amt != null ? o.amt : 1.4 } };
-  const M = o.clear ? T.MeshPhysicalMaterial : T.MeshStandardMaterial;
   const po = { color: o.color ? l3Col(o.color) : 0xffffff, roughness: o.rough != null ? o.rough : 0.5, metalness: o.metal || 0, vertexColors: !!o.vcol, envMapIntensity: o.env != null ? o.env : 0.9 }; if (o.clear) { po.clearcoat = o.clear; po.clearcoatRoughness = o.clearR != null ? o.clearR : 0.25; }
-  const m = new M(po);
+  const m = o.clear ? l3Phys(po) : new T.MeshStandardMaterial(po);
   if (o.emissive) { m.emissive = l3Col(o.emissive); m.emissiveIntensity = o.eInt || 1; }
   m.onBeforeCompile = sh => {
     sh.uniforms.uTex = uni.uTex; sh.uniforms.uK = uni.uK; sh.uniforms.uAmt = uni.uAmt;
@@ -5522,7 +5524,7 @@ function l3Skin(o) {   // háromsíkú (felület-ragadó) bump: o = {color, roug
   m.userData.uni = uni; return m;
 }
 /* sima (nem pikkelyes) anyag gyors készítése */
-const l3Mat = o => { const q = Object.assign({ roughness: 0.5, metalness: 0 }, o); const ph = !!q.clear; delete q.clear; if (q.color != null) q.color = l3Col(q.color); if (q.emissive != null) q.emissive = l3Col(q.emissive); return new (ph ? THREE.MeshPhysicalMaterial : THREE.MeshStandardMaterial)(q); };
+const l3Mat = o => { const q = Object.assign({ roughness: 0.5, metalness: 0 }, o); const ph = !!q.clear; delete q.clear; if (q.color != null) q.color = l3Col(q.color); if (q.emissive != null) q.emissive = l3Col(q.emissive); return ph ? l3Phys(q) : new THREE.MeshStandardMaterial(q); };
 
 /* ---------- cső egy görbe mentén (farok, nyak, ág): profil(t, szög) → sugár; UV: u = hossz, v = kerület ---------- */
 function l3TubeGeo(n, m) {   // n gyűrű, m oldal; a pontokat l3TubeSet tölti
@@ -5619,7 +5621,7 @@ const kVinyl = (color, o) => l3Mat(Object.assign({ color: color, roughness: 0.46
 /* fényes fekete gyöngyszem két fényfolttal; a csoport z-ben lapított */
 function kBead(parent, x, y, z, r, flat) {
   const T = THREE, g = new T.Group(); g.position.set(x, y, z); g.scale.z = flat || 0.7;
-  const b = new T.Mesh(new T.SphereGeometry(r, 16, 12), kBead.mat || (kBead.mat = new T.MeshPhysicalMaterial({ color: 0x07060a, roughness: 0.12, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.6 })));
+  const b = new T.Mesh(new T.SphereGeometry(r, 16, 12), kBead.mat || (kBead.mat = l3Phys({ color: 0x07060a, roughness: 0.12, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.6 })));
   g.add(b);
   const h1 = new T.Mesh(new T.SphereGeometry(r * 0.3, 8, 6), kBead.w || (kBead.w = new T.MeshBasicMaterial({ color: 0xffffff, toneMapped: false }))); h1.position.set(r * 0.34, r * 0.4, r * 0.82 / (flat || 0.7)); g.add(h1);
   const h2 = new T.Mesh(new T.SphereGeometry(r * 0.15, 8, 6), kBead.w); h2.position.set(-r * 0.3, -r * 0.34, r * 0.88 / (flat || 0.7)); g.add(h2);
@@ -5653,7 +5655,8 @@ function l3Load(cb) {
   document.head.appendChild(s);
 }
 const l3Col = (hex, k) => { const c = new THREE.Color(hex).convertSRGBToLinear(); if (k != null) c.multiplyScalar(k); return c; };
-const l3Inv = () => { if (L3.on && !L3.raf) L3.raf = requestAnimationFrame(l3Frame); };
+/* l3Inv('v') = csak a nézet változott (görgetés, parallax): az árnyék-térkép nem rajzolódik újra; minden más hívás újrarajzoltatja (L3.sd) */
+const l3Inv = v => { if (v !== 'v') L3.sd = true; if (L3.on && !L3.raf) L3.raf = requestAnimationFrame(l3Frame); };
 
 /* ---------- geometria-építő: dobozok világ-UV-val és csúcspont-színnel, egy hívásra összefűzve ---------- */
 class L3Geo {
@@ -5770,13 +5773,13 @@ function l3Init() {
     const lowq = !!window.__L3_LOWQ, r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq, alpha: true, powerPreference: 'high-performance' });
     L3.lowq = lowq;
     r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
-    r.shadowMap.enabled = true; r.shadowMap.type = T.PCFSoftShadowMap; r.setScissorTest(true);
+    r.shadowMap.enabled = true; r.shadowMap.type = T.PCFShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
     L3.cv = cv; L3.r = r; L3.scene = new T.Scene(); L3.cam = new T.PerspectiveCamera(L3K.FOV, 1, 10, 6000); L3.ray = new T.Raycaster();
     cv.addEventListener('webglcontextlost', e => { e.preventDefault(); L3.st = 'failed'; l3Hide(); if ($('.lb')) drawLibrary(); });
     const sc = L3.scene;
     sc.add(new T.HemisphereLight(0xfff0dc, 0x5e3a22, 0.62));
-    const key = new T.DirectionalLight(0xffe2bc, 1.35); key.castShadow = true; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.9; sc.add(key); sc.add(key.target); L3.key = key;
-    const sm = lowq ? 512 : Math.min(innerWidth, innerHeight) < 700 ? 1024 : 2048; key.shadow.mapSize.set(sm, sm);
+    const key = new T.DirectionalLight(0xffe2bc, 1.35); key.castShadow = true; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.9; key.shadow.radius = 1.8; sc.add(key); sc.add(key.target); L3.key = key;
+    L3.sd = true;
     const fill = new T.DirectionalLight(0xbcd0ff, 0.22); fill.position.set(700, 200, 800); sc.add(fill);
     // környezeti visszaverődés: meleg softbox-ok egy kis "stúdióban"
     const es = new T.Scene(); es.background = new T.Color(0x20140d);
@@ -5784,14 +5787,23 @@ function l3Init() {
     sb(12, 8, -9, 8, 9, 6, 0xffe2bd); sb(10, 6, 10, 3, 7, 2.4, 0xfff0e0); sb(16, 2, 0, 11, 0, 4, 0xffffff); sb(24, 10, 0, -7, -8, 0.7, 0x7a4a2a);
     const pm = new T.PMREMGenerator(r); sc.environment = pm.fromScene(es, 0.03).texture; pm.dispose();
     addEventListener('resize', l3Resize);
-    document.addEventListener('scroll', l3Inv, { passive: true });
+    document.addEventListener('scroll', () => l3Inv('v'), { passive: true });
     l3Resize();
     return true;
   } catch (e) { console.error(e); L3.st = 'failed'; return false; }
 }
+/* minőségi fokozat: 0 = alap (felbontás ≤ 1,25×, 2048-as árnyék), 1 = 1× és 1024-es árnyék, 2 = vészfék: 0,75× és 512-es árnyék (a vászon CSS-sel felnagyítva) */
+function l3Quality() {
+  const r = L3.r; if (!r) return;
+  const vw = innerWidth, vh = innerHeight, d = L3.deg || 0, pr = L3.lowq ? 1 : d >= 2 ? 0.75 : d === 1 ? 1 : Math.min(devicePixelRatio || 1, vw < 700 ? 1.5 : 1.25);
+  r.setPixelRatio(pr); r.setSize(vw, vh, false);
+  const sh = L3.key && L3.key.shadow, sm = L3.lowq || d >= 2 ? 512 : d === 1 || Math.min(vw, vh) < 700 ? 1024 : 2048;
+  if (sh && sh.mapSize.x !== sm) { sh.mapSize.set(sm, sm); if (sh.map) { sh.map.dispose(); sh.map = null; } }
+  L3.sd = true;
+}
 function l3Resize() {
   if (!L3.r) return;
-  const vw = innerWidth, vh = innerHeight; L3.r.setPixelRatio(L3.lowq || L3.deg ? 1 : Math.min(devicePixelRatio || 1, vw < 700 ? 1.75 : 2)); L3.r.setSize(vw, vh, false);
+  const vw = innerWidth, vh = innerHeight; l3Quality();
   L3.cv.style.width = vw + 'px'; L3.cv.style.height = vh + 'px'; L3.cam.aspect = vw / vh; L3.cam.updateProjectionMatrix(); l3Inv();
   if (L3.on) { clearTimeout(L3.rt); L3.rt = setTimeout(() => { if ($('.lb.l3') && Math.abs((L3.lastW || 0) - $('.lb').clientWidth) > 1) drawLibrary(); }, 180); }
 }
@@ -5885,7 +5897,7 @@ function l3Filter() {
   l3Inv();
 }
 function l3Pose(it) {   // könyv: kihúzódik és megdől hover/fókusz/kiválasztás esetén; a forgáspont a könyv alja
-  if (it.drag) return;
+  L3.sd = true; if (it.drag) return;
   const hv = it.hv, lift = it.lf || 0;
   it.grp.position.set(it.bx, it.by + lift * 0.35, it.bz + 10 * hv + 15 * it.pk + lift);
   it.grp.rotation.x = it.kind === 'book' ? 0.085 * hv + 0.03 * it.pk + 0.05 * (lift ? 1 : 0) : 0;
@@ -5904,9 +5916,13 @@ function l3Render() {
   r.setScissorTest(false); r.clear(); r.setScissorTest(true);
   if (x1 <= x0 || y1 <= y0) return;
   r.setScissor(x0, c.vh - y1, x1 - x0, y1 - y0);
-  const key = L3.key, half = Math.hypot(c.vw, c.vh) * 0.66, tgt = new THREE.Vector3(c.sx, c.sy, -70), dir = new THREE.Vector3(-0.3, 0.66, 1).normalize();
-  key.target.position.copy(tgt); key.position.copy(tgt).addScaledVector(dir, 1500); key.target.updateMatrixWorld();
-  const sc = key.shadow.camera; sc.left = -half; sc.right = half; sc.top = half; sc.bottom = -half; sc.near = 200; sc.far = 3300; sc.updateProjectionMatrix();
+  const key = L3.key, half = Math.hypot(c.vw, c.vh) * 0.72, SN = 96, qx = Math.round(c.sx / SN) * SN, qy = Math.round(c.sy / SN) * SN, kk = qx + ',' + qy + ',' + Math.round(half);
+  if (kk !== L3.sdK) {   // az árnyék-kamera 96 px-es rácson ugrik (a keret ≥ 0,2·átló ráhagyással), így görgetéskor nem kell újrarajzolni az árnyékot
+    L3.sdK = kk; L3.sd = true; const tgt = new THREE.Vector3(qx, qy, -70), dir = new THREE.Vector3(-0.3, 0.66, 1).normalize();
+    key.target.position.copy(tgt); key.position.copy(tgt).addScaledVector(dir, 1500); key.target.updateMatrixWorld();
+    const sc = key.shadow.camera; sc.left = -half; sc.right = half; sc.top = half; sc.bottom = -half; sc.near = 200; sc.far = 3300; sc.updateProjectionMatrix();
+  }
+  r.shadowMap.needsUpdate = !!L3.sd; L3.sd = false;
   r.render(L3.scene, L3.cam);
 }
 function l3Frame(now) {
@@ -5921,10 +5937,10 @@ function l3Frame(now) {
     else if (it.hv !== t) { it.hv = t; l3Pose(it); }
     if (it.lt != null && Math.abs(lf - it.lf) > 0.05) { it.lf += (lf - it.lf) * (1 - Math.pow(0.0002, dt)); busy = true; l3Pose(it); }
   });
-  if (DND.s && DND.s.l3 && DND.s.on) { l3DndStep(dt); busy = true; }
-  for (let i = L3.anims.length - 1; i >= 0; i--) { const a = L3.anims[i]; a.t += dt; const u = Math.min(1, a.t / a.d); a.fn(u, dt); busy = true; if (u >= 1) { L3.anims.splice(i, 1); if (a.done) a.done(); } }
-  l3Render();
-  if (busy) { l3Perf(now); L3.raf = requestAnimationFrame(l3Frame); } else { L3.t = 0; L3.pf = null; }
+  if (DND.s && DND.s.l3 && DND.s.on) { l3DndStep(dt); busy = true; L3.sd = true; }
+  for (let i = L3.anims.length - 1; i >= 0; i--) { const a = L3.anims[i]; a.t += dt; const u = Math.min(1, a.t / a.d); a.fn(u, dt); busy = true; L3.sd = true; if (u >= 1) { L3.anims.splice(i, 1); if (a.done) a.done(); } }
+  l3Render(); l3Perf(now);
+  if (busy) L3.raf = requestAnimationFrame(l3Frame); else { L3.t = 0; }
 }
 /* ---------- lassúság-őr: folyamatos animáció közben mért képkocka-idők; először csendben visszaveszünk (felbontás/árnyék), másodszor felajánljuk a 2D nézetet ---------- */
 function l3Perf(now) {
@@ -5932,17 +5948,15 @@ function l3Perf(now) {
   const pf = L3.pf || (L3.pf = { last: 0, d: [] });
   if (pf.last && now - pf.last < 250) pf.d.push(now - pf.last);
   pf.last = now;
-  if (pf.d.length >= 45) { const d = pf.d.slice(3).sort((x, y) => x - y); pf.d = []; l3PerfEval(d[d.length >> 1], d[Math.floor(d.length * 0.9)]); }
+  if (pf.d.length >= 30) { const d = pf.d.slice(2).sort((x, y) => x - y); pf.d = []; l3PerfEval(d[d.length >> 1], d[Math.floor(d.length * 0.9)]); }
 }
 function l3PerfEval(med, p90) {
-  const slow = med > 36 || p90 > 60;
+  const slow = med > 24 || p90 > 60;   // 60 Hz-en a 2 vsync-es (33 ms) képkocka már lassú
   L3.slow = slow ? (L3.slow || 0) + 1 : Math.max(0, (L3.slow || 0) - 1);
-  if (L3.slow >= 2 && !L3.deg) {   // 1. lépcső: csendes visszavétel
-    L3.deg = 1; L3.slow = 0; L3.r.setPixelRatio(1); L3.r.setSize(innerWidth, innerHeight, false);
-    const sh = L3.key && L3.key.shadow; if (sh) { sh.mapSize.set(1024, 1024); if (sh.map) { sh.map.dispose(); sh.map = null; } }
-    l3Inv(); return 'deg';
+  if (L3.slow >= 2 && (L3.deg || 0) < 2) {   // 1–2. lépcső: csendes visszavétel (felbontás + árnyék)
+    L3.deg = (L3.deg || 0) + 1; L3.slow = 0; l3Quality(); l3Inv(); return 'deg';
   }
-  if (L3.slow >= 2 && L3.deg === 1 && !S.settings.perf3dAsked) {   // 2. lépcső: egyszer rákérdezünk
+  if (L3.slow >= 2 && L3.deg >= 2 && !S.settings.perf3dAsked) {   // 3. lépcső: egyszer rákérdezünk
     S.settings.perf3dAsked = true; persist(); L3.slow = 0;
     toastAction('A 3D könyvtár lassúnak tűnik ezen a gépen. Átváltsak a gyorsabb 2D nézetre?', 'Átváltok', () => { S.settings.view3d = false; persist(); drawLibrary(); toast('2D nézet. A Beállításokban bármikor visszakapcsolhatod a 3D-t.'); });
     return 'ask';
@@ -6198,7 +6212,7 @@ function lnBuild(it) {
   const M = {
     iron: l3Mat({ color: '#1b1e26', roughness: 0.4, metalness: 0.85, envMapIntensity: 1.2 }),
     brass: l3Mat({ color: '#e0b04a', roughness: 0.26, metalness: 1, envMapIntensity: 1.4 }),
-    glass: new T.MeshPhysicalMaterial({ color: l3Col('#ffe2b0'), transparent: true, opacity: 0.16, roughness: 0.05, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.05, emissive: l3Col('#ff9d3f'), emissiveIntensity: 0, depthWrite: false }),
+    glass: l3Phys({ color: l3Col('#ffe2b0'), transparent: true, opacity: 0.16, roughness: 0.05, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.05, emissive: l3Col('#ff9d3f'), emissiveIntensity: 0, depthWrite: false }),
     wax: l3Mat({ color: '#f4e6c4', roughness: 0.55, emissive: '#ffb860', emissiveIntensity: 0 }),
     wick: l3Mat({ color: '#241812', roughness: 0.9 }),
     fo: new T.MeshBasicMaterial({ color: 0xff8a1c, transparent: true, opacity: 0.88, depthWrite: false, toneMapped: false }),
@@ -6292,7 +6306,7 @@ function glBuild3(it, which) {
     frame: l3Mat({ color: '#15171d', roughness: 0.36, metalness: 0.4, clear: 1, clearcoat: 0.5, clearcoatRoughness: 0.3, envMapIntensity: 0.9 }),
     brass: l3Mat({ color: '#e0b04a', roughness: 0.26, metalness: 1, envMapIntensity: 1.4 }),
     glass: glTexMat(stat, () => { if (typeof S !== 'undefined' && S.__apply) S.__apply(); }, which),
-    gloss: new T.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.1, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03, depthWrite: false }),
+    gloss: l3Phys({ color: 0xffffff, transparent: true, opacity: 0.1, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03, depthWrite: false }),
     led: new T.MeshBasicMaterial({ color: 0xff7a1a, toneMapped: false })
   };
   const P = (m, part) => { m.userData.part = part || 'glass'; parts.push(m); return m; };
@@ -6684,11 +6698,11 @@ function nkZoomOpen(it, A) {
   try { r = new T.WebGLRenderer({ antialias: !L3.lowq, alpha: true, powerPreference: 'high-performance' }); } catch (e) { console.error(e); return; }
   const ctxOK = r.getContext && r.getContext(); if (!ctxOK) return;
   r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
-  r.shadowMap.enabled = !L3.lowq; r.shadowMap.type = T.PCFSoftShadowMap;
+  r.shadowMap.enabled = !L3.lowq; r.shadowMap.type = T.PCFShadowMap;
   const scene = new T.Scene(); scene.environment = nkEnv(r);
   scene.add(new T.HemisphereLight(0xfff0dc, 0x6a4326, 0.55));
   const key = new T.DirectionalLight(0xffe2bc, 0.95); key.position.set(-70, 130, 170); key.target.position.set(0, 40, -40); scene.add(key, key.target);
-  if (!L3.lowq) { key.castShadow = true; key.shadow.mapSize.set(1536, 1536); key.shadow.bias = -0.0006; key.shadow.normalBias = 0.6; const sc = key.shadow.camera; sc.left = -110; sc.right = 110; sc.top = 110; sc.bottom = -110; sc.near = 20; sc.far = 520; sc.updateProjectionMatrix(); }
+  if (!L3.lowq) { key.castShadow = true; key.shadow.mapSize.set(1536, 1536); key.shadow.radius = 1.8; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.6; const sc = key.shadow.camera; sc.left = -110; sc.right = 110; sc.top = 110; sc.bottom = -110; sc.near = 20; sc.far = 520; sc.updateProjectionMatrix(); }
   const fill = new T.DirectionalLight(0xbcd0ff, 0.2); fill.position.set(80, 40, 120); scene.add(fill);
   const root = new T.Group(); scene.add(root);
   const AS = nkAssemble(root, it, 'zoom'), R = AS.R, ctl = R.ctl, parts = AS.parts;
@@ -6707,7 +6721,7 @@ function nkZoomOpen(it, A) {
   const Z = { ctl: ctl, r: r, el: el, p: 0, pt: 1, t: 0, lx: 0, ly: 0, tx: 0, ty: 0, closing: false, loop: null }; NKZ.o = Z;
   const size = () => {
     const mw = innerWidth - 24, mh = innerHeight - (innerWidth < 640 ? 150 : 120), w = Math.max(240, Math.min(mw, mh * 1.3)), h = Math.round(w / 1.3);
-    stage.style.width = w + 'px'; stage.style.height = h + 'px'; r.setPixelRatio(L3.lowq ? 1 : Math.min(devicePixelRatio || 1, 2)); r.setSize(w, h, false); cv.style.width = w + 'px'; cv.style.height = h + 'px'; cam.aspect = w / h; cam.updateProjectionMatrix(); Z.w = w; Z.h = h;
+    stage.style.width = w + 'px'; stage.style.height = h + 'px'; r.setPixelRatio(L3.lowq ? 1 : Math.min(devicePixelRatio || 1, 1.5)); r.setSize(w, h, false); cv.style.width = w + 'px'; cv.style.height = h + 'px'; cam.aspect = w / h; cam.updateProjectionMatrix(); Z.w = w; Z.h = h;
   };
   size(); Z.b = stage.getBoundingClientRect();
   const flip = rev => {   // a polcon álló doboz helyéről nő ki (vagy oda zsugorodik vissza)
@@ -7212,12 +7226,12 @@ function plBuild(it) {
     soil: new T.MeshStandardMaterial({ color: l3Col('#4a2f20'), roughness: 1 }),
     stone: kVinyl('#9a8f86', { roughness: 0.8, clearcoat: 0 }),
     stem: kVinyl('#2f8a4e', { roughness: 0.6 }),
-    petal: new T.MeshPhysicalMaterial({ color: l3Col('#ff6f9f'), roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, emissive: l3Col('#ff3d85'), emissiveIntensity: 0.1 }),
+    petal: l3Phys({ color: l3Col('#ff6f9f'), roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, emissive: l3Col('#ff3d85'), emissiveIntensity: 0.1 }),
     center: kVinyl('#ffd34a', { roughness: 0.4 }), glint: new T.MeshBasicMaterial({ color: 0xfff6c8 }),
     bug: kVinyl('#e8322b', { roughness: 0.25, clearcoat: 0.9 }), bugD: new T.MeshStandardMaterial({ color: 0x2a1010, roughness: 0.5 }),
     spark: new T.SpriteMaterial({ map: p2Star(), color: 0xfff4b0, transparent: true, depthWrite: false, opacity: 0, blending: T.AdditiveBlending, toneMapped: false })
   };
-  shade.forEach((c, i) => { M['l' + i] = new T.MeshPhysicalMaterial({ color: l3Col(c), roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.5, emissive: l3Col(c), emissiveIntensity: 0.1, envMapIntensity: 0.7 }); });
+  shade.forEach((c, i) => { M['l' + i] = l3Phys({ color: l3Col(c), roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.5, emissive: l3Col(c), emissiveIntensity: 0.1, envMapIntensity: 0.7 }); });
   const P = (m, part) => { m.userData.part = part || 'pot'; parts.push(m); return m; };
   // cserép
   const pot = new T.Mesh(new T.CylinderGeometry(26, 19.5, 34, 40, 1, true), M.pot); pot.position.y = 17.5; pot.castShadow = true; pot.receiveShadow = true; root.add(P(pot, 'pot'));
@@ -7829,7 +7843,7 @@ function settingsModal() {
         sw('Mozgás és animációk', 'motion', 'Kikapcsolva a kockák egyből a helyükre ugranak. A rendszer „csökkentett mozgás” beállítását mindig tiszteletben tartja.', () => applyMotionClasses()),
         sw('Kímélő mód', 'lite', 'Gyengébb gépen vagy telefonon, ha akadozik az oldal: rövidebb dobás, nincs háttérfény, nincsenek belépő animációk és konfetti.', () => applyMotionClasses())),
       h('div', { class: 'set-sec' }, h('h3', null, 'Könyvtár nézet'),
-        h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: st.view3d !== false, disabled: !l3GL(), onchange: e => { st.view3d = e.target.checked; if (e.target.checked) { delete st.perf3dAsked; if (typeof L3 !== 'undefined') { L3.deg = 0; L3.slow = 0; } } persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, '3D könyvtár')),
+        h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: st.view3d !== false, disabled: !l3GL(), onchange: e => { st.view3d = e.target.checked; if (e.target.checked) { delete st.perf3dAsked; if (typeof L3 !== 'undefined') { L3.deg = 0; L3.slow = 0; if (L3.r) l3Quality(); } } persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, '3D könyvtár')),
           h('span', { class: 'hint' }, l3GL() ? 'Valódi 3D polcok, könyvek és díszek fénnyel-árnyékkal. Gyengébb gépen kikapcsolva a gyorsabb 2D nézet látszik. Kímélő módban mindig 2D.' : 'Ez a böngésző nem támogatja a 3D-t (WebGL), ezért a 2D nézet látszik.'))),
       h('div', { class: 'set-sec' }, h('h3', null, 'Szürreális mód'),
         sw('Szürreális mód bekapcsolva', 'surreal', 'Váratlan, vicces opciók és szabályszegő párosítások is kijöhetnek.'),

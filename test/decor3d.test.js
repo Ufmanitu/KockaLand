@@ -49,9 +49,10 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   await cyc(); const m0 = await cyc(), m1 = await cyc();   // az 1. kör után „felmelegedett” állapothoz mérünk
   ok(m1.g <= m0.g + 2 && m1.t <= m0.t + 2, 'nincs szivárgás 2D↔3D váltás után (geometria ' + m0.g + '→' + m1.g + ', textúra ' + m0.t + '→' + m1.t + ')');
   // lassúság-őr: 1. lépcső csendes visszavétel, 2. lépcső egyszeri ajánlat a 2D-re; beállítás-kapcsoló
-  const pe = await page.evaluate(() => { const r = []; L3.deg = 0; L3.slow = 0; delete S.settings.perf3dAsked; r.push(l3PerfEval(10, 14)); r.push(l3PerfEval(90, 130)); r.push(l3PerfEval(90, 130)); r.push(L3.deg); r.push(l3PerfEval(90, 130)); r.push(l3PerfEval(90, 130)); r.push(!!S.settings.perf3dAsked); r.push(l3PerfEval(90, 130)); return r; });
+  const pe = await page.evaluate(() => { const r = []; L3.deg = 0; L3.slow = 0; delete S.settings.perf3dAsked; const sl = () => r.push(l3PerfEval(90, 130)); r.push(l3PerfEval(10, 14)); sl(); sl(); r.push(L3.deg); sl(); sl(); r.push(L3.deg); sl(); sl(); r.push(!!S.settings.perf3dAsked); sl(); return r; });
   ok(pe[0] === 'ok' && pe[1] === 'slow' && pe[2] === 'deg' && pe[3] === 1, 'őr: gyors gépen nem történik semmi, lassún csendben visszavesz (deg=1)');
-  ok(pe[5] === 'ask' && pe[6] === true && pe[7] !== 'ask', 'őr: egyszer rákérdez a 2D-re, többször nem');
+  ok(pe[4] === 'slow' && pe[5] === 'deg' && pe[6] === 2, 'őr: második csendes fokozat (deg=2, vészfék)');
+  ok(pe[8] === 'ask' && pe[9] === true && pe[10] !== 'ask', 'őr: egyszer rákérdez a 2D-re, többször nem');
   ok(!!(await page.$('.toast button')) || (await page.evaluate(() => /2D nézet/.test(document.body.textContent))), 'őr: a toast megjelenik');
   await page.evaluate(() => { const b = Array.from(document.querySelectorAll('.toast button')).find(x => /Átváltok/.test(x.textContent)); if (b) b.click(); });
   await page.waitForFunction('S.settings.view3d === false && !document.querySelector(".lb.l3")', null, { timeout: 30000 }).catch(() => { });

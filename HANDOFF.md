@@ -43,9 +43,10 @@ Tesztek (Playwright, Chromium; a 3D-sek szoftveres GL-en lassúak, sorban futtas
 - Képalapú 3D dísz (kis-sarkany): `kSvgPlane` rétegek a SVG-ből (720×600 px, kulcs `fly:<réteg>`), MeshBasicMaterial (nincs világítás); a rétegek pivotja `dx/dy`-nal; előnézet: `node test/fly-preview.js <png> [rétegek]`. A `decor3d` teszt kivételt tesz (`IMG=['kis-sarkany']`, kevés háromszög).
 - Anyag: `kVinyl`, `l3Mat` (clear→Physical), `l3Skin` (bump). Csúcsszínes SDF-hez `vertexColors:true` és az SDF-nek colFn kell, különben fekete (szellem-karok tanulsága).
 - Képsor: `node test/lib3d-gallery.js <png> <típusok|all>` (CLIP=x,y,w,h, DSF=2), `node test/lib3d-anim.js <előtag> <típus> <ms,ms> "<js: it=elem>" [x,y,w,h]`.
-- Lassúság-őr: folyamatos animáció közben 45 képkockánként medián/p90; 2× lassú → csendben DPR 1 + 1024-es árnyék, újabb 2× → egyszeri toast a 2D-re (`S.settings.perf3dAsked`). A Beállítások „3D könyvtár” kapcsolója nullázza.
+- Lassúság-őr (`l3Perf`/`l3PerfEval`/`l3Quality`): minden folytonos képkockát lát (görgetést is), 30 képkockánként medián/p90; med > 24 ms vagy p90 > 60 ms kétszer → `L3.deg` 1 (1× felbontás, 1024-es árnyék), majd 2 (0,75×, 512), harmadszor egyszeri toast a 2D-re (`S.settings.perf3dAsked`). Alap: felbontás ≤ 1,25×, 2048-as árnyék.
 
 ## Buktatók (tanulságok)
+- 3D teljesítmény: az árnyék-térkép NEM automatikus (`shadowMap.autoUpdate=false`); `l3Inv()` (alapértelmezés) és `l3Pose`/`l3Anim` jelzi (`L3.sd`), hogy újra kell rajzolni; görgetéshez/parallaxhoz `l3Inv('v')` (csak nézet). Új, a jelenetet mozgató kódnak `l3Inv()`-t kell hívnia, különben elavult árnyék marad. Clearcoat helyett `l3Phys` (MeshStandard); új dísz anyagai ne használjanak MeshPhysicalMaterialt. Mérés: szoftveres GL-ben a képkocka-idő a felbontással skálázik (`DPR 2 ≈ 2,9×`), a sárkány geometriája a vertex-költség nagy része.
 - Three r128: nincs `CapsuleGeometry`; az `onBeforeCompile`-os anyag (l3Skin) csak `clear`-nél kapjon clearcoat-ot (figyelmeztetés).
 - A színes-csúcsú anyag minden hozzá tartozó geometriához kér `color` attribútumot (primitíveknek külön, nem-vertexColors anyag kell, különben feketék: macska-fül, sárkány-ujj).
 - Az `Object3D.position` csak olvasható property: `Object.assign(mesh, {position})` strict módban hibát dob; `mesh.position.set()` kell.

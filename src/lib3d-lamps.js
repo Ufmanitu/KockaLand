@@ -8,7 +8,7 @@ function lnBuild(it) {
   const M = {
     iron: l3Mat({ color: '#1b1e26', roughness: 0.4, metalness: 0.85, envMapIntensity: 1.2 }),
     brass: l3Mat({ color: '#e0b04a', roughness: 0.26, metalness: 1, envMapIntensity: 1.4 }),
-    glass: new T.MeshPhysicalMaterial({ color: l3Col('#ffe2b0'), transparent: true, opacity: 0.16, roughness: 0.05, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.05, emissive: l3Col('#ff9d3f'), emissiveIntensity: 0, depthWrite: false }),
+    glass: l3Phys({ color: l3Col('#ffe2b0'), transparent: true, opacity: 0.16, roughness: 0.05, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.05, emissive: l3Col('#ff9d3f'), emissiveIntensity: 0, depthWrite: false }),
     wax: l3Mat({ color: '#f4e6c4', roughness: 0.55, emissive: '#ffb860', emissiveIntensity: 0 }),
     wick: l3Mat({ color: '#241812', roughness: 0.9 }),
     fo: new T.MeshBasicMaterial({ color: 0xff8a1c, transparent: true, opacity: 0.88, depthWrite: false, toneMapped: false }),
@@ -102,7 +102,7 @@ function glBuild3(it, which) {
     frame: l3Mat({ color: '#15171d', roughness: 0.36, metalness: 0.4, clear: 1, clearcoat: 0.5, clearcoatRoughness: 0.3, envMapIntensity: 0.9 }),
     brass: l3Mat({ color: '#e0b04a', roughness: 0.26, metalness: 1, envMapIntensity: 1.4 }),
     glass: glTexMat(stat, () => { if (typeof S !== 'undefined' && S.__apply) S.__apply(); }, which),
-    gloss: new T.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.1, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03, depthWrite: false }),
+    gloss: l3Phys({ color: 0xffffff, transparent: true, opacity: 0.1, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03, depthWrite: false }),
     led: new T.MeshBasicMaterial({ color: 0xff7a1a, toneMapped: false })
   };
   const P = (m, part) => { m.userData.part = part || 'glass'; parts.push(m); return m; };

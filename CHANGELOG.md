@@ -1,5 +1,13 @@
 # Változásnapló
 
+## v10 — 3D teljesítmény (2026-11-21)
+- **Árnyék-térkép állandó**: csak akkor rajzolódik újra, ha valami mozog (hover, animáció, húzás); görgetéskor és az egér-parallaxnál nem (az árnyék-kamera 96 px-es rácson ugrik). Egy állandósult képkocka ~160 draw call / ~50 e háromszög a korábbi ~420 / ~180 e helyett.
+- **Olcsóbb árnyék-szűrés**: PCFShadowMap (9 minta) a PCFSoft (36 minta) helyett, `shadow.radius` a lágysághoz.
+- **Alap felbontás ≤ 1,25×** (retina-n a korábbi 2× helyett: ~2,5× kevesebb képpont); a book nook zoom ≤ 1,5×.
+- **Clearcoat helyett olcsó fényes anyag** (`l3Phys`: MeshStandard, csökkentett érdesség).
+- **Lassúság-őr**: minden folytonos képkockát lát (görgetést is), 30 képkockás ablak, szigorúbb küszöb (med > 24 ms), két csendes minőségi fokozat (`l3Quality`: 1× / 1024-es árnyék, majd 0,75× / 512), végül a 2D-ajánlat.
+- Új teszt: `test/lib3d-perf.test.js`; `decor3d` őr-ellenőrzése bővítve.
+
 ## v9 — Sárkányok és szellem finomítása (2026-11-21)
 - **Fekvő sárkány**: vörös-fekete (fekete hát/szárny, vörös test, narancsos has), hosszabb könyvhalom alatta (már nem lóg le), a farka a halmon pihen. 3D és 2D egyaránt.
 - **Repülő sárkány = 2D kép**: a referencia-rajz szerint – kis fekete sárkány, füstcsík, ami krémszínű kunkorodó felhőoszloppá nő és tartja a dőlő sötét könyveket. Egyetlen SVG-forrás (`decor-baby.js`) szolgál a 2D nézetnek és – rétegenként textúrázott síkokként (`lib3d-flyimg.js`) – a 3D polcnak is; kattintás: fúj → csapkod, a füstre: megpuffan, a könyvekre: rezegnek, szemvillogás, idle.

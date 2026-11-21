@@ -310,12 +310,12 @@ function plBuild(it) {
     soil: new T.MeshStandardMaterial({ color: l3Col('#4a2f20'), roughness: 1 }),
     stone: kVinyl('#9a8f86', { roughness: 0.8, clearcoat: 0 }),
     stem: kVinyl('#2f8a4e', { roughness: 0.6 }),
-    petal: new T.MeshPhysicalMaterial({ color: l3Col('#ff6f9f'), roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, emissive: l3Col('#ff3d85'), emissiveIntensity: 0.1 }),
+    petal: l3Phys({ color: l3Col('#ff6f9f'), roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, emissive: l3Col('#ff3d85'), emissiveIntensity: 0.1 }),
     center: kVinyl('#ffd34a', { roughness: 0.4 }), glint: new T.MeshBasicMaterial({ color: 0xfff6c8 }),
     bug: kVinyl('#e8322b', { roughness: 0.25, clearcoat: 0.9 }), bugD: new T.MeshStandardMaterial({ color: 0x2a1010, roughness: 0.5 }),
     spark: new T.SpriteMaterial({ map: p2Star(), color: 0xfff4b0, transparent: true, depthWrite: false, opacity: 0, blending: T.AdditiveBlending, toneMapped: false })
   };
-  shade.forEach((c, i) => { M['l' + i] = new T.MeshPhysicalMaterial({ color: l3Col(c), roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.5, emissive: l3Col(c), emissiveIntensity: 0.1, envMapIntensity: 0.7 }); });
+  shade.forEach((c, i) => { M['l' + i] = l3Phys({ color: l3Col(c), roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.5, emissive: l3Col(c), emissiveIntensity: 0.1, envMapIntensity: 0.7 }); });
   const P = (m, part) => { m.userData.part = part || 'pot'; parts.push(m); return m; };
   // cserép
   const pot = new T.Mesh(new T.CylinderGeometry(26, 19.5, 34, 40, 1, true), M.pot); pot.position.y = 17.5; pot.castShadow = true; pot.receiveShadow = true; root.add(P(pot, 'pot'));
