@@ -61,6 +61,7 @@ function syncShelves() {
   if (!S.shelves.length) S.shelves = defaultShelves(S.books);
   else if (missing.length) { const last = S.shelves[S.shelves.length - 1]; missing.forEach(id => last.ids.push(id)); }
   if (firstTime && !S.decor.length) { const st = starterDecor(); S.decor = st.decor; placeDecor(st.place, 0); }
+  const cut = trimDecor(); if (cut > 0) { persist(); setTimeout(() => toast('Túl sok dísz volt kint, ezért ' + cut + ' dísz lekerült a polcról (legfeljebb ' + MAX_DECOR + ' lehet, hogy az oldal gyors maradjon). A Díszek gombbal bármikor újat tehetsz ki.'), 600); }
 }
 const shelfOf = id => S.shelves.find(s => s.ids.indexOf(id) >= 0);
 const bookById = id => S.books.find(b => b.id === id);

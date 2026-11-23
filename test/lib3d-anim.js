@@ -7,7 +7,7 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   page.on('pageerror', e => console.log('ERR', e.message)); page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED|ERR_BLOCKED/.test(m.text())) console.log('CON', m.text()); });
   await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
   await page.route(/three\.min\.js/, r => r.fulfill({ contentType: 'application/javascript', body: fs.readFileSync(path.join(__dirname, 'vendor/three.min.js')) }));
-  await page.addInitScript(() => { window.__L3_LOWQ = true; try { localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true } })); } catch (e) { } });
+  await page.addInitScript(() => { window.__MAX_DECOR = 99; window.__L3_LOWQ = true; try { localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true } })); } catch (e) { } });
   await page.goto('file://' + path.resolve('dist/index.html') + '#polc'); await page.waitForFunction('typeof L3 !== "undefined" && L3.on && L3.items.size > 0', null, { timeout: 40000 }).catch(() => { });
   await page.evaluate(`(() => { S.shelves.forEach(s => { s.ids = s.ids.filter(id => !isDecorId(id)); }); S.decor = []; DECOR_SETS.forEach(set => { if (set.parts.some(p => p.type === ${JSON.stringify(type)})) addDecorSet(set, 0); }); S.shelves[0].ids = S.shelves[0].ids.filter(id => isDecorId(id)); drawLibrary(); })()`);
   await page.waitForFunction('L3.on && L3.items.size > 0', null, { timeout: 30000 }).catch(() => { });

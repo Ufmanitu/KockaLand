@@ -1,4 +1,4 @@
-// node test/lib3d-perf.test.js — a 3D teljesítmény-védelmek: alap felbontás ≤1,25×, olcsó árnyék (PCF), az árnyék-térkép csak változáskor rajzolódik újra
+// node test/lib3d-perf.test.js — a 3D teljesítmény-védelmek: alap felbontás ≤1,25×, lágy, olcsó árnyék (VSM), az árnyék-térkép csak változáskor rajzolódik újra
 // (görgetéskor nem, hoverkor igen), kevés draw call állandósult állapotban, a minőségi fokozatok váltanak és vissza is állnak
 const { chromium } = require('playwright'); const path = require('path'); const fs = require('fs');
 (async () => {
@@ -15,7 +15,7 @@ const { chromium } = require('playwright'); const path = require('path'); const 
 
   const q = await page.evaluate(() => ({ pr: L3.r.getPixelRatio(), dpr: devicePixelRatio, type: L3.r.shadowMap.type, auto: L3.r.shadowMap.autoUpdate, map: L3.key.shadow.mapSize.x }));
   ok(q.dpr === 2 && q.pr <= 1.25, 'alap felbontás: retina (2×) kijelzőn is legfeljebb 1,25× (' + q.pr + ')');
-  ok(q.type === 1 && q.auto === false, 'árnyék: olcsó PCF, nem automatikus frissítés');
+  ok(q.type === 3 && q.auto === false, 'árnyék: lágy VSM (képkockánként 1 mintavétel), nem automatikus frissítés');
 
   // árnyék-térkép rajzolásainak számlálása
   await page.evaluate(() => { window.__sh = 0; const sm = L3.r.shadowMap, f = sm.render.bind(sm); sm.render = function () { const need = sm.needsUpdate; f.apply(null, arguments); if (need) window.__sh++; }; });

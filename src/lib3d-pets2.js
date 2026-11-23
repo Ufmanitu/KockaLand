@@ -124,7 +124,7 @@ function ctBuild(it) {
   const hearts = (n) => { for (let i = 0; i < n; i++) setTimeout(() => { if (!L3.on) return; drParticle(root, 'heart', new T.Vector3(-30 + (Math.random() - 0.5) * 30, 56, 24 + Math.random() * 6), { vx: (Math.random() - 0.5) * 8, vy: 14 + Math.random() * 6, life: 1.7, big: 0.9 }); }, i * 220); };
   const ctl = {
     S: S, root: root, awake: false, snoring: false,
-    look(p) { if (!ctl.awake) return; const v = kLookVec(head, p, 180); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (!ctl.awake) return; const v = kLookVec(head, p, 180); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     wake() {
       crStop(ctl); ctl.awake = true; ctl.snoring = false;
       ctl.seq = l3Seq().to(S, { open: 1, lift: 1, hx: -0.06, ear: -0.35 }, 0.35, 'out')
@@ -255,7 +255,7 @@ function owBuild(it) {
   };
   const ctl = {
     S: S, root: root,
-    look(p) { if (ctl.busy) return; const v = kLookVec(head, p, 180); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(head, p, 180); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     blink() { l3Seq().to(S, { blink: 1 }, 0.07, 'out').to(S, { blink: 0 }, 0.12, 'io').play(); },
     lookAround() {
       crStop(ctl); ctl.busy = true; S.lx = 0; S.ly = 0;

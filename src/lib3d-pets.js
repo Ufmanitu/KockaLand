@@ -75,7 +75,7 @@ function ghBuild(it) {
   S.__apply();
   const ctl = {
     S: S, root: root,
-    look(p) { if (ctl.busy) return; const v = kLookVec(eyes[0], p, 160); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(eyes[0], p, 160); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     blink() { l3Seq().to(S, { blink: 1 }, 0.07, 'out').to(S, { blink: 0 }, 0.12, 'io').play(); },
     turn() { if (ctl.busy) return; ctl.busy = true; l3Anim(1.7, u => { S.lx = -1 + 2 * u; S.ly = 0.7 - Math.sin(u * Math.PI * 2) * 0.2; S.read = Math.sin(u * Math.PI); S.__apply(); }, () => { S.lx = 0; S.ly = 0; S.read = 0; S.__apply(); ctl.busy = false; }); },
     startle() { crStop(ctl); ctl.seq = l3Seq().to(S, { hop: 1, eyeW: 1.28, armUp: 0.5, glow: 0.5 }, 0.14, 'out').to(S, { hop: 0 }, 0.22, 'bounce').wait(0.5).to(S, { eyeW: 1, armUp: 0, glow: 0.12 }, 0.5, 'io').play(); },

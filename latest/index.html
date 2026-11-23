@@ -665,6 +665,9 @@ input[type=checkbox], input[type=radio] { accent-color: var(--tc); width: 18px; 
 .dc-shelfsel select { width: auto; min-width: 180px; }
 @media (max-width: 560px) { .dc-card { grid-template-columns: 1fr; justify-items: start; } }
 
+.dc-count { font-weight: 600; color: var(--fg2); }
+.dc-count.full { color: var(--danger); }
+
 
 /* ===== Díszek 2: olvasó szellem, lámpás, üvegablak-panelek ===== */
 /* --- olvasó szellem --- */
@@ -4156,6 +4159,7 @@ function syncShelves() {
   if (!S.shelves.length) S.shelves = defaultShelves(S.books);
   else if (missing.length) { const last = S.shelves[S.shelves.length - 1]; missing.forEach(id => last.ids.push(id)); }
   if (firstTime && !S.decor.length) { const st = starterDecor(); S.decor = st.decor; placeDecor(st.place, 0); }
+  const cut = trimDecor(); if (cut > 0) { persist(); setTimeout(() => toast('Túl sok dísz volt kint, ezért ' + cut + ' dísz lekerült a polcról (legfeljebb ' + MAX_DECOR + ' lehet, hogy az oldal gyors maradjon). A Díszek gombbal bármikor újat tehetsz ki.'), 600); }
 }
 const shelfOf = id => S.shelves.find(s => s.ids.indexOf(id) >= 0);
 const bookById = id => S.books.find(b => b.id === id);
@@ -4602,6 +4606,16 @@ function decorLifeStart(root) {
 }
 
 /* ---------- modell: felvétel, törlés, kezdő díszek ---------- */
+/* a 3D polc sok díszt nem bír el (egy dísz 30–100 draw call): legfeljebb MAX_DECOR dísz lehet kint egyszerre */
+let MAX_DECOR = window.__MAX_DECOR || 8;   // (a tesztek az __MAX_DECOR-rel emelik)
+const decorLeft = () => Math.max(0, MAX_DECOR - (Array.isArray(S.decor) ? S.decor.length : 0));
+function trimDecor() {   // a limit feletti díszeket levesszük (a polcok sorrendjében az első MAX_DECOR marad); visszaadja, hányat vett le
+  if (!Array.isArray(S.decor) || S.decor.length <= MAX_DECOR) return 0;
+  const order = []; S.shelves.forEach(s => s.ids.forEach(id => { if (S.decor.some(d => d.id === id)) order.push(id); }));
+  const keep = new Set(order.slice(0, MAX_DECOR)), n = S.decor.length - keep.size;
+  S.decor = S.decor.filter(d => keep.has(d.id)); S.shelves.forEach(s => { s.ids = s.ids.filter(id => keep.has(id) || !isDecorId(id)); });
+  return n;
+}
 function starterDecor() {   // kezdő díszek: fekvő sárkány az 1. polcon, a többi szétosztva (a polcok száma szerint), hogy az első látogatáskor is "lakott" legyen a könyvtár
   const a = newDecor('sarkany-fekvo'), k = newDecor('kis-sarkany'), n = newDecor('book-nook'), o = newDecor('bagoly'), c = newDecor('macska'), p = newDecor('noveny');
   return { decor: [a, k, n, o, c, p], place: [[a.id, 'start', 0], [k.id, 'end', 1], [n.id, 'start', 2], [o.id, 'end', 2], [c.id, 'start', 3], [p.id, 'end', 3]] };
@@ -4613,10 +4627,10 @@ function placeDecor(pairs, shelfIdx) {
   });
 }
 function addDecorSet(set, shelfIdx) {
-  syncShelves();
+  syncShelves(); if (set.parts.length > decorLeft()) return false;
   const link = set.parts.length > 1 ? Engine.uid() : null, pairs = [];
   set.parts.forEach(p => { const d = newDecor(p.type, link); S.decor.push(d); pairs.push([d.id, p.at]); });
-  placeDecor(pairs, shelfIdx);
+  placeDecor(pairs, shelfIdx); return true;
 }
 function removeDecor(id) {
   const snapD = JSON.stringify(S.decor), snapS = JSON.stringify(S.shelves), d = decorById(id);
@@ -4639,8 +4653,8 @@ function decorModal() {
   const list = h('div', { class: 'dc-list' }, DECOR_SETS.map(set => h('div', { class: 'dc-card panel' },
     decorPreviewEl(set),
     h('div', { class: 'dc-info' }, h('h3', null, set.name), h('p', { class: 'muted small' }, set.desc), h('p', { class: 'dc-tip small' }, ic('sparkle', 13), set.tip)),
-    btn('Hozzáadás', { icon: 'plus', kind: 'primary sm', onclick: () => { addDecorSet(set, shelfIdx); persist(); m.close(); drawLibrary(); toast(set.name + ' a polcon. Kattints rá!'); } }))));
-  const m = openModal({ title: 'Díszek a polcra', wide: true, cls: 'dc-modal', body: [h('p', { class: 'muted' }, 'Kis kiegészítők, amik a polcon élnek: rájuk kattintva megmozdulnak. Hozzáadás után átrendezés módban a helyükre húzhatod őket.'), h('div', { class: 'field dc-shelfsel' }, h('label', { for: 'dc-shelf' }, 'Melyik polcra kerüljön'), sel), list], actions: [{ label: 'Kész', kind: 'primary' }] });
+    btn('Hozzáadás', { icon: 'plus', kind: 'primary sm', onclick: () => { if (!addDecorSet(set, shelfIdx)) { toast('Elérted a limitet: legfeljebb ' + MAX_DECOR + ' dísz lehet kint. Vegyél le egyet (kattints rá, majd Eltávolítás).'); return; } persist(); m.close(); drawLibrary(); toast(set.name + ' a polcon. Kattints rá!'); } }))));
+  const m = openModal({ title: 'Díszek a polcra', wide: true, cls: 'dc-modal', body: [h('p', { class: 'muted' }, 'Kis kiegészítők, amik a polcon élnek: rájuk kattintva megmozdulnak. Hozzáadás után átrendezés módban a helyükre húzhatod őket.'), h('p', { class: 'small dc-count' + (decorLeft() ? '' : ' full') }, 'Kint van: ' + (S.decor || []).length + ' / ' + MAX_DECOR + ' dísz' + (decorLeft() ? '' : ' – tele. Hogy az oldal gyors maradjon, többet nem lehet kitenni; vegyél le egyet.')), h('div', { class: 'field dc-shelfsel' }, h('label', { for: 'dc-shelf' }, 'Melyik polcra kerüljön'), sel), list], actions: [{ label: 'Kész', kind: 'primary' }] });
   return m;
 }
 function decorPopup(el) {
@@ -5675,6 +5689,12 @@ class L3Geo {
     });
     return this;
   }
+  shade(x0, x1, y0, y1, z, xs, ys, fn, uvs) {   // z-re merőleges rács; fn(x, y) → csúcspont-szín; xs/ys a rácspontok (x0..x1, y0..y1 között)
+    const s = uvs || 220, nx = xs.length, base = this.p.length / 3;
+    for (let j = 0; j < ys.length; j++) for (let i = 0; i < nx; i++) { const c = fn(xs[i], ys[j]); this.p.push(xs[i], ys[j], z); this.n.push(0, 0, 1); this.u.push(xs[i] / s, ys[j] / s); this.c.push(c.r, c.g, c.b); }
+    for (let j = 0; j < ys.length - 1; j++) for (let i = 0; i < nx - 1; i++) { const a = base + j * nx + i, b = a + 1, c = a + nx + 1, d = a + nx; this.i.push(a, b, c, a, c, d); }
+    return this;
+  }
   build() {
     const T = THREE, g = new T.BufferGeometry();
     g.setAttribute('position', new T.Float32BufferAttribute(this.p, 3)); g.setAttribute('normal', new T.Float32BufferAttribute(this.n, 3)); g.setAttribute('uv', new T.Float32BufferAttribute(this.u, 2));
@@ -5764,21 +5784,32 @@ function l3Fit(root) {   // a keretek magasságát a 3D szekrény méretére ál
   });
 }
 
+/* gyenge GPU (integrált Intel, mobil-GPU, szoftveres) vagy érintőkijelző: alacsonyabb alapminőség (1. fokozat), MSAA nélkül, parallax nélkül */
+function l3WeakGPU() {
+  if (window.__L3_WEAK != null) return !!window.__L3_WEAK;
+  if (navigator.webdriver) return false;
+  try {
+    const c = document.createElement('canvas'), gl = c.getContext('webgl') || c.getContext('experimental-webgl'); if (!gl) return false;
+    const x = gl.getExtension('WEBGL_debug_renderer_info'), n = x ? String(gl.getParameter(x.UNMASKED_RENDERER_WEBGL) || '') : '', lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+    const touch = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+    return touch || /Mali|Adreno|PowerVR|Immortalis|VideoCore|SwiftShader|llvmpipe|Software|Basic Render|Intel(?!.*\bArc\b)/i.test(n);
+  } catch (e) { return false; }
+}
 /* ---------- színtér ---------- */
 function l3Init() {
   if (L3.r) return true;
   const T = THREE;
   try {
     const cv = document.createElement('canvas'); cv.id = 'l3'; cv.setAttribute('aria-hidden', 'true'); document.body.insertBefore(cv, $('#app'));
-    const lowq = !!window.__L3_LOWQ, r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq, alpha: true, powerPreference: 'high-performance' });
-    L3.lowq = lowq;
+    const lowq = !!window.__L3_LOWQ, weak = !lowq && l3WeakGPU(), r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq && !weak, alpha: true, powerPreference: 'high-performance' });
+    L3.lowq = lowq; L3.weak = weak; if (weak) L3.deg = Math.max(L3.deg || 0, 1);
     r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
-    r.shadowMap.enabled = true; r.shadowMap.type = T.PCFShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
+    r.shadowMap.enabled = true; r.shadowMap.type = T.VSMShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
     L3.cv = cv; L3.r = r; L3.scene = new T.Scene(); L3.cam = new T.PerspectiveCamera(L3K.FOV, 1, 10, 6000); L3.ray = new T.Raycaster();
     cv.addEventListener('webglcontextlost', e => { e.preventDefault(); L3.st = 'failed'; l3Hide(); if ($('.lb')) drawLibrary(); });
     const sc = L3.scene;
     sc.add(new T.HemisphereLight(0xfff0dc, 0x5e3a22, 0.62));
-    const key = new T.DirectionalLight(0xffe2bc, 1.35); key.castShadow = true; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.9; key.shadow.radius = 1.8; sc.add(key); sc.add(key.target); L3.key = key;
+    const key = new T.DirectionalLight(0xffe2bc, 1.35); key.castShadow = true; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.9; key.shadow.radius = 9; key.shadow.blurSamples = 12; sc.add(key); sc.add(key.target); L3.key = key;
     L3.sd = true;
     const fill = new T.DirectionalLight(0xbcd0ff, 0.22); fill.position.set(700, 200, 800); sc.add(fill);
     // környezeti visszaverődés: meleg softbox-ok egy kis "stúdióban"
@@ -5792,13 +5823,14 @@ function l3Init() {
     return true;
   } catch (e) { console.error(e); L3.st = 'failed'; return false; }
 }
-/* minőségi fokozat: 0 = alap (felbontás ≤ 1,25×, 2048-as árnyék), 1 = 1× és 1024-es árnyék, 2 = vészfék: 0,75× és 512-es árnyék (a vászon CSS-sel felnagyítva) */
+/* minőségi fokozat: 0 = alap (felbontás ≤ 1,25×, 2048-as árnyék), 1 = 1× és 1024-es árnyék (gyenge GPU-n ez az induló), 2 = vészfék: 0,75×, 512-es árnyék és lapos képként rajzolt díszek */
 function l3Quality() {
   const r = L3.r; if (!r) return;
   const vw = innerWidth, vh = innerHeight, d = L3.deg || 0, pr = L3.lowq ? 1 : d >= 2 ? 0.75 : d === 1 ? 1 : Math.min(devicePixelRatio || 1, vw < 700 ? 1.5 : 1.25);
   r.setPixelRatio(pr); r.setSize(vw, vh, false);
   const sh = L3.key && L3.key.shadow, sm = L3.lowq || d >= 2 ? 512 : d === 1 || Math.min(vw, vh) < 700 ? 1024 : 2048;
   if (sh && sh.mapSize.x !== sm) { sh.mapSize.set(sm, sm); if (sh.map) { sh.map.dispose(); sh.map = null; } }
+  if (sh) { sh.radius = 9 * sm / 2048; sh.blurSamples = sm >= 2048 ? 12 : 8; }
   L3.sd = true;
 }
 function l3Resize() {
@@ -5816,6 +5848,12 @@ function l3BuildCase(W, Hc, levels, lh) {
   g.box(0, -Hc, -D, K.SIDE, 0, 0, side); g.box(W - K.SIDE, -Hc, -D, W, 0, 0, side);                          // oldalak
   g.box(-4, -14, -D, W + 4, 0, 7, mold); g.box(0, -K.TOPH, -D, W, -14, 0, side); g.box(-2, -K.TOPH - 5, -D + 4, W + 2, -K.TOPH, 4, mold);   // korona + tető
   g.box(K.SIDE, -(Hc - K.PLINTH), -D, W - K.SIDE, -K.TOPH, -D + 4, back, 160);                                   // hátlap
+  for (let l = 0; l < levels; l++) {   // hátlap-árnyalás fülkénként: sötétebb a deszka alatt, a sarkokban és a polc mentén (olcsó „ambient occlusion”, csúcspont-színnel)
+    const top = l ? -(K.TOPH + l * lh) : -K.TOPH, bot = -(K.TOPH + (l + 1) * lh) + K.BOARD, h = top - bot, x0 = K.SIDE, x1 = W - K.SIDE, ew = Math.min(46, (x1 - x0) * 0.2);
+    const ys = [bot, bot + h * 0.1, bot + h * 0.55, top - h * 0.3, top - h * 0.08, top], xs = [x0, x0 + ew, x1 - ew, x1];
+    const kv = y => { const t = (y - bot) / h; return t < 0.1 ? 0.8 + t * 2 : t > 0.7 ? 1 - (t - 0.7) / 0.3 * 0.5 : 1; }, kh = x => { const e = Math.min(x - x0, x1 - x) / ew; return 0.72 + 0.28 * Math.max(0, Math.min(1, e)); };
+    g.shade(x0, x1, bot, top, -D + 4.4, xs, ys, (x, y) => back.clone().multiplyScalar(kv(y) * kh(x)), 160);
+  }
   for (let l = 0; l < levels; l++) { const yb = -(K.TOPH + (l + 1) * lh); g.box(K.SIDE, yb, -D + 4, W - K.SIDE, yb + K.BOARD, -1.5, board); g.box(K.SIDE, yb + K.BOARD - 2.4, -3, W - K.SIDE, yb + K.BOARD, -1.5, l3Col('#d09a63')); }  // deszkák + élfény
   g.box(K.SIDE - 5, -Hc, -D + 6, W - K.SIDE + 5, -(K.TOPH + levels * lh), 5, plinth); g.box(K.SIDE - 8, -Hc, -D + 6, K.SIDE - 2, -Hc + 6, 5, plinth); g.box(W - K.SIDE + 2, -Hc, -D + 6, W - K.SIDE + 8, -Hc + 6, 5, plinth);   // lábazat
   [[0, 0], [W - 3, 0]].forEach(p => g.box(p[0], -Hc + K.PLINTH, -1, p[0] + 3, -K.TOPH, 1.6, l3Col('#c89560')));   // élléc a szélén
@@ -5867,6 +5905,7 @@ function l3Sync() {
   const T = THREE, K = L3K, cont = L3.box.getBoundingClientRect();
   L3.tex.forEach(e => { e.used = false; });
   l3Clear();
+  const flatDecor = !!S.settings.flatDecor || (L3.deg || 0) >= 2;   // a díszek lapos képként: sokkal olcsóbb (beállítás, vagy a lassúság-őr vészfoka)
   { const T2 = THREE, cw = cont.width + 300, ch = cont.height + 400, wl = new T2.Mesh(new T2.PlaneGeometry(cw, ch), new T2.ShadowMaterial({ color: 0x3a1408, opacity: 0.3 })); wl.position.set(cont.width / 2, -cont.height / 2 - 60, -L3K.DEPTH - 1); wl.receiveShadow = true; L3.scene.add(wl); L3.cases.push(wl); }
   $$('.lb-case', L3.box).forEach((cs, si) => {
     const fr = cs.querySelector('.lb-frame'), lay = L3.lays[si]; if (!fr || !lay) return;
@@ -5874,7 +5913,7 @@ function l3Sync() {
     cg.add(l3BuildCase(lay.W, lay.H, lay.levels, lay.lh));
     lay.items.forEach(it => {
       const rec = 3 + ((hashStr(it.id) >>> 4) % 5), bx = K.SIDE + 2 + it.x + it.w / 2, by = -(K.TOPH + (it.lvl + 1) * lay.lh) + K.BOARD;
-      const o = it.kind === 'book' ? l3BuildBook(it, lay.lh) : (DECOR3[it.d.type] && DECOR3[it.d.type].build ? DECOR3[it.d.type].build(it, lay) : l3DecorBill(it));
+      const o = it.kind === 'book' ? l3BuildBook(it, lay.lh) : (DECOR3[it.d.type] && DECOR3[it.d.type].build && !flatDecor ? DECOR3[it.d.type].build(it, lay) : l3DecorBill(it));
       const item = { id: it.id, kind: it.kind, b: it.b, d: it.d, T: it.T, w: it.w, h: it.h, grp: o.grp, parts: o.parts, mats: o.mats, ctl: o.ctl, bx: bx, by: by, bz: it.kind === 'book' ? -rec : 0, hv: 0, ht: 0, pk: 0, lf: 0, dim: 0, depth: o.d, shelf: si, lvl: it.lvl };
       o.grp.position.set(bx, by, item.bz); cg.add(o.grp); o.parts.forEach(p => { p.userData.item = item; L3.pick.push(p); });
       L3.items.set(it.id, item);
@@ -5951,10 +5990,10 @@ function l3Perf(now) {
   if (pf.d.length >= 30) { const d = pf.d.slice(2).sort((x, y) => x - y); pf.d = []; l3PerfEval(d[d.length >> 1], d[Math.floor(d.length * 0.9)]); }
 }
 function l3PerfEval(med, p90) {
-  const slow = med > 24 || p90 > 60;   // 60 Hz-en a 2 vsync-es (33 ms) képkocka már lassú
+  const slow = med > 20 || p90 > 42;   // 60 Hz-en a 2 vsync-es (33 ms) képkocka már lassú
   L3.slow = slow ? (L3.slow || 0) + 1 : Math.max(0, (L3.slow || 0) - 1);
   if (L3.slow >= 2 && (L3.deg || 0) < 2) {   // 1–2. lépcső: csendes visszavétel (felbontás + árnyék)
-    L3.deg = (L3.deg || 0) + 1; L3.slow = 0; l3Quality(); l3Inv(); return 'deg';
+    L3.deg = (L3.deg || 0) + 1; L3.slow = 0; l3Quality(); if (L3.deg >= 2 && $('.lb.l3')) l3Sync(); else l3Inv(); return 'deg';
   }
   if (L3.slow >= 2 && L3.deg >= 2 && !S.settings.perf3dAsked) {   // 3. lépcső: egyszer rákérdezünk
     S.settings.perf3dAsked = true; persist(); L3.slow = 0;
@@ -5985,7 +6024,7 @@ function l3Hover() {
 function l3Move(e) {
   if (!e.target.closest || !e.target.closest('.lb-frame')) { if (L3.hov) { L3.ptr = null; L3.hq = true; l3Inv(); } return; }
   L3.ptr = { x: e.clientX, y: e.clientY }; L3.hq = true;
-  if (e.pointerType === 'mouse') { L3.par.tx = (e.clientX / innerWidth - 0.5) * 70; L3.par.ty = -(e.clientY / innerHeight - 0.5) * 44; }
+  if (e.pointerType === 'mouse' && !L3.deg) { L3.par.tx = (e.clientX / innerWidth - 0.5) * 70; L3.par.ty = -(e.clientY / innerHeight - 0.5) * 44; }
   l3Inv();
 }
 function l3Leave() { L3.ptr = null; L3.hq = true; L3.par.tx = L3.par.ty = 0; l3Inv(); }
@@ -6143,6 +6182,7 @@ function l3HeartTex() {
   g.fillStyle = 'rgba(255,255,255,.55)'; g.beginPath(); g.ellipse(21, 22, 5, 3, -0.6, 0, 6.283); g.fill();
   const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return (L3.heart = t);
 }
+
 
 /* ---------- „élet”: időnként valamelyik látható dísz magától megmozdul (pislog, füstöl, farkát rángatja) ---------- */
 function l3IdleStart() {
@@ -6889,7 +6929,7 @@ function ghBuild(it) {
   S.__apply();
   const ctl = {
     S: S, root: root,
-    look(p) { if (ctl.busy) return; const v = kLookVec(eyes[0], p, 160); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(eyes[0], p, 160); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     blink() { l3Seq().to(S, { blink: 1 }, 0.07, 'out').to(S, { blink: 0 }, 0.12, 'io').play(); },
     turn() { if (ctl.busy) return; ctl.busy = true; l3Anim(1.7, u => { S.lx = -1 + 2 * u; S.ly = 0.7 - Math.sin(u * Math.PI * 2) * 0.2; S.read = Math.sin(u * Math.PI); S.__apply(); }, () => { S.lx = 0; S.ly = 0; S.read = 0; S.__apply(); ctl.busy = false; }); },
     startle() { crStop(ctl); ctl.seq = l3Seq().to(S, { hop: 1, eyeW: 1.28, armUp: 0.5, glow: 0.5 }, 0.14, 'out').to(S, { hop: 0 }, 0.22, 'bounce').wait(0.5).to(S, { eyeW: 1, armUp: 0, glow: 0.12 }, 0.5, 'io').play(); },
@@ -7040,7 +7080,7 @@ function ctBuild(it) {
   const hearts = (n) => { for (let i = 0; i < n; i++) setTimeout(() => { if (!L3.on) return; drParticle(root, 'heart', new T.Vector3(-30 + (Math.random() - 0.5) * 30, 56, 24 + Math.random() * 6), { vx: (Math.random() - 0.5) * 8, vy: 14 + Math.random() * 6, life: 1.7, big: 0.9 }); }, i * 220); };
   const ctl = {
     S: S, root: root, awake: false, snoring: false,
-    look(p) { if (!ctl.awake) return; const v = kLookVec(head, p, 180); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (!ctl.awake) return; const v = kLookVec(head, p, 180); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     wake() {
       crStop(ctl); ctl.awake = true; ctl.snoring = false;
       ctl.seq = l3Seq().to(S, { open: 1, lift: 1, hx: -0.06, ear: -0.35 }, 0.35, 'out')
@@ -7171,7 +7211,7 @@ function owBuild(it) {
   };
   const ctl = {
     S: S, root: root,
-    look(p) { if (ctl.busy) return; const v = kLookVec(head, p, 180); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(head, p, 180); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     blink() { l3Seq().to(S, { blink: 1 }, 0.07, 'out').to(S, { blink: 0 }, 0.12, 'io').play(); },
     lookAround() {
       crStop(ctl); ctl.busy = true; S.lx = 0; S.ly = 0;
@@ -7529,7 +7569,7 @@ function dgLieBuild(it) {
   };
   const ctl = {
     S: S, root: root, awake: false,
-    look(p) { if (ctl.busy) return; const v = kLookVec(head, p, 200); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(head, p, 200); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     boop() {
       crStop(ctl); ctl.busy = true;
       ctl.seq = l3Seq().to(S, { hx: -0.2, lid: 0.55, brow: 1, tail: 0.35 }, 0.14, 'out').call(() => smokeAt(2, 1)).to(S, { tail: -0.2, tailZ: 0.1 }, 0.3, 'io').wait(0.5).to(S, { hx: 0, lid: 0.22, brow: 0, tail: 0, tailZ: 0 }, 0.5, 'io').call(() => { ctl.busy = false; }).play();
@@ -7626,7 +7666,7 @@ function fiBuild(it) {
   const top = fiM(FI.top[0], FI.top[1]);
   const ctl = {
     S: S, root: root, busy: false,
-    look(p) { if (ctl.busy) return; const v = kLookVec(eg, p, 220); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(eg, p, 220); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     blast() {
       crStop(ctl); ctl.busy = true;
       ctl.seq = l3Seq().to(S, { blast: 1, recoil: 1, swell: 1 }, 0.22, 'out').call(() => { puff(top[0] + 2, top[1] + 4, 8, 1.4, -2, 13); puff(mo[0] + 16, mo[1] + 6, 4, 1.1, 5, 6); })
@@ -7766,7 +7806,7 @@ function renderHelp() {
           h('li', null, h('b', null, 'Könyvtár fül'), ': valódi polcokon álló gerincek. Ha az egeret ráviszed egy könyvre, kissé megbillen; kattintásra megnyílik: itt állíthatod a státuszát, színét, stílusát, magasságát és vastagságát. A dobásból kiválasztott könyv kiemelve áll a polcon.'),
           h('li', null, h('b', null, 'Átrendezés'), ': húzd a könyveket másik helyre vagy másik polcra (telefonon is). Billentyűvel ', kbd('Shift'), ' + nyilak. A polcok átnevezhetők, hozzáadhatók, törölhetők, a ', h('b', null, 'Rendezés…'), ' gomb cím, szerző, szín, vastagság, műfaj vagy státusz szerint sorba rakja őket.'),
           h('li', null, h('b', null, 'Díszek'), ': a polcon kis kiegészítők élnek (kezdetnek egy fekvő sárkány a könyvhalmon). Kattints rájuk: a vörös-fekete fekvő sárkány orrát megbökheted (háromszor már tüzet okád), ha máshova kattintasz, dorombol; az olvasó fehér szellem megijed, kezével eltakarja a szemét, vagy a könyvét olvasva fürkészi a sorokat; a gyertyás lámpást elfújhatod és újra meggyújthatod; az üvegablak-lámpák alján kapcsolod a fényt, az üvegre kattintva pedig életre kel a jelenet; a kis fekete repülő sárkány (képként rajzolva) füstcsíkot fúj, ami krémszínű, kunkorodó felhőoszloppá válik és tartja a dőlő könyveket: kattintásra nagyot fúj, aztán csapkod, a füstre kattintva megpuffan, a könyvekre kattintva megrezegnek; az alvó macskát felébresztheted, megsimogathatod – háromszor már morcos; a bagoly körülnéz, huhog, megrémül; a pozsgás kinyílik, és katicabogár mászik rajta; a book-nook egy berendezett mini szoba: a lámpáját kapcsolhatod, a szobára kattintva (3D nézetben) felnagyul a kis világ, és bele lehet nézni – a kandalló, az ablak, a cica, a földgömb, a növény, a fotel és az óra is megkattintható (Esc: vissza a polcra); 2D nézetben éjszakai sikátor, kinyíló ajtóval. A ', h('b', null, 'Díszek'), ' gombbal újabbakat tehetsz a polcra; átrendezés módban a helyükre húzhatod, rákattintva eltávolíthatod őket. Billentyűvel is játszhatók (', kbd('Enter'), '). Kímélő módban a szem nem követi az egeret.'),
-          h('li', null, h('b', null, '3D könyvtár'), ': a polcok, a könyvek és a díszek valódi 3D-ben látszanak fénnyel és árnyékkal; a könyvekre vigyed az egeret (kihúzódnak), kattints (megnyílik), átrendezés módban húzd őket. Ha a gép lassú, az oldal először csendben visszavesz a részletességből, aztán felajánlja a 2D nézetet. A Könyvtár fejlécében a ', h('b', null, '2D nézet'), ' / ', h('b', null, '3D nézet'), ' gombbal és a Beállításokban is válthatsz.'),
+          h('li', null, h('b', null, '3D könyvtár'), ': a polcok, a könyvek és a díszek valódi 3D-ben látszanak fénnyel és árnyékkal; a könyvekre vigyed az egeret (kihúzódnak), kattints (megnyílik), átrendezés módban húzd őket. Egyszerre legfeljebb 8 dísz lehet kint (ennél több lassúvá tenné az oldalt). Ha a gép lassú, az oldal először csendben visszavesz a részletességből, aztán a díszeket lapos képre cseréli, végül felajánlja a 2D nézetet; a díszek 3D-jét a Beállításokban ki is kapcsolhatod. A Könyvtár fejlécében a ', h('b', null, '2D nézet'), ' / ', h('b', null, '3D nézet'), ' gombbal és a Beállításokban is válthatsz.'),
           h('li', null, h('b', null, 'Szerkesztés fül'), ': a teljes lista keresővel, szűrőkkel, tömeges kezeléssel.'),
           h('li', null, 'Könyvet felvehetsz kézzel, vagy ', h('b', null, 'importálhatsz'), ': Goodreads CSV-t, saját CSV-t (fejléc: cím, szerző, műfaj, hangulat, oldal, státusz), JSON listát vagy egyszerű sorokat („Cím – Szerző”).'),
           h('li', null, 'Az importálás előnézetet mutat, a duplikátumokat kihagyja, és hozzáadás vagy csere közül választhatsz.'),
@@ -7843,8 +7883,10 @@ function settingsModal() {
         sw('Mozgás és animációk', 'motion', 'Kikapcsolva a kockák egyből a helyükre ugranak. A rendszer „csökkentett mozgás” beállítását mindig tiszteletben tartja.', () => applyMotionClasses()),
         sw('Kímélő mód', 'lite', 'Gyengébb gépen vagy telefonon, ha akadozik az oldal: rövidebb dobás, nincs háttérfény, nincsenek belépő animációk és konfetti.', () => applyMotionClasses())),
       h('div', { class: 'set-sec' }, h('h3', null, 'Könyvtár nézet'),
-        h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: st.view3d !== false, disabled: !l3GL(), onchange: e => { st.view3d = e.target.checked; if (e.target.checked) { delete st.perf3dAsked; if (typeof L3 !== 'undefined') { L3.deg = 0; L3.slow = 0; if (L3.r) l3Quality(); } } persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, '3D könyvtár')),
-          h('span', { class: 'hint' }, l3GL() ? 'Valódi 3D polcok, könyvek és díszek fénnyel-árnyékkal. Gyengébb gépen kikapcsolva a gyorsabb 2D nézet látszik. Kímélő módban mindig 2D.' : 'Ez a böngésző nem támogatja a 3D-t (WebGL), ezért a 2D nézet látszik.'))),
+        h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: st.view3d !== false, disabled: !l3GL(), onchange: e => { st.view3d = e.target.checked; if (e.target.checked) { delete st.perf3dAsked; if (typeof L3 !== 'undefined') { L3.deg = L3.weak ? 1 : 0; L3.slow = 0; if (L3.r) l3Quality(); } } persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, '3D könyvtár')),
+          h('span', { class: 'hint' }, l3GL() ? 'Valódi 3D polcok, könyvek és díszek fénnyel-árnyékkal. Gyengébb gépen kikapcsolva a gyorsabb 2D nézet látszik. Kímélő módban mindig 2D.' : 'Ez a böngésző nem támogatja a 3D-t (WebGL), ezért a 2D nézet látszik.')),
+        h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !st.flatDecor, disabled: !l3GL(), onchange: e => { st.flatDecor = !e.target.checked; if (!st.flatDecor) delete st.flatDecor; persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, 'Díszek 3D modellként')),
+          h('span', { class: 'hint' }, 'Kikapcsolva a díszek lapos képként állnak a 3D polcon: sokkal gyorsabb, ha akadozik az oldal. A könyvek és a polc ettől még 3D. Legfeljebb ' + MAX_DECOR + ' dísz lehet kint.'))),
       h('div', { class: 'set-sec' }, h('h3', null, 'Szürreális mód'),
         sw('Szürreális mód bekapcsolva', 'surreal', 'Váratlan, vicces opciók és szabályszegő párosítások is kijöhetnek.'),
         h('div', { class: 'field' }, h('label', null, 'Káosz mértéke'), chaos)),

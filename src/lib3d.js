@@ -42,6 +42,12 @@ class L3Geo {
     });
     return this;
   }
+  shade(x0, x1, y0, y1, z, xs, ys, fn, uvs) {   // z-re merőleges rács; fn(x, y) → csúcspont-szín; xs/ys a rácspontok (x0..x1, y0..y1 között)
+    const s = uvs || 220, nx = xs.length, base = this.p.length / 3;
+    for (let j = 0; j < ys.length; j++) for (let i = 0; i < nx; i++) { const c = fn(xs[i], ys[j]); this.p.push(xs[i], ys[j], z); this.n.push(0, 0, 1); this.u.push(xs[i] / s, ys[j] / s); this.c.push(c.r, c.g, c.b); }
+    for (let j = 0; j < ys.length - 1; j++) for (let i = 0; i < nx - 1; i++) { const a = base + j * nx + i, b = a + 1, c = a + nx + 1, d = a + nx; this.i.push(a, b, c, a, c, d); }
+    return this;
+  }
   build() {
     const T = THREE, g = new T.BufferGeometry();
     g.setAttribute('position', new T.Float32BufferAttribute(this.p, 3)); g.setAttribute('normal', new T.Float32BufferAttribute(this.n, 3)); g.setAttribute('uv', new T.Float32BufferAttribute(this.u, 2));
@@ -131,21 +137,32 @@ function l3Fit(root) {   // a keretek magasságát a 3D szekrény méretére ál
   });
 }
 
+/* gyenge GPU (integrált Intel, mobil-GPU, szoftveres) vagy érintőkijelző: alacsonyabb alapminőség (1. fokozat), MSAA nélkül, parallax nélkül */
+function l3WeakGPU() {
+  if (window.__L3_WEAK != null) return !!window.__L3_WEAK;
+  if (navigator.webdriver) return false;
+  try {
+    const c = document.createElement('canvas'), gl = c.getContext('webgl') || c.getContext('experimental-webgl'); if (!gl) return false;
+    const x = gl.getExtension('WEBGL_debug_renderer_info'), n = x ? String(gl.getParameter(x.UNMASKED_RENDERER_WEBGL) || '') : '', lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+    const touch = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+    return touch || /Mali|Adreno|PowerVR|Immortalis|VideoCore|SwiftShader|llvmpipe|Software|Basic Render|Intel(?!.*\bArc\b)/i.test(n);
+  } catch (e) { return false; }
+}
 /* ---------- színtér ---------- */
 function l3Init() {
   if (L3.r) return true;
   const T = THREE;
   try {
     const cv = document.createElement('canvas'); cv.id = 'l3'; cv.setAttribute('aria-hidden', 'true'); document.body.insertBefore(cv, $('#app'));
-    const lowq = !!window.__L3_LOWQ, r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq, alpha: true, powerPreference: 'high-performance' });
-    L3.lowq = lowq;
+    const lowq = !!window.__L3_LOWQ, weak = !lowq && l3WeakGPU(), r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq && !weak, alpha: true, powerPreference: 'high-performance' });
+    L3.lowq = lowq; L3.weak = weak; if (weak) L3.deg = Math.max(L3.deg || 0, 1);
     r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
-    r.shadowMap.enabled = true; r.shadowMap.type = T.PCFShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
+    r.shadowMap.enabled = true; r.shadowMap.type = T.VSMShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
     L3.cv = cv; L3.r = r; L3.scene = new T.Scene(); L3.cam = new T.PerspectiveCamera(L3K.FOV, 1, 10, 6000); L3.ray = new T.Raycaster();
     cv.addEventListener('webglcontextlost', e => { e.preventDefault(); L3.st = 'failed'; l3Hide(); if ($('.lb')) drawLibrary(); });
     const sc = L3.scene;
     sc.add(new T.HemisphereLight(0xfff0dc, 0x5e3a22, 0.62));
-    const key = new T.DirectionalLight(0xffe2bc, 1.35); key.castShadow = true; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.9; key.shadow.radius = 1.8; sc.add(key); sc.add(key.target); L3.key = key;
+    const key = new T.DirectionalLight(0xffe2bc, 1.35); key.castShadow = true; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.9; key.shadow.radius = 9; key.shadow.blurSamples = 12; sc.add(key); sc.add(key.target); L3.key = key;
     L3.sd = true;
     const fill = new T.DirectionalLight(0xbcd0ff, 0.22); fill.position.set(700, 200, 800); sc.add(fill);
     // környezeti visszaverődés: meleg softbox-ok egy kis "stúdióban"
@@ -159,13 +176,14 @@ function l3Init() {
     return true;
   } catch (e) { console.error(e); L3.st = 'failed'; return false; }
 }
-/* minőségi fokozat: 0 = alap (felbontás ≤ 1,25×, 2048-as árnyék), 1 = 1× és 1024-es árnyék, 2 = vészfék: 0,75× és 512-es árnyék (a vászon CSS-sel felnagyítva) */
+/* minőségi fokozat: 0 = alap (felbontás ≤ 1,25×, 2048-as árnyék), 1 = 1× és 1024-es árnyék (gyenge GPU-n ez az induló), 2 = vészfék: 0,75×, 512-es árnyék és lapos képként rajzolt díszek */
 function l3Quality() {
   const r = L3.r; if (!r) return;
   const vw = innerWidth, vh = innerHeight, d = L3.deg || 0, pr = L3.lowq ? 1 : d >= 2 ? 0.75 : d === 1 ? 1 : Math.min(devicePixelRatio || 1, vw < 700 ? 1.5 : 1.25);
   r.setPixelRatio(pr); r.setSize(vw, vh, false);
   const sh = L3.key && L3.key.shadow, sm = L3.lowq || d >= 2 ? 512 : d === 1 || Math.min(vw, vh) < 700 ? 1024 : 2048;
   if (sh && sh.mapSize.x !== sm) { sh.mapSize.set(sm, sm); if (sh.map) { sh.map.dispose(); sh.map = null; } }
+  if (sh) { sh.radius = 9 * sm / 2048; sh.blurSamples = sm >= 2048 ? 12 : 8; }
   L3.sd = true;
 }
 function l3Resize() {
@@ -183,6 +201,12 @@ function l3BuildCase(W, Hc, levels, lh) {
   g.box(0, -Hc, -D, K.SIDE, 0, 0, side); g.box(W - K.SIDE, -Hc, -D, W, 0, 0, side);                          // oldalak
   g.box(-4, -14, -D, W + 4, 0, 7, mold); g.box(0, -K.TOPH, -D, W, -14, 0, side); g.box(-2, -K.TOPH - 5, -D + 4, W + 2, -K.TOPH, 4, mold);   // korona + tető
   g.box(K.SIDE, -(Hc - K.PLINTH), -D, W - K.SIDE, -K.TOPH, -D + 4, back, 160);                                   // hátlap
+  for (let l = 0; l < levels; l++) {   // hátlap-árnyalás fülkénként: sötétebb a deszka alatt, a sarkokban és a polc mentén (olcsó „ambient occlusion”, csúcspont-színnel)
+    const top = l ? -(K.TOPH + l * lh) : -K.TOPH, bot = -(K.TOPH + (l + 1) * lh) + K.BOARD, h = top - bot, x0 = K.SIDE, x1 = W - K.SIDE, ew = Math.min(46, (x1 - x0) * 0.2);
+    const ys = [bot, bot + h * 0.1, bot + h * 0.55, top - h * 0.3, top - h * 0.08, top], xs = [x0, x0 + ew, x1 - ew, x1];
+    const kv = y => { const t = (y - bot) / h; return t < 0.1 ? 0.8 + t * 2 : t > 0.7 ? 1 - (t - 0.7) / 0.3 * 0.5 : 1; }, kh = x => { const e = Math.min(x - x0, x1 - x) / ew; return 0.72 + 0.28 * Math.max(0, Math.min(1, e)); };
+    g.shade(x0, x1, bot, top, -D + 4.4, xs, ys, (x, y) => back.clone().multiplyScalar(kv(y) * kh(x)), 160);
+  }
   for (let l = 0; l < levels; l++) { const yb = -(K.TOPH + (l + 1) * lh); g.box(K.SIDE, yb, -D + 4, W - K.SIDE, yb + K.BOARD, -1.5, board); g.box(K.SIDE, yb + K.BOARD - 2.4, -3, W - K.SIDE, yb + K.BOARD, -1.5, l3Col('#d09a63')); }  // deszkák + élfény
   g.box(K.SIDE - 5, -Hc, -D + 6, W - K.SIDE + 5, -(K.TOPH + levels * lh), 5, plinth); g.box(K.SIDE - 8, -Hc, -D + 6, K.SIDE - 2, -Hc + 6, 5, plinth); g.box(W - K.SIDE + 2, -Hc, -D + 6, W - K.SIDE + 8, -Hc + 6, 5, plinth);   // lábazat
   [[0, 0], [W - 3, 0]].forEach(p => g.box(p[0], -Hc + K.PLINTH, -1, p[0] + 3, -K.TOPH, 1.6, l3Col('#c89560')));   // élléc a szélén
@@ -234,6 +258,7 @@ function l3Sync() {
   const T = THREE, K = L3K, cont = L3.box.getBoundingClientRect();
   L3.tex.forEach(e => { e.used = false; });
   l3Clear();
+  const flatDecor = !!S.settings.flatDecor || (L3.deg || 0) >= 2;   // a díszek lapos képként: sokkal olcsóbb (beállítás, vagy a lassúság-őr vészfoka)
   { const T2 = THREE, cw = cont.width + 300, ch = cont.height + 400, wl = new T2.Mesh(new T2.PlaneGeometry(cw, ch), new T2.ShadowMaterial({ color: 0x3a1408, opacity: 0.3 })); wl.position.set(cont.width / 2, -cont.height / 2 - 60, -L3K.DEPTH - 1); wl.receiveShadow = true; L3.scene.add(wl); L3.cases.push(wl); }
   $$('.lb-case', L3.box).forEach((cs, si) => {
     const fr = cs.querySelector('.lb-frame'), lay = L3.lays[si]; if (!fr || !lay) return;
@@ -241,7 +266,7 @@ function l3Sync() {
     cg.add(l3BuildCase(lay.W, lay.H, lay.levels, lay.lh));
     lay.items.forEach(it => {
       const rec = 3 + ((hashStr(it.id) >>> 4) % 5), bx = K.SIDE + 2 + it.x + it.w / 2, by = -(K.TOPH + (it.lvl + 1) * lay.lh) + K.BOARD;
-      const o = it.kind === 'book' ? l3BuildBook(it, lay.lh) : (DECOR3[it.d.type] && DECOR3[it.d.type].build ? DECOR3[it.d.type].build(it, lay) : l3DecorBill(it));
+      const o = it.kind === 'book' ? l3BuildBook(it, lay.lh) : (DECOR3[it.d.type] && DECOR3[it.d.type].build && !flatDecor ? DECOR3[it.d.type].build(it, lay) : l3DecorBill(it));
       const item = { id: it.id, kind: it.kind, b: it.b, d: it.d, T: it.T, w: it.w, h: it.h, grp: o.grp, parts: o.parts, mats: o.mats, ctl: o.ctl, bx: bx, by: by, bz: it.kind === 'book' ? -rec : 0, hv: 0, ht: 0, pk: 0, lf: 0, dim: 0, depth: o.d, shelf: si, lvl: it.lvl };
       o.grp.position.set(bx, by, item.bz); cg.add(o.grp); o.parts.forEach(p => { p.userData.item = item; L3.pick.push(p); });
       L3.items.set(it.id, item);
@@ -318,10 +343,10 @@ function l3Perf(now) {
   if (pf.d.length >= 30) { const d = pf.d.slice(2).sort((x, y) => x - y); pf.d = []; l3PerfEval(d[d.length >> 1], d[Math.floor(d.length * 0.9)]); }
 }
 function l3PerfEval(med, p90) {
-  const slow = med > 24 || p90 > 60;   // 60 Hz-en a 2 vsync-es (33 ms) képkocka már lassú
+  const slow = med > 20 || p90 > 42;   // 60 Hz-en a 2 vsync-es (33 ms) képkocka már lassú
   L3.slow = slow ? (L3.slow || 0) + 1 : Math.max(0, (L3.slow || 0) - 1);
   if (L3.slow >= 2 && (L3.deg || 0) < 2) {   // 1–2. lépcső: csendes visszavétel (felbontás + árnyék)
-    L3.deg = (L3.deg || 0) + 1; L3.slow = 0; l3Quality(); l3Inv(); return 'deg';
+    L3.deg = (L3.deg || 0) + 1; L3.slow = 0; l3Quality(); if (L3.deg >= 2 && $('.lb.l3')) l3Sync(); else l3Inv(); return 'deg';
   }
   if (L3.slow >= 2 && L3.deg >= 2 && !S.settings.perf3dAsked) {   // 3. lépcső: egyszer rákérdezünk
     S.settings.perf3dAsked = true; persist(); L3.slow = 0;
@@ -352,7 +377,7 @@ function l3Hover() {
 function l3Move(e) {
   if (!e.target.closest || !e.target.closest('.lb-frame')) { if (L3.hov) { L3.ptr = null; L3.hq = true; l3Inv(); } return; }
   L3.ptr = { x: e.clientX, y: e.clientY }; L3.hq = true;
-  if (e.pointerType === 'mouse') { L3.par.tx = (e.clientX / innerWidth - 0.5) * 70; L3.par.ty = -(e.clientY / innerHeight - 0.5) * 44; }
+  if (e.pointerType === 'mouse' && !L3.deg) { L3.par.tx = (e.clientX / innerWidth - 0.5) * 70; L3.par.ty = -(e.clientY / innerHeight - 0.5) * 44; }
   l3Inv();
 }
 function l3Leave() { L3.ptr = null; L3.hq = true; L3.par.tx = L3.par.ty = 0; l3Inv(); }
@@ -510,6 +535,7 @@ function l3HeartTex() {
   g.fillStyle = 'rgba(255,255,255,.55)'; g.beginPath(); g.ellipse(21, 22, 5, 3, -0.6, 0, 6.283); g.fill();
   const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return (L3.heart = t);
 }
+
 
 /* ---------- „élet”: időnként valamelyik látható dísz magától megmozdul (pislog, füstöl, farkát rángatja) ---------- */
 function l3IdleStart() {

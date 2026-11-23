@@ -59,7 +59,7 @@ function fiBuild(it) {
   const top = fiM(FI.top[0], FI.top[1]);
   const ctl = {
     S: S, root: root, busy: false,
-    look(p) { if (ctl.busy) return; const v = kLookVec(eg, p, 220); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.02) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv(); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(eg, p, 220); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     blast() {
       crStop(ctl); ctl.busy = true;
       ctl.seq = l3Seq().to(S, { blast: 1, recoil: 1, swell: 1 }, 0.22, 'out').call(() => { puff(top[0] + 2, top[1] + 4, 8, 1.4, -2, 13); puff(mo[0] + 16, mo[1] + 6, 4, 1.1, 5, 6); })

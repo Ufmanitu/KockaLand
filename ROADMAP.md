@@ -8,6 +8,7 @@
 - v8 (2026-11-19): fekvő sárkány a könyvhalmon + repülő, tüzet fújó sárkány (a füst tartja a könyveket); book nook = berendezett 3D mini szoba + ráközelítés (zoom-nézet); GitHub: Ufmanitu/KockaLand
 - v9 (2026-11-21): vörös-fekete fekvő sárkány hosszabb könyvhalmon; a repülő sárkány 2D kép (füstcsík → krémszínű felhőoszlop, a könyveket tartja; 3D-ben textúra-síkokon); a szellem újratervezve (fehér harang, ovális szem, fekete könyv)
 - v10 (2026-11-21): 3D teljesítmény – állandó árnyék-térkép, olcsó PCF, felbontás ≤1,25×, clearcoat nélküli anyagok, gyorsabb automatikus minőségvisszavétel
+- v11 (2026-11-23): díszlimit (8), gyenge-GPU felismerés + lapos díszek mód, lágy VSM árnyék, árnyalt hátlap
 
 ## Következő (javaslatok, a user döntése szerint)
 1. Book nook bővítés: több tárgy a szobában (teáscsésze, madaras ablak), szobák cseréje (pl. tetőtér, konyha), hang

@@ -66,3 +66,6 @@
 .dc-tip { display: flex; align-items: center; gap: 6px; color: var(--tc); font-weight: 600; }
 .dc-shelfsel select { width: auto; min-width: 180px; }
 @media (max-width: 560px) { .dc-card { grid-template-columns: 1fr; justify-items: start; } }
+
+.dc-count { font-weight: 600; color: var(--fg2); }
+.dc-count.full { color: var(--danger); }
