@@ -262,7 +262,7 @@ const FX = {
     }
     if (!this.raf) { this.last = performance.now(); this.raf = requestAnimationFrame(t => this.loop(t)); }
   },
-  hearts(x, y, n) { this.add(x, y, n || 22, { colors: ['#e0526a', '#ff8fa3', '#ffb3c1', '#f4c26b', '#fff1d6'], kind: 'heart', speed: 8, spread: Math.PI * 1.1, size: 9, life: 100 }); },
+  hearts(x, y, n) { this.add(x, y, n || 22, { colors: ['#b3243a', '#d0445c', '#8c1d2f', '#e0b45a', '#f3e6cc'], kind: 'heart', speed: 8, spread: Math.PI * 1.1, size: 9, life: 100 }); },
   sparks(x, y, n) { this.add(x, y, n || 10, { colors: ['#ffe9b0', '#ffd27a', '#fff6dc'], kind: 'spark', speed: 3.2, spread: Math.PI * 2, size: 6, life: 34, gravity: 0.03 }); },
   loop(t) {
     const cx = this.cx, d = this.d; this.raf = 0;
@@ -332,7 +332,7 @@ function initState() {
     S.ui = Object.assign({ themeId: S.themes[0].id, view: 'dobas' }, S.ui || {});
     S.rolls = S.rolls || {};
     S.fresh = false;
-    S.migrated = Seed.migrate(S);
+    S.migrated = Seed.migrate(S); Seed.recolor(S);
   } else {
     S = { v: 1, themes: Seed.themes(), books: Seed.books(), shelves: [], history: [], settings: Object.assign({}, DEFAULTS, (st && st.settings) || {}), ui: { themeId: 'randi', view: 'dobas' }, rolls: {}, fresh: true, seedV: Seed.VERSION };
   }

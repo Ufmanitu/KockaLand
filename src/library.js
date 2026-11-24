@@ -3,11 +3,11 @@
    Könyv-megjelenés (opcionális mezők): color '#rrggbb', style 0-4, h 0.7-1 (magasság), th 1-3 (vastagság). Ha nincs, a címből számolt, stabil alapérték. */
 'use strict';
 
-const PALETTE = ['#7b2d26', '#a63d2f', '#c4572f', '#d08c2f', '#c9a227', '#8a8f3c', '#4f6f3a', '#2f5d50', '#2c7a7b', '#2a4a6e', '#1f3558', '#4b3b7a', '#7a3b6a', '#a14a76', '#5c4033', '#3b3a36', '#8c8577', '#e0d5bf', '#d9c3a0', '#b34a5e'];
-const SPINE_STYLES = ['Sima', 'Csíkos', 'Díszes', 'Modern', 'Kopott'];
-const SPINE_H = [['Alacsony', 0.74], ['Közepes', 0.87], ['Magas', 1]];
+const PALETTE = ['#5c1320', '#7a1b2e', '#8f1d2c', '#4a1627', '#3f1d38', '#2a1630', '#14192e', '#1b2a4a', '#34506b', '#17353b', '#1f4a4a', '#1f3a2c', '#4a4a22', '#4a2c1c', '#33201a', '#7b3a22', '#9c7a3c', '#25232a', '#14110f', '#3f4552', '#6b6560', '#d8ccb4', '#c9b891', '#e8dfcc'];   // dark romance: vérvörös, szilva, éjkék, erdőzöld, bőrbarna, fekete + 3 világos (csont, pergamen, elefántcsont)
+const SPINE_STYLES = ['Sima', 'Csíkos', 'Díszes', 'Modern', 'Kopott', 'Bőrkötés', 'Keretes', 'Kéttónusú'];
+const SPINE_H = [['Alacsony', 0.76], ['Közepes', 0.88], ['Magas', 1]];
 const SPINE_TH = [['Auto', 0], ['Vékony', 1], ['Közepes', 2], ['Vastag', 3]];
-const TH_W = [0, 24, 36, 50];
+const TH_W = [0, 28, 41, 57];
 const hashStr = s => { let x = 5381; s = String(s); for (let i = 0; i < s.length; i++) x = ((x << 5) + x + s.charCodeAt(i)) >>> 0; return x; };
 const isHex = c => typeof c === 'string' && /^#[0-9a-f]{6}$/i.test(c);
 function inkFor(hex) {
@@ -21,15 +21,19 @@ function hueSortKey(hex) {   // színkör szerinti sorrend: előbb a színesek, 
   const hh = mx === r ? ((g - b) / d + 6) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
   return hh * 60 + l;
 }
+const lumOf = hex => { const n = parseInt(hex.slice(1), 16); return (0.2126 * (n >> 16 & 255) + 0.7152 * (n >> 8 & 255) + 0.0722 * (n & 255)) / 255; };
 function spineLook(b) {
   const hs = hashStr(b.id + '|' + b.title);
-  const color = isHex(b.color) ? b.color : PALETTE[hs % PALETTE.length];
-  const style = b.style != null && b.style >= 0 && b.style < SPINE_STYLES.length ? b.style | 0 : (hs >>> 5) % 5;
-  const k = b.h != null ? clamp(+b.h || 0.87, 0.6, 1) : [0.74, 0.8, 0.87, 0.93, 1][(hs >>> 9) % 5];
+  const color = isHex(b.color) ? b.color : PALETTE[hs % PALETTE.length], lum = lumOf(color);
+  const style = b.style != null && b.style >= 0 && b.style < SPINE_STYLES.length ? b.style | 0 : (hs >>> 5) % SPINE_STYLES.length;
+  const pr = (hs >>> 13) % 11, pat = b.pat != null && b.pat >= 0 && b.pat < SPINE_PATS.length ? b.pat | 0 : (pr > 8 ? 0 : pr);   // alapból a könyvek ~80%-a mintás
+  const fp = lum < 0.45 ? [0, 0, 0, 1, 2, 5] : [3, 4, 3, 4, 2], acc = isHex(b.acc) ? b.acc : FOILS[fp[(hs >>> 17) % fp.length]][1];
+  const k = b.h != null ? clamp(+b.h || 0.88, 0.6, 1) : [0.76, 0.82, 0.88, 0.94, 1][(hs >>> 9) % 5];
   const pages = +b.pages || 0;
-  const auto = pages ? 22 + clamp(pages, 60, 900) / 900 * 34 : 26 + (hs >>> 3) % 12;
-  const w = Math.round(TH_W[b.th] || auto);
-  return { color: color, ink: inkFor(color), style: style, k: k, w: w };
+  const auto = (pages ? 22 + clamp(pages, 60, 900) / 900 * 34 : 26 + (hs >>> 3) % 12) * 1.14;
+  const w = Math.round(TH_W[b.th] || auto), ink = inkFor(color), metal = foilMetal(acc), contrast = Math.abs(lumOf(acc) - lum) > 0.4;
+  const tfoil = metal && contrast && (style === 2 || style === 5 || style === 6);
+  return { color: color, ink: ink, style: style, k: k, w: w, pat: pat, acc: acc, metal: metal, lum: lum, tfoil: tfoil, tink: tfoil ? acc : ink };
 }
 
 /* ---------- modell ---------- */
@@ -51,6 +55,7 @@ function syncShelves() {
   if (!S) return;
   const firstTime = !Array.isArray(S.decor);
   S.decor = dragonMigrate(Array.isArray(S.decor) ? S.decor : []).filter(d => d && typeof d.id === 'string' && DECOR[d.type]);
+  let wiped = 0; if (!S.settings.decor12) { wiped = S.decor.length; S.decor = []; S.settings.decor12 = true; }   // v12: a díszek újrakezdése — mindent levesz egyszer, utána egyszerre csak egy lehet kint
   const have = new Set(S.books.map(b => b.id).concat(S.decor.map(d => d.id))), seen = new Set();
   S.shelves = (Array.isArray(S.shelves) ? S.shelves : []).filter(s => s && Array.isArray(s.ids));
   S.shelves.forEach(s => {
@@ -60,8 +65,9 @@ function syncShelves() {
   const missing = S.decor.filter(d => !seen.has(d.id)).map(d => d.id).concat(S.books.filter(b => !seen.has(b.id)).map(b => b.id));
   if (!S.shelves.length) S.shelves = defaultShelves(S.books);
   else if (missing.length) { const last = S.shelves[S.shelves.length - 1]; missing.forEach(id => last.ids.push(id)); }
-  if (firstTime && !S.decor.length) { const st = starterDecor(); S.decor = st.decor; placeDecor(st.place, 0); }
-  const cut = trimDecor(); if (cut > 0) { persist(); setTimeout(() => toast('Túl sok dísz volt kint, ezért ' + cut + ' dísz lekerült a polcról (legfeljebb ' + MAX_DECOR + ' lehet, hogy az oldal gyors maradjon). A Díszek gombbal bármikor újat tehetsz ki.'), 600); }
+  if (firstTime && !S.decor.length && window.__STARTER) { const st = starterDecor(); S.decor = st.decor; placeDecor(st.place, 0); }   // (csak a tesztek kérnek kezdő díszeket; az oldal díszek nélkül indul)
+  if (wiped) { persist(); setTimeout(() => toast('A díszek lekerültek a polcról. A Díszek gombbal egyet felrakhatsz (egyszerre csak egy lehet kint).'), 700); }
+  const cut = trimDecor(); if (cut > 0) { persist(); setTimeout(() => toast('Egyszerre csak ' + MAX_DECOR + ' dísz lehet kint, a többi lekerült a polcról. A Díszek gombbal bármikor cserélhetsz.'), 600); }
 }
 const shelfOf = id => S.shelves.find(s => s.ids.indexOf(id) >= 0);
 const bookById = id => S.books.find(b => b.id === id);
@@ -80,20 +86,21 @@ function pickedBooks() {   // a Dobás nézeten épp kiválasztott könyvek: [{b
 const libLH = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lh'), 10) || 214;
 function titleFit(b, L, lh) {   // betűméret + szerző-sáv magassága, hogy a cím lehetőleg kiférjen a gerincre
   const avail = L.k * (lh - 40) - 34, showA = L.w >= 34 && !!b.author;
-  const aH = showA ? Math.min(avail * 0.3, b.author.length * 5.4) : 0;
+  const aH = showA ? Math.min(avail * 0.36, b.author.length * 6) : 0;
   const tAvail = avail - aH - (showA ? 6 : 0);
   const fs = clamp(Math.floor(tAvail / (Math.max(4, b.title.length) * 0.54) * 2) / 2, 9.5, L.w < 30 ? 12 : 13.5);
   return { fs: fs, ah: Math.round(aH), showA: showA };
 }
+const spineBgCss = (b, L, lh) => { const u = spineBgUrl(b, L, L.w, Math.round(L.k * (lh - 40))); return u ? 'url(' + u + ')' : 'none'; };
 function slotEl(b, picked, lh) {
   const L = spineLook(b), F = titleFit(b, L, lh || libLH());
-  const cls = 'lb-sp s' + L.style + (picked ? ' picked' : '') + (b.status === 'olvasom' ? ' reading' : b.status === 'elolvastam' ? ' done' : '');
+  const cls = 'lb-sp s' + L.style + (L.pat ? ' pt' : '') + (picked ? ' picked' : '') + (b.status === 'olvasom' ? ' reading' : b.status === 'elolvastam' ? ' done' : '');
   const sp = h('button', { type: 'button', class: cls, dataset: { id: b.id }, title: b.title + (b.author ? ' – ' + b.author : '') + (picked ? ' (a dobásból kiválasztva)' : ''), 'aria-label': b.title + (b.author ? ', ' + b.author : '') + (picked ? ' (kiválasztva)' : '') },
     h('span', { class: 'lb-bk' },
       h('span', { class: 'lb-t' }, b.title),
       F.showA ? h('span', { class: 'lb-a' }, b.author) : null,
       b.status !== 'olvasatlan' ? h('i', { class: 'lb-mark', 'aria-hidden': 'true' }) : null));
-  return h('div', { class: 'lb-slot', dataset: { id: b.id }, style: { '--c': L.color, '--ink': L.ink, '--w': L.w + 'px', '--k': String(L.k), '--fs': F.fs + 'px', '--ah': F.ah + 'px' } }, sp);
+  return h('div', { class: 'lb-slot', dataset: { id: b.id }, style: { '--c': L.color, '--ink': L.ink, '--tink': L.tink, '--bgimg': spineBgCss(b, L, lh || libLH()), '--w': L.w + 'px', '--k': String(L.k), '--fs': F.fs + 'px', '--ah': F.ah + 'px' } }, sp);
 }
 function libStats() {
   const n = S.books.length, dc = S.decor.length;

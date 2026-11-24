@@ -1,15 +1,15 @@
 /* Elrendezés: fejléc + fő nézet (közép, max 1120px) + telefonon alsó fül-sáv. Hangulat: gyertyafényes esti asztal, krém fatábla, fa kockák. */
 :root {
-  --bg: #f8eee6; --bg2: #f1e2d7; --surface: #fffaf5; --surface2: #f6e9de; --raise: #ffffff;
-  --line: rgba(90, 45, 40, .14); --line2: rgba(90, 45, 40, .28);
-  --fg: #2a1a1d; --fg2: #66504f; --fg3: #8f7776;
-  --heart: #d23f58; --on-accent: #ffffff;
-  --board: #fffcf6; --board2: #f4e8d4; --boardink: #a67c40; --boardline: rgba(120, 80, 30, .24);
-  --wood1: #efd5a9; --wood2: #d8ad72; --woodink: #4b2d15;
-  --glow: rgba(255, 176, 96, .30);
-  --bokeh1: rgba(255, 170, 120, .34); --bokeh2: rgba(236, 110, 140, .26); --bokeh3: rgba(255, 214, 140, .38);
-  --shadow: 0 10px 30px rgba(90, 35, 35, .16); --shadow-s: 0 2px 8px rgba(90, 35, 35, .12);
-  --ok: #2c8a58; --warn: #a96d14; --danger: #c52f48;
+  --bg: #eee4d6; --bg2: #e4d7c4; --surface: #f8f1e5; --surface2: #ebdfcd; --raise: #fffaf1;
+  --line: rgba(60, 28, 22, .16); --line2: rgba(60, 28, 22, .30);
+  --fg: #231512; --fg2: #5c4640; --fg3: #86716a;
+  --heart: #8c1d2f; --on-accent: #ffffff;
+  --board: #f6edd9; --board2: #e9d9b8; --boardink: #8a6a34; --boardline: rgba(110, 75, 25, .28);
+  --wood1: #dcb67f; --wood2: #bb8c52; --woodink: #3d2412;
+  --glow: rgba(190, 120, 50, .22);
+  --bokeh1: rgba(185, 110, 50, .22); --bokeh2: rgba(120, 25, 40, .16); --bokeh3: rgba(214, 170, 90, .26);
+  --shadow: 0 10px 30px rgba(50, 20, 15, .2); --shadow-s: 0 2px 8px rgba(50, 20, 15, .14);
+  --ok: #2f7d57; --warn: #94620f; --danger: #a82037;
   --f-ui: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   --f-display: 'Marcellus', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
   --f-cube: 'Josefin Sans', 'Trebuchet MS', 'Gill Sans', sans-serif;
@@ -18,28 +18,28 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #150e14; --bg2: #1d121b; --surface: #251925; --surface2: #2f202e; --raise: #38283a;
-    --line: rgba(255, 225, 205, .11); --line2: rgba(255, 225, 205, .24);
-    --fg: #f8ede5; --fg2: #cfbab3; --fg3: #927d7c;
-    --heart: #ee647c;
-    --board: #f4e9d6; --board2: #e6d4b4; --boardink: #9d7238; --boardline: rgba(110, 70, 20, .3);
-    --glow: rgba(255, 170, 90, .26);
-    --bokeh1: rgba(255, 150, 90, .20); --bokeh2: rgba(220, 70, 120, .22); --bokeh3: rgba(255, 200, 120, .16);
-    --shadow: 0 14px 36px rgba(0, 0, 0, .5); --shadow-s: 0 2px 10px rgba(0, 0, 0, .4);
-    --ok: #52c488; --warn: #e3a550; --danger: #ff6b82;
+    --bg: #0f0a0c; --bg2: #160e11; --surface: #1d1317; --surface2: #281a1f; --raise: #33232a;
+    --line: rgba(240, 215, 190, .1); --line2: rgba(240, 215, 190, .22);
+    --fg: #f1e6da; --fg2: #c4aea2; --fg3: #8a7770;
+    --heart: #c8374f;
+    --board: #efe1c6; --board2: #dcc7a0; --boardink: #8f6c33; --boardline: rgba(110, 70, 20, .3);
+    --glow: rgba(200, 130, 60, .2);
+    --bokeh1: rgba(150, 40, 55, .22); --bokeh2: rgba(200, 140, 60, .13); --bokeh3: rgba(90, 50, 120, .16);
+    --shadow: 0 14px 36px rgba(0, 0, 0, .55); --shadow-s: 0 2px 10px rgba(0, 0, 0, .45);
+    --ok: #52b583; --warn: #d9a24c; --danger: #e0566d;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #150e14; --bg2: #1d121b; --surface: #251925; --surface2: #2f202e; --raise: #38283a;
-  --line: rgba(255, 225, 205, .11); --line2: rgba(255, 225, 205, .24);
-  --fg: #f8ede5; --fg2: #cfbab3; --fg3: #927d7c;
-  --heart: #ee647c;
-  --board: #f4e9d6; --board2: #e6d4b4; --boardink: #9d7238; --boardline: rgba(110, 70, 20, .3);
-  --glow: rgba(255, 170, 90, .26);
-  --bokeh1: rgba(255, 150, 90, .20); --bokeh2: rgba(220, 70, 120, .22); --bokeh3: rgba(255, 200, 120, .16);
-  --shadow: 0 14px 36px rgba(0, 0, 0, .5); --shadow-s: 0 2px 10px rgba(0, 0, 0, .4);
-  --ok: #52c488; --warn: #e3a550; --danger: #ff6b82;
+  --bg: #0f0a0c; --bg2: #160e11; --surface: #1d1317; --surface2: #281a1f; --raise: #33232a;
+  --line: rgba(240, 215, 190, .1); --line2: rgba(240, 215, 190, .22);
+  --fg: #f1e6da; --fg2: #c4aea2; --fg3: #8a7770;
+  --heart: #c8374f;
+  --board: #efe1c6; --board2: #dcc7a0; --boardink: #8f6c33; --boardline: rgba(110, 70, 20, .3);
+  --glow: rgba(200, 130, 60, .2);
+  --bokeh1: rgba(150, 40, 55, .22); --bokeh2: rgba(200, 140, 60, .13); --bokeh3: rgba(90, 50, 120, .16);
+  --shadow: 0 14px 36px rgba(0, 0, 0, .55); --shadow-s: 0 2px 10px rgba(0, 0, 0, .45);
+  --ok: #52b583; --warn: #d9a24c; --danger: #e0566d;
   color-scheme: dark;
 }
 

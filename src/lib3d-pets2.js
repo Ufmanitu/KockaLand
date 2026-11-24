@@ -12,7 +12,7 @@ function p2Star() {
 
 /* ---------- alvó macska ---------- */
 const ctCol = {};
-function ctColInit() { if (!ctCol.g) Object.assign(ctCol, { g: lc('#6d6d80'), gl: lc('#8d8da0'), gd: lc('#2c2c40'), cream: lc('#f6eedf'), pink: lc('#ee93a8') }); }
+function ctColInit() { if (!ctCol.g) Object.assign(ctCol, { g: lc('#6d6d80'), gl: lc('#8d8da0'), gd: lc('#2c2c40'), cream: lc('#f6eedf'), pink: lc('#b0707a') }); }
 function ctBodyGeo() {
   ctColInit();
   return drGeoOnce('ctBody', () => sdfGeo((x, y, z) => {
@@ -52,7 +52,7 @@ function ctBuild(it) {
     fur: l3Skin({ color: '#ffffff', kind: 'fur', vcol: true, cell: 2.4, amt: 0.55, rough: 0.88, env: 0.5 }),
     furP: l3Skin({ color: '#6d6d80', kind: 'fur', cell: 2.4, amt: 0.55, rough: 0.88, env: 0.5 }),
     cream: kVinyl('#f6eedf', { roughness: 0.8, clearcoat: 0 }),
-    pink: new T.MeshStandardMaterial({ color: l3Col('#f0a3b4'), roughness: 0.7 }),
+    pink: new T.MeshStandardMaterial({ color: l3Col('#b0707a'), roughness: 0.7 }),
     nose: kVinyl('#ee8fa4', { roughness: 0.35 }),
     iris: new T.MeshStandardMaterial({ color: l3Col('#c0ee6f'), roughness: 0.3, emissive: l3Col('#9bd04a'), emissiveIntensity: 0.25 }),
     pupil: new T.MeshBasicMaterial({ color: 0x15180e }),
@@ -287,11 +287,11 @@ registerDecor3({
 /* ---------- cserepes pozsgás ---------- */
 function plPotTex() {
   return kTex(512, 128, (g, W, H) => {
-    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#dd855a'); gr.addColorStop(1, '#b4562f'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#74403a'); gr.addColorStop(1, '#42221c'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
     const rng = dcRng(4); for (let i = 0; i < 700; i++) { g.fillStyle = 'rgba(' + (rng() < 0.5 ? '255,220,190' : '90,40,20') + ',' + (0.03 + rng() * 0.06).toFixed(3) + ')'; g.fillRect(rng() * W, rng() * H, 1 + rng() * 3, 1 + rng() * 3); }
-    const y0 = H * 0.3, y1 = H * 0.54; g.fillStyle = '#f7e8cf'; g.fillRect(0, y0, W, y1 - y0);
+    const y0 = H * 0.3, y1 = H * 0.54; g.fillStyle = '#cdb98f'; g.fillRect(0, y0, W, y1 - y0);
     g.strokeStyle = 'rgba(110,50,20,.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(0, y0); g.lineTo(W, y0); g.moveTo(0, y1); g.lineTo(W, y1); g.stroke();
-    g.strokeStyle = '#b8582f'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.beginPath(); const n = 24, s = W / n, ym = (y0 + y1) / 2; for (let i = 0; i <= n; i++) { const x = i * s, y = ym + (i % 2 ? -1 : 1) * (y1 - y0) * 0.27; i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
+    g.strokeStyle = '#6a2a24'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.beginPath(); const n = 24, s = W / n, ym = (y0 + y1) / 2; for (let i = 0; i <= n; i++) { const x = i * s, y = ym + (i % 2 ? -1 : 1) * (y1 - y0) * 0.27; i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
   }, 'plPot');
 }
 function plLeafGeo() {
@@ -306,11 +306,11 @@ function plBuild(it) {
   const shade = ['#4cb572', '#5cc47f', '#69cf8b', '#7bd99a', '#8fe3a9'];
   const M = {
     pot: new T.MeshStandardMaterial({ map: plPotTex(), roughness: 0.8, metalness: 0 }),
-    rim: kVinyl('#e08a5c', { roughness: 0.7, clearcoat: 0.05 }),
+    rim: kVinyl('#7e463a', { roughness: 0.7, clearcoat: 0.05 }),
     soil: new T.MeshStandardMaterial({ color: l3Col('#4a2f20'), roughness: 1 }),
     stone: kVinyl('#9a8f86', { roughness: 0.8, clearcoat: 0 }),
     stem: kVinyl('#2f8a4e', { roughness: 0.6 }),
-    petal: l3Phys({ color: l3Col('#ff6f9f'), roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, emissive: l3Col('#ff3d85'), emissiveIntensity: 0.1 }),
+    petal: l3Phys({ color: l3Col('#a3223f'), roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, emissive: l3Col('#7a1428'), emissiveIntensity: 0.1 }),
     center: kVinyl('#ffd34a', { roughness: 0.4 }), glint: new T.MeshBasicMaterial({ color: 0xfff6c8 }),
     bug: kVinyl('#e8322b', { roughness: 0.25, clearcoat: 0.9 }), bugD: new T.MeshStandardMaterial({ color: 0x2a1010, roughness: 0.5 }),
     spark: new T.SpriteMaterial({ map: p2Star(), color: 0xfff4b0, transparent: true, depthWrite: false, opacity: 0, blending: T.AdditiveBlending, toneMapped: false })

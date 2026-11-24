@@ -78,7 +78,7 @@ function glRoseScene(u) {
     '<path d="M29 100C37 113 63 113 71 100C69 113 60 120 50 120C40 120 31 113 29 100Z" fill="#8a0e26"/>' +
     '<path d="M37 82C37 69 63 69 63 82C63 95 57 105 50 105C43 105 37 95 37 82Z" fill="#f04a6e"/>' +
     '<path d="M41 80C43 73 57 73 59 80C59 88 53 92 50 88C48 85 52 82 54 84" fill="none" stroke="#7a0a20" stroke-width="1.5"/>' +
-    '<path d="M45 79C46 75 54 75 55 79C55 83 52 85.5 50 85.5C48 85.5 45 83 45 79Z" fill="#ff93ab"/>' +
+    '<path d="M45 79C46 75 54 75 55 79C55 83 52 85.5 50 85.5C48 85.5 45 83 45 79Z" fill="#d6566f"/>' +
     '<path d="M29 100C35 93 38 86 39.500 79M71 100C65 93 62 86 60.500 79M43 108C45 101 47 96.500 49 92M57 108C55 101 53 96.500 51 92M24 88C27 84 30 82 33 81M76 88C73 84 70 82 67 81" fill="none" stroke-width="1.3"/>' +
     '<path d="M30 78C32 70 37 65 43 63" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.6"/><path d="M62 70C67 72 71 77 72 83" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.4"/>' +
     '</g>';
@@ -93,7 +93,7 @@ function glRoseScene(u) {
 }
 registerDecor({
   id: 'uveg-rozsa', name: 'Rózsa és pillangó (üvegablak-lámpa)', hint: 'Az alján kapcsolod a fényt. Kattints az üvegre: a pillangó felrebben, egy szirom lehull.', ar: 100 / 170, k: 0.96,
-  svg: u => glFrame(u, glRoseScene(u), ['#ffb36b', '#ff7a8c']),
+  svg: u => glFrame(u, glRoseScene(u), ['#d99a4a', '#a8324a']),
   onClick(el, ev, A) {
     const sw = ev.detail !== 0 && ev.target.closest && ev.target.closest('.d-sw');
     if (sw) { const on = A.toggle(el); el.classList.remove('is-bloom'); A.play(el, on ? 'is-lit' : 'is-dark', 900); return; }

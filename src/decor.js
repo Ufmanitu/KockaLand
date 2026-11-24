@@ -78,7 +78,7 @@ function decorLifeStart(root) {
 
 /* ---------- modell: felvétel, törlés, kezdő díszek ---------- */
 /* a 3D polc sok díszt nem bír el (egy dísz 30–100 draw call): legfeljebb MAX_DECOR dísz lehet kint egyszerre */
-let MAX_DECOR = window.__MAX_DECOR || 8;   // (a tesztek az __MAX_DECOR-rel emelik)
+let MAX_DECOR = window.__MAX_DECOR || 1;   // egyszerre egy dísz (a tesztek az __MAX_DECOR-rel emelik)
 const decorLeft = () => Math.max(0, MAX_DECOR - (Array.isArray(S.decor) ? S.decor.length : 0));
 function trimDecor() {   // a limit feletti díszeket levesszük (a polcok sorrendjében az első MAX_DECOR marad); visszaadja, hányat vett le
   if (!Array.isArray(S.decor) || S.decor.length <= MAX_DECOR) return 0;
@@ -97,8 +97,9 @@ function placeDecor(pairs, shelfIdx) {
     if (p[1] === 'start') sh.ids.unshift(p[0]); else sh.ids.push(p[0]);
   });
 }
-function addDecorSet(set, shelfIdx) {
-  syncShelves(); if (set.parts.length > decorLeft()) return false;
+function addDecorSet(set, shelfIdx) {   // ha a polcon már áll dísz, az újjal lecseréljük (a limitnél a régi helyére kerül)
+  syncShelves(); if (set.parts.length > MAX_DECOR) return false;
+  while (S.decor.length && S.decor.length + set.parts.length > MAX_DECOR) { const o = S.decor.shift(); S.shelves.forEach(s => { s.ids = s.ids.filter(x => x !== o.id); }); }
   const link = set.parts.length > 1 ? Engine.uid() : null, pairs = [];
   set.parts.forEach(p => { const d = newDecor(p.type, link); S.decor.push(d); pairs.push([d.id, p.at]); });
   placeDecor(pairs, shelfIdx); return true;
@@ -124,8 +125,8 @@ function decorModal() {
   const list = h('div', { class: 'dc-list' }, DECOR_SETS.map(set => h('div', { class: 'dc-card panel' },
     decorPreviewEl(set),
     h('div', { class: 'dc-info' }, h('h3', null, set.name), h('p', { class: 'muted small' }, set.desc), h('p', { class: 'dc-tip small' }, ic('sparkle', 13), set.tip)),
-    btn('Hozzáadás', { icon: 'plus', kind: 'primary sm', onclick: () => { if (!addDecorSet(set, shelfIdx)) { toast('Elérted a limitet: legfeljebb ' + MAX_DECOR + ' dísz lehet kint. Vegyél le egyet (kattints rá, majd Eltávolítás).'); return; } persist(); m.close(); drawLibrary(); toast(set.name + ' a polcon. Kattints rá!'); } }))));
-  const m = openModal({ title: 'Díszek a polcra', wide: true, cls: 'dc-modal', body: [h('p', { class: 'muted' }, 'Kis kiegészítők, amik a polcon élnek: rájuk kattintva megmozdulnak. Hozzáadás után átrendezés módban a helyükre húzhatod őket.'), h('p', { class: 'small dc-count' + (decorLeft() ? '' : ' full') }, 'Kint van: ' + (S.decor || []).length + ' / ' + MAX_DECOR + ' dísz' + (decorLeft() ? '' : ' – tele. Hogy az oldal gyors maradjon, többet nem lehet kitenni; vegyél le egyet.')), h('div', { class: 'field dc-shelfsel' }, h('label', { for: 'dc-shelf' }, 'Melyik polcra kerüljön'), sel), list], actions: [{ label: 'Kész', kind: 'primary' }] });
+    btn((S.decor || []).length ? 'Csere erre' : 'Kirakom', { icon: 'plus', kind: 'primary sm', onclick: () => { if (!addDecorSet(set, shelfIdx)) { toast('Ez a készlet nem fér ki a polcra.'); return; } persist(); m.close(); drawLibrary(); toast(set.name + ' a polcon. Kattints rá!'); } }))));
+  const m = openModal({ title: 'Díszek a polcra', wide: true, cls: 'dc-modal', body: [h('p', { class: 'muted' }, 'Egy kis kiegészítő a polcra: rákattintva megmozdul. Hozzáadás után átrendezés módban a helyére húzhatod.'), h('p', { class: 'small dc-count' }, (S.decor || []).length ? 'Most kint van: ' + ((S.decor[0] && DECOR[S.decor[0].type]) ? DECOR[S.decor[0].type].name : 'egy dísz') + ' — az újjal lecseréled.' : 'Egyszerre egy dísz lehet kint, hogy az oldal gyors maradjon.'), h('div', { class: 'field dc-shelfsel' }, h('label', { for: 'dc-shelf' }, 'Melyik polcra kerüljön'), sel), list], actions: [{ label: 'Kész', kind: 'primary' }] });
   return m;
 }
 function decorPopup(el) {

@@ -1,6 +1,6 @@
 /* ===== Utazás (v2). Úticél-címkék: távolság (közel/közepes/messze), jelleg (város, tenger, víz, hegy, falu, bor, természet, hajózható, kempingezhető),
    éghajlat (meleg, hideg). A Hossz-ra, Közlekedésre, Szállásra, Programra szigorú „kell" szabályok vonatkoznak. */
-SeedParts.utazas = T => T.theme('utazas', 'Utazás', '✈️', '#2c9bb8', 'Úti cél, hossz, közlekedés, szállás és program: egyben vagy egyenként.', [
+SeedParts.utazas = T => T.theme('utazas', 'Utazás', '✈️', '#2f7d86', 'Úti cél, hossz, közlekedés, szállás és program: egyben vagy egyenként.', [
   T.die('utazas-hossz', 'Hossz', '⏳', `
 Egy nap #egy-nap
 Hétvége (2–3 nap) #hétvége

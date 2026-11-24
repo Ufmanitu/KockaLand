@@ -48,7 +48,7 @@ SeedParts.fozes = T => {
     ['Gofri, friss gyümölcsökkel', 'reggeli-étel|sütemény', 'gyümölcs|tojás', 'közepes'], ['Joghurtos-gyümölcsös reggeli tál', 'reggeli-étel', 'gyümölcs', 'gyors'], ['Sajtos-sonkás melegszendvics', 'reggeli-étel', 'sajt|sertés', 'gyors']
   ];
   const dishLines = DISHES.map(d => d[0] + ' ?' + d[1] + ' ?' + d[2] + ' ?' + d[3]).join('\n');
-  return T.theme('fozes', 'Otthoni főzés és sütés', '🍳', '#d9622b', 'Nem tudjátok, mit főzzetek vagy süssetek? A kockák döntenek: alkalom, típus, alapanyag, nehézség, és a konkrét étel.', [
+  return T.theme('fozes', 'Otthoni főzés és sütés', '🍳', '#a6482a', 'Nem tudjátok, mit főzzetek vagy süssetek? A kockák döntenek: alkalom, típus, alapanyag, nehézség, és a konkrét étel.', [
     T.die('foz-alkalom', 'Alkalom', '📅', `
 Hétköznap esti vacsora ?leves|főétel|tészta|saláta #hétköznap !hosszú
 Hétvégi ebéd ?leves|főétel|tészta|saláta|pékáru #hétvége

@@ -4,7 +4,7 @@
 'use strict';
 
 registerDecor({
-  id: 'bagoly', name: 'Bagoly', hint: 'Kattints: körülnéz. Még egyszer: huhog. Harmadszor megrémül!', ar: 0.86, k: 0.66, look: true,
+  id: 'bagoly', name: 'Bagoly', hint: 'Kattints: körülnéz. Még egyszer: huhog. Harmadszor megrémül!', ar: 0.86, k: 0.82, look: true,
   svg: u => {
     const O = 'stroke="rgba(50,30,14,.65)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"';
     let chev = '';

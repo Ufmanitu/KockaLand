@@ -79,36 +79,27 @@ function l3Glow() {   // lágy, kerek árnyék/fény-folt
   gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.45, 'rgba(255,255,255,.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
   return (L3.glow = new THREE.CanvasTexture(c));
 }
-function l3SpineTex(b, L, F, w, h) {
-  const key = [b.title, b.author, L.color, L.style, w, h, F.fs, F.ah, F.showA, b.status, L3.fonts].join('|');
+function l3SpineTex(b, L, F, w, h) {   // → {t: szín-textúra, m: maszk (R dombormű · G érdesség · B fémesség)}; a rajzot a spine.js készíti
+  const key = [b.title, b.author, L.color, L.style, L.pat, L.acc, w, h, F.fs, F.ah, F.showA, b.status, L3.fonts, L3.deg ? 2 : 3].join('|');
   let e = L3.tex.get(key);
   if (!e) {
-    const S3 = 3, cw = Math.ceil(w * S3), ch = Math.ceil(h * S3), cv = document.createElement('canvas'); cv.width = cw; cv.height = ch; const g = cv.getContext('2d'), rng = dcRng(hashStr(key));
-    g.fillStyle = L.color; g.fillRect(0, 0, cw, ch);
-    if (L.style === 4) { const vg = g.createLinearGradient(0, 0, 0, ch); vg.addColorStop(0, 'rgba(255,255,255,.2)'); vg.addColorStop(0.12, 'rgba(255,255,255,0)'); vg.addColorStop(0.85, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.3)'); g.fillStyle = vg; g.fillRect(0, 0, cw, ch); }
-    for (let i = 0; i < cw * ch / 26; i++) { g.fillStyle = rng() < 0.5 ? 'rgba(0,0,0,.07)' : 'rgba(255,255,255,.05)'; g.fillRect(rng() * cw, rng() * ch, 1 + rng() * 1.5, 1); }   // bőr/vászon szemcse
-    const line = (y, col, th) => { g.fillStyle = col; g.fillRect(0, y * S3, cw, th * S3); };
-    if (L.style === 1) { [7, 11.5].forEach(y => line(y, L.ink, 1.6)); [h - 13, h - 8.5].forEach(y => line(y, L.ink, 1.6)); g.globalAlpha = 1; }
-    if (L.style === 2) { [7, 11].forEach(y => line(y, '#d9b25a', 1.6)); [h - 12.5, h - 8.5].forEach(y => line(y, '#d9b25a', 1.6)); }
-    if (L.style === 4) { g.fillStyle = 'rgba(0,0,0,.2)'; g.fillRect(cw * 0.24, 0, 1.5, ch); }
-    const ink = L.style === 2 ? '#f3deaa' : L.ink, top = 18 * S3, aH = F.showA ? F.ah * S3 : 0, avail = ch - top - 16 * S3 - (aH ? aH + 6 * S3 : 0);
-    if (L.style === 3) { g.fillStyle = 'rgba(255,255,255,.16)'; g.fillRect(cw * 0.1, top - 6 * S3, cw * 0.8, Math.min(avail, g.measureText ? ch : ch) - 0); g.fillStyle = L.color; }
-    const ff = (s, wgt) => (wgt || '') + ' ' + s + 'px Marcellus, "Palatino Linotype", "Book Antiqua", Georgia, serif';
-    let fs = F.fs * S3; g.font = ff(fs); let tw = g.measureText(b.title).width; if (tw > avail) { fs = Math.max(8.5 * S3, fs * avail / tw); g.font = ff(fs); tw = g.measureText(b.title).width; }
-    g.save(); g.translate(cw / 2, top); g.rotate(Math.PI / 2); g.fillStyle = ink; g.textBaseline = 'middle'; g.textAlign = 'left';
-    let tt = b.title; if (tw > avail) { while (tt.length > 3 && g.measureText(tt + '…').width > avail) tt = tt.slice(0, -1); tt += '…'; }
-    if (L.style === 2) { g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowOffsetY = 1; }
-    g.fillText(tt, 0, 0); g.restore();
-    if (F.showA) {
-      let fa = Math.min(10.5 * S3, cw * 0.3); g.font = ff(fa, ''); let at = b.author, mw = aH; while (at.length > 3 && g.measureText(at).width > mw) at = at.slice(0, -1);
-      g.save(); g.translate(cw / 2, ch - 14 * S3 - Math.min(aH, g.measureText(at).width)); g.rotate(Math.PI / 2); g.globalAlpha = 0.78; g.fillStyle = ink; g.textBaseline = 'middle'; g.textAlign = 'left'; g.fillText(at, 0, 0); g.restore();
-    }
-    if (b.status === 'elolvastam') { g.fillStyle = '#e8c765'; g.beginPath(); g.arc(cw / 2, ch - 7 * S3, 4 * S3, 0, 6.283); g.fill(); g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 1; g.stroke(); }
-    if (L.style === 3) { g.fillStyle = ink; g.globalAlpha = 0.65; g.beginPath(); g.arc(cw / 2, ch - 12 * S3, 4.5 * S3, 0, 6.283); g.fill(); g.globalAlpha = 1; }
-    const t = new THREE.CanvasTexture(cv); t.encoding = THREE.sRGBEncoding; t.anisotropy = Math.min(8, L3.r.capabilities.getMaxAnisotropy()); e = { t: t };
-    L3.tex.set(key, e);
+    const d = spineDraw(b, L, F, w, h, L3.deg ? 2 : 3, true), an = Math.min(8, L3.r.capabilities.getMaxAnisotropy());
+    const t = new THREE.CanvasTexture(d.cv); t.encoding = THREE.sRGBEncoding; t.anisotropy = an;
+    const m = new THREE.CanvasTexture(d.mv); m.anisotropy = Math.min(4, an);
+    e = { t: t, m: m }; L3.tex.set(key, e);
   }
-  e.used = true; return e.t;
+  e.used = true; return e;
+}
+function l3Paper() {   // közös textúrák: lapélek (finom vonalak) és kötésvászon-szövés
+  if (L3.paper) return L3.paper;
+  const mkc = n => { const c = document.createElement('canvas'); c.width = c.height = n; return c; }, rng = dcRng(41);
+  const pc = mkc(128), pg = pc.getContext('2d'); pg.fillStyle = '#f4ead2'; pg.fillRect(0, 0, 128, 128);
+  for (let y = 0; y < 128; y += 1.5) { pg.fillStyle = 'rgba(120,90,50,' + (0.05 + rng() * 0.1).toFixed(3) + ')'; pg.fillRect(0, y, 128, 0.7); }
+  const cc = mkc(128), cg = cc.getContext('2d'); cg.fillStyle = '#ffffff'; cg.fillRect(0, 0, 128, 128);
+  for (let i = 0; i < 900; i++) { cg.fillStyle = rng() < 0.5 ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.5)'; cg.fillRect(rng() * 128, rng() * 128, 1 + rng() * 3, 1); }
+  for (let y = 0; y < 128; y += 2) { cg.fillStyle = 'rgba(0,0,0,.035)'; cg.fillRect(0, y, 128, 1); }
+  const mk = c => { const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t; };
+  return (L3.paper = { pages: mk(pc), cloth: mk(cc) });
 }
 
 /* ---------- elrendezés (2D-vel azonos logika: balról jobbra, sortörés polcszintenként) ---------- */
@@ -156,7 +147,7 @@ function l3Init() {
     const cv = document.createElement('canvas'); cv.id = 'l3'; cv.setAttribute('aria-hidden', 'true'); document.body.insertBefore(cv, $('#app'));
     const lowq = !!window.__L3_LOWQ, weak = !lowq && l3WeakGPU(), r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq && !weak, alpha: true, powerPreference: 'high-performance' });
     L3.lowq = lowq; L3.weak = weak; if (weak) L3.deg = Math.max(L3.deg || 0, 1);
-    r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
+    r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.0;
     r.shadowMap.enabled = true; r.shadowMap.type = T.VSMShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
     L3.cv = cv; L3.r = r; L3.scene = new T.Scene(); L3.cam = new T.PerspectiveCamera(L3K.FOV, 1, 10, 6000); L3.ray = new T.Raycaster();
     cv.addEventListener('webglcontextlost', e => { e.preventDefault(); L3.st = 'failed'; l3Hide(); if ($('.lb')) drawLibrary(); });
@@ -197,7 +188,7 @@ function l3Hide() { L3.on = false; clearTimeout(L3.idleT); if (L3.cv) L3.cv.styl
 /* ---------- szekrény ---------- */
 function l3BuildCase(W, Hc, levels, lh) {
   const T = THREE, K = L3K, D = K.DEPTH, g = new L3Geo();
-  const side = l3Col('#a46d3d'), mold = l3Col('#bb8450'), back = l3Col('#4c2f1b'), board = l3Col('#b57c48'), plinth = l3Col('#8a5832');
+  const side = l3Col('#40261a'), mold = l3Col('#523020'), back = l3Col('#26150f'), board = l3Col('#4a2a1b'), plinth = l3Col('#32190f');   // sötét dió/mahagóni (v12: dark romance)
   g.box(0, -Hc, -D, K.SIDE, 0, 0, side); g.box(W - K.SIDE, -Hc, -D, W, 0, 0, side);                          // oldalak
   g.box(-4, -14, -D, W + 4, 0, 7, mold); g.box(0, -K.TOPH, -D, W, -14, 0, side); g.box(-2, -K.TOPH - 5, -D + 4, W + 2, -K.TOPH, 4, mold);   // korona + tető
   g.box(K.SIDE, -(Hc - K.PLINTH), -D, W - K.SIDE, -K.TOPH, -D + 4, back, 160);                                   // hátlap
@@ -207,30 +198,34 @@ function l3BuildCase(W, Hc, levels, lh) {
     const kv = y => { const t = (y - bot) / h; return t < 0.1 ? 0.8 + t * 2 : t > 0.7 ? 1 - (t - 0.7) / 0.3 * 0.5 : 1; }, kh = x => { const e = Math.min(x - x0, x1 - x) / ew; return 0.72 + 0.28 * Math.max(0, Math.min(1, e)); };
     g.shade(x0, x1, bot, top, -D + 4.4, xs, ys, (x, y) => back.clone().multiplyScalar(kv(y) * kh(x)), 160);
   }
-  for (let l = 0; l < levels; l++) { const yb = -(K.TOPH + (l + 1) * lh); g.box(K.SIDE, yb, -D + 4, W - K.SIDE, yb + K.BOARD, -1.5, board); g.box(K.SIDE, yb + K.BOARD - 2.4, -3, W - K.SIDE, yb + K.BOARD, -1.5, l3Col('#d09a63')); }  // deszkák + élfény
+  for (let l = 0; l < levels; l++) { const yb = -(K.TOPH + (l + 1) * lh); g.box(K.SIDE, yb, -D + 4, W - K.SIDE, yb + K.BOARD, -1.5, board); g.box(K.SIDE, yb + K.BOARD - 2.4, -3, W - K.SIDE, yb + K.BOARD, -1.5, l3Col('#8f5d38')); }  // deszkák + élfény
   g.box(K.SIDE - 5, -Hc, -D + 6, W - K.SIDE + 5, -(K.TOPH + levels * lh), 5, plinth); g.box(K.SIDE - 8, -Hc, -D + 6, K.SIDE - 2, -Hc + 6, 5, plinth); g.box(W - K.SIDE + 2, -Hc, -D + 6, W - K.SIDE + 8, -Hc + 6, 5, plinth);   // lábazat
-  [[0, 0], [W - 3, 0]].forEach(p => g.box(p[0], -Hc + K.PLINTH, -1, p[0] + 3, -K.TOPH, 1.6, l3Col('#c89560')));   // élléc a szélén
+  [[0, 0], [W - 3, 0]].forEach(p => g.box(p[0], -Hc + K.PLINTH, -1, p[0] + 3, -K.TOPH, 1.6, l3Col('#86583a')));   // élléc a szélén
   const mat = new T.MeshStandardMaterial({ map: l3Wood(), bumpMap: l3Wood(), bumpScale: 1.4, vertexColors: true, roughness: 0.6, metalness: 0, envMapIntensity: 0.55 });
   const m = new T.Mesh(g.build(), mat); m.castShadow = m.receiveShadow = true; return m;
 }
 
 /* ---------- könyv ---------- */
 function l3BuildBook(it, lh) {
-  const T = THREE, b = it.b, L = it.L, w = it.w, h = it.h, hs = hashStr(b.id), d = 98 + (hs % 30), ct = Math.min(2.6, w * 0.09), bulge = Math.min(2.8, w * 0.08);
-  const F = titleFit(b, L, lh), grp = new T.Group();
-  const sg = new T.PlaneGeometry(w, h, 10, 1); sg.translate(0, h / 2, 0); const pp = sg.attributes.position; for (let i = 0; i < pp.count; i++) { const x = pp.getX(i) / (w / 2); pp.setZ(i, bulge * (1 - x * x)); } sg.computeVertexNormals();
-  const smat = new T.MeshStandardMaterial({ map: l3SpineTex(b, L, F, w, h), roughness: L.style === 2 ? 0.42 : 0.58, metalness: 0, envMapIntensity: 0.7 });
+  const T = THREE, b = it.b, L = it.L, w = it.w, h = it.h, hs = hashStr(b.id), d = 98 + (hs % 30), ct = Math.min(2.8, w * 0.085), bulge = Math.min(3.4, w * 0.09);
+  const F = titleFit(b, L, lh), grp = new T.Group(), px = l3Paper();
+  const sg = new T.PlaneGeometry(w, h, 12, 2); sg.translate(0, h / 2, 0); const pp = sg.attributes.position; for (let i = 0; i < pp.count; i++) { const x = pp.getX(i) / (w / 2), y = pp.getY(i) / h; pp.setZ(i, bulge * (1 - x * x) * (1 - 0.1 * Math.pow(2 * y - 1, 2))); } sg.computeVertexNormals();
+  const tx = l3SpineTex(b, L, F, w, h), glossy = L.style === 2 || L.style === 5 || L.style === 6;
+  const smat = new T.MeshStandardMaterial({ map: tx.t, roughnessMap: tx.m, metalnessMap: tx.m, bumpMap: tx.m, bumpScale: 1.6, roughness: glossy ? 0.82 : 1, metalness: 1, envMapIntensity: 0.9 });
+  smat.color.setScalar(0.62); smat.userData.k = 0.62;   // a erős fény felmossa a sötét színeket: a dark romance hangulathoz visszavesszük
   const spine = new T.Mesh(sg, smat); spine.castShadow = spine.receiveShadow = true; grp.add(spine);
-  const cov = l3Col(L.color, 0.8), pg = l3Col('#efe3c6'), g = new L3Geo();
+  const cov = l3Col(L.color, 0.56), g = new L3Geo(), gp = new L3Geo();
   g.box(-w / 2, 0, -d, -w / 2 + ct, h, -0.3, cov, 80); g.box(w / 2 - ct, 0, -d, w / 2, h, -0.3, cov, 80); g.box(-w / 2, 0, -d, w / 2, h, -d + ct, cov, 80);
-  g.box(-w / 2 + ct + 0.2, 2.2, -d + ct, w / 2 - ct - 0.2, h - 2.2, -3.2, pg, 60);
-  const bmat = new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.78, metalness: 0, envMapIntensity: 0.35 });
+  gp.box(-w / 2 + ct + 0.2, 2.2, -d + ct, w / 2 - ct - 0.2, h - 2.2, -3.2, null, 60);
+  const bmat = new T.MeshStandardMaterial({ vertexColors: true, map: px.cloth, roughness: 0.74, metalness: 0, envMapIntensity: 0.4 });
   const body = new T.Mesh(g.build(), bmat); body.castShadow = body.receiveShadow = true; grp.add(body);
+  const pmat = new T.MeshStandardMaterial({ map: px.pages, roughness: 0.92, metalness: 0, envMapIntensity: 0.25 });
+  const pages = new T.Mesh(gp.build(), pmat); pages.castShadow = pages.receiveShadow = true; grp.add(pages);
   if (b.status === 'olvasom') {   // könyvjelző-szalag a gerinc tetején
     const sh = new T.Shape(); sh.moveTo(-2.6, 0); sh.lineTo(2.6, 0); sh.lineTo(2.6, 28); sh.lineTo(0, 23); sh.lineTo(-2.6, 28); sh.closePath();
-    const rb = new T.Mesh(new T.ShapeGeometry(sh), new T.MeshStandardMaterial({ color: l3Col('#c43d4b'), roughness: 0.5, side: T.DoubleSide })); rb.position.set(0, h - 22, bulge + 0.8); rb.castShadow = true; grp.add(rb);
+    const rb = new T.Mesh(new T.ShapeGeometry(sh), new T.MeshStandardMaterial({ color: l3Col('#8f1d2c'), roughness: 0.45, side: T.DoubleSide })); rb.position.set(0, h - 22, bulge + 0.8); rb.castShadow = true; grp.add(rb);
   }
-  return { grp: grp, parts: [spine, body], mats: [smat, bmat], d: d, bulge: bulge };
+  return { grp: grp, parts: [spine, body, pages], mats: [smat, bmat, pmat], d: d, bulge: bulge };
 }
 
 /* ---------- dísz: ideiglenes (lapos) alak az SVG-ből; a valódi 3D modellek a DECOR3 katalógusból jönnek ---------- */
@@ -270,11 +265,16 @@ function l3Sync() {
       const item = { id: it.id, kind: it.kind, b: it.b, d: it.d, T: it.T, w: it.w, h: it.h, grp: o.grp, parts: o.parts, mats: o.mats, ctl: o.ctl, bx: bx, by: by, bz: it.kind === 'book' ? -rec : 0, hv: 0, ht: 0, pk: 0, lf: 0, dim: 0, depth: o.d, shelf: si, lvl: it.lvl };
       o.grp.position.set(bx, by, item.bz); cg.add(o.grp); o.parts.forEach(p => { p.userData.item = item; L3.pick.push(p); });
       L3.items.set(it.id, item);
+      if (it.kind === 'decor' && (L3.deg || 0) < 2) {   // v12: meleg "spotlámpa"-folt a díszek mögött a hátlapon (additív, olcsó)
+        if (!L3.glowTex) { const c = document.createElement('canvas'); c.width = c.height = 128; const g2 = c.getContext('2d'), gr = g2.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,170,90,1)'); gr.addColorStop(0.45, 'rgba(210,110,60,.45)'); gr.addColorStop(1, 'rgba(120,40,40,0)'); g2.fillStyle = gr; g2.fillRect(0, 0, 128, 128); L3.glowTex = new T.CanvasTexture(c); L3.glowTex.encoding = T.sRGBEncoding; }
+        const gm = new T.Mesh(new T.PlaneGeometry(it.w * 2.1, it.h * 1.9), new T.MeshBasicMaterial({ map: L3.glowTex, transparent: true, opacity: 0.34, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false }));
+        gm.position.set(bx, by + it.h * 0.5, -K.DEPTH + 7); gm.renderOrder = -1; cg.add(gm);
+      }
     });
     L3.scene.add(cg); L3.cases.push(cg);
   });
   const pk = new Set(pickedBooks().map(x => x.book.id)); L3.items.forEach(it => { it.pk = pk.has(it.id) ? 1 : 0; l3Pose(it); });
-  L3.tex.forEach((e, k) => { if (!e.used) { e.t.dispose(); L3.tex.delete(k); } });
+  L3.tex.forEach((e, k) => { if (!e.used) { e.t.dispose(); if (e.m) e.m.dispose(); L3.tex.delete(k); } });
   l3Filter();
   if (!L3.fonts && document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(() => { L3.fonts = true; if (L3.on && $('.lb.l3')) l3Sync(); });
   l3Inv();
@@ -284,15 +284,15 @@ function l3Filter() {
   L3.items.forEach(it => {
     if (it.kind !== 'book') return;
     const dim = !!q && Engine.slug([it.b.title, it.b.author, it.b.genre, it.b.mood].join(' ')).indexOf(q) < 0;
-    if (dim !== !!it.dim) { it.dim = dim ? 1 : 0; it.mats.forEach(m => { m.color.setScalar(dim ? 0.28 : 1); }); }
+    if (dim !== !!it.dim) { it.dim = dim ? 1 : 0; it.mats.forEach(m => { m.color.setScalar((dim ? 0.28 : 1) * (m.userData.k || 1)); }); }
   });
   l3Inv();
 }
 function l3Pose(it) {   // könyv: kihúzódik és megdől hover/fókusz/kiválasztás esetén; a forgáspont a könyv alja
   L3.sd = true; if (it.drag) return;
   const hv = it.hv, lift = it.lf || 0;
-  it.grp.position.set(it.bx, it.by + lift * 0.35, it.bz + 10 * hv + 15 * it.pk + lift);
-  it.grp.rotation.x = it.kind === 'book' ? 0.085 * hv + 0.03 * it.pk + 0.05 * (lift ? 1 : 0) : 0;
+  it.grp.position.set(it.bx, it.by + lift * 0.35 + (it.kind === 'book' ? 4 * hv : 0), it.bz + (it.kind === 'book' ? 30 : 10) * hv + 15 * it.pk + lift);
+  it.grp.rotation.x = it.kind === 'book' ? 0.3 * hv + 0.03 * it.pk + 0.05 * (lift ? 1 : 0) : 0;
 }
 
 /* ---------- kamera, fény, kirajzolás ---------- */

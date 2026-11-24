@@ -7,16 +7,16 @@
 <style>
 /* Elrendezés: fejléc + fő nézet (közép, max 1120px) + telefonon alsó fül-sáv. Hangulat: gyertyafényes esti asztal, krém fatábla, fa kockák. */
 :root {
-  --bg: #f8eee6; --bg2: #f1e2d7; --surface: #fffaf5; --surface2: #f6e9de; --raise: #ffffff;
-  --line: rgba(90, 45, 40, .14); --line2: rgba(90, 45, 40, .28);
-  --fg: #2a1a1d; --fg2: #66504f; --fg3: #8f7776;
-  --heart: #d23f58; --on-accent: #ffffff;
-  --board: #fffcf6; --board2: #f4e8d4; --boardink: #a67c40; --boardline: rgba(120, 80, 30, .24);
-  --wood1: #efd5a9; --wood2: #d8ad72; --woodink: #4b2d15;
-  --glow: rgba(255, 176, 96, .30);
-  --bokeh1: rgba(255, 170, 120, .34); --bokeh2: rgba(236, 110, 140, .26); --bokeh3: rgba(255, 214, 140, .38);
-  --shadow: 0 10px 30px rgba(90, 35, 35, .16); --shadow-s: 0 2px 8px rgba(90, 35, 35, .12);
-  --ok: #2c8a58; --warn: #a96d14; --danger: #c52f48;
+  --bg: #eee4d6; --bg2: #e4d7c4; --surface: #f8f1e5; --surface2: #ebdfcd; --raise: #fffaf1;
+  --line: rgba(60, 28, 22, .16); --line2: rgba(60, 28, 22, .30);
+  --fg: #231512; --fg2: #5c4640; --fg3: #86716a;
+  --heart: #8c1d2f; --on-accent: #ffffff;
+  --board: #f6edd9; --board2: #e9d9b8; --boardink: #8a6a34; --boardline: rgba(110, 75, 25, .28);
+  --wood1: #dcb67f; --wood2: #bb8c52; --woodink: #3d2412;
+  --glow: rgba(190, 120, 50, .22);
+  --bokeh1: rgba(185, 110, 50, .22); --bokeh2: rgba(120, 25, 40, .16); --bokeh3: rgba(214, 170, 90, .26);
+  --shadow: 0 10px 30px rgba(50, 20, 15, .2); --shadow-s: 0 2px 8px rgba(50, 20, 15, .14);
+  --ok: #2f7d57; --warn: #94620f; --danger: #a82037;
   --f-ui: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   --f-display: 'Marcellus', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
   --f-cube: 'Josefin Sans', 'Trebuchet MS', 'Gill Sans', sans-serif;
@@ -25,28 +25,28 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #150e14; --bg2: #1d121b; --surface: #251925; --surface2: #2f202e; --raise: #38283a;
-    --line: rgba(255, 225, 205, .11); --line2: rgba(255, 225, 205, .24);
-    --fg: #f8ede5; --fg2: #cfbab3; --fg3: #927d7c;
-    --heart: #ee647c;
-    --board: #f4e9d6; --board2: #e6d4b4; --boardink: #9d7238; --boardline: rgba(110, 70, 20, .3);
-    --glow: rgba(255, 170, 90, .26);
-    --bokeh1: rgba(255, 150, 90, .20); --bokeh2: rgba(220, 70, 120, .22); --bokeh3: rgba(255, 200, 120, .16);
-    --shadow: 0 14px 36px rgba(0, 0, 0, .5); --shadow-s: 0 2px 10px rgba(0, 0, 0, .4);
-    --ok: #52c488; --warn: #e3a550; --danger: #ff6b82;
+    --bg: #0f0a0c; --bg2: #160e11; --surface: #1d1317; --surface2: #281a1f; --raise: #33232a;
+    --line: rgba(240, 215, 190, .1); --line2: rgba(240, 215, 190, .22);
+    --fg: #f1e6da; --fg2: #c4aea2; --fg3: #8a7770;
+    --heart: #c8374f;
+    --board: #efe1c6; --board2: #dcc7a0; --boardink: #8f6c33; --boardline: rgba(110, 70, 20, .3);
+    --glow: rgba(200, 130, 60, .2);
+    --bokeh1: rgba(150, 40, 55, .22); --bokeh2: rgba(200, 140, 60, .13); --bokeh3: rgba(90, 50, 120, .16);
+    --shadow: 0 14px 36px rgba(0, 0, 0, .55); --shadow-s: 0 2px 10px rgba(0, 0, 0, .45);
+    --ok: #52b583; --warn: #d9a24c; --danger: #e0566d;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #150e14; --bg2: #1d121b; --surface: #251925; --surface2: #2f202e; --raise: #38283a;
-  --line: rgba(255, 225, 205, .11); --line2: rgba(255, 225, 205, .24);
-  --fg: #f8ede5; --fg2: #cfbab3; --fg3: #927d7c;
-  --heart: #ee647c;
-  --board: #f4e9d6; --board2: #e6d4b4; --boardink: #9d7238; --boardline: rgba(110, 70, 20, .3);
-  --glow: rgba(255, 170, 90, .26);
-  --bokeh1: rgba(255, 150, 90, .20); --bokeh2: rgba(220, 70, 120, .22); --bokeh3: rgba(255, 200, 120, .16);
-  --shadow: 0 14px 36px rgba(0, 0, 0, .5); --shadow-s: 0 2px 10px rgba(0, 0, 0, .4);
-  --ok: #52c488; --warn: #e3a550; --danger: #ff6b82;
+  --bg: #0f0a0c; --bg2: #160e11; --surface: #1d1317; --surface2: #281a1f; --raise: #33232a;
+  --line: rgba(240, 215, 190, .1); --line2: rgba(240, 215, 190, .22);
+  --fg: #f1e6da; --fg2: #c4aea2; --fg3: #8a7770;
+  --heart: #c8374f;
+  --board: #efe1c6; --board2: #dcc7a0; --boardink: #8f6c33; --boardline: rgba(110, 70, 20, .3);
+  --glow: rgba(200, 130, 60, .2);
+  --bokeh1: rgba(150, 40, 55, .22); --bokeh2: rgba(200, 140, 60, .13); --bokeh3: rgba(90, 50, 120, .16);
+  --shadow: 0 14px 36px rgba(0, 0, 0, .55); --shadow-s: 0 2px 10px rgba(0, 0, 0, .45);
+  --ok: #52b583; --warn: #d9a24c; --danger: #e0566d;
   color-scheme: dark;
 }
 
@@ -490,7 +490,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--tc); width: 18px; 
 }
 
 /* ===== Könyvtár (v2): polcok, gerincek, húzás ===== */
-:root { --lh: 214px; }
+:root { --lh: 240px; }
 .lb-tabs { margin: -6px 0 14px; }
 .lb-shelves { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 500px), 1fr)); gap: 22px 20px; align-items: start; }
 .lb-case { min-width: 0; }
@@ -521,41 +521,38 @@ input[type=checkbox], input[type=radio] { accent-color: var(--tc); width: 18px; 
 }
 .lb-empty { align-self: center; padding: 0 12px; color: #d9c3a0; }
 .lb-slot { flex: none; display: flex; align-items: flex-end; justify-content: center; width: calc(var(--w) + 2px); height: var(--lh); padding: 0 1px 14px; }
-.lb-sp { position: relative; flex: none; width: var(--w); height: calc(var(--k) * (var(--lh) - 40px)); padding: 0; margin: 0; border: 0; background: none; cursor: pointer; font: inherit; color: var(--ink); -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+.lb-sp { position: relative; flex: none; width: var(--w); height: calc(var(--k) * (var(--lh) - 40px)); padding: 0; margin: 0; border: 0; background: none; cursor: pointer; font: inherit; color: var(--tink, var(--ink)); -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
 .lb-sp:focus-visible { outline: none; }
 .lb-sp:focus-visible .lb-bk { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--tc); }
 .lb-bk {
   position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 0 14px; border-radius: 2px 2px 1px 1px; transform-origin: 18% 100%;
-  background: linear-gradient(90deg, rgba(0, 0, 0, .32), rgba(255, 255, 255, .13) 10%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .1) 84%, rgba(0, 0, 0, .34)), var(--c);
+  background: linear-gradient(90deg, rgba(0, 0, 0, .18), rgba(255, 255, 255, .1) 10%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .06) 84%, rgba(0, 0, 0, .2)), var(--bgimg, none) center / 100% 100% no-repeat, var(--c);
   box-shadow: 1px 0 0 rgba(0, 0, 0, .35), 0 1px 0 rgba(0, 0, 0, .25);
   transition: transform .24s cubic-bezier(.3, 1.5, .5, 1), box-shadow .2s;
 }
 .lb-bk::before, .lb-bk::after { content: ''; position: absolute; left: 0; right: 0; pointer-events: none; }
 .lb-t { flex: 1 1 0; min-height: 0; max-height: 100%; writing-mode: vertical-rl; font-family: var(--f-display); font-size: var(--fs, 13px); line-height: 1.15; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: start; }
 .lb-a { flex: 0 1 auto; max-height: var(--ah, 30%); writing-mode: vertical-rl; font-family: var(--f-ui); font-size: 10px; letter-spacing: .03em; opacity: .78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* stílusok */
-.s1 .lb-bk::before { top: 7px; height: 6px; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); opacity: .55; }
-.s1 .lb-bk::after { bottom: 7px; height: 6px; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); opacity: .55; }
-.s2 .lb-bk::before { top: 7px; height: 2px; background: #d9b25a; box-shadow: 0 4px 0 #d9b25a; }
-.s2 .lb-bk::after { bottom: 7px; height: 2px; background: #d9b25a; box-shadow: 0 -4px 0 #d9b25a; }
-.s2 .lb-t { color: #f3deaa; text-shadow: 0 1px 0 rgba(0, 0, 0, .35); }
+/* stílusok: a díszítést (fólia-vonalak, bordák, keret, minta) a gerinc-kép tartalmazza (spine.js); itt csak a szöveg-kezelés */
+.lb-t { text-shadow: 0 1px 0 rgba(0, 0, 0, .28); }
+.pt .lb-t { background: color-mix(in srgb, var(--c) 88%, transparent); padding: 5px 2px; border-radius: 3px; box-shadow: 0 0 0 .5px color-mix(in srgb, var(--ink) 28%, transparent); }
 .s3 .lb-t { background: color-mix(in srgb, var(--ink) 16%, transparent); padding: 6px 3px; border-radius: 2px; }
 .s3 .lb-bk::after { bottom: 6px; left: 50%; right: auto; width: 9px; height: 9px; margin-left: -4.5px; background: var(--ink); opacity: .65; }
-.s4 .lb-bk { background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0) 12%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, .28)), linear-gradient(90deg, rgba(0, 0, 0, .32), rgba(255, 255, 255, .1) 10%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .12) 84%, rgba(0, 0, 0, .36)), var(--c); }
-.s4 .lb-bk::before { top: 0; bottom: 0; left: 24%; right: auto; width: 1px; background: rgba(0, 0, 0, .22); }
+.s5 .lb-bk { padding: 32px 0 30px; }
+.s6 .lb-bk { padding: 20px 0 16px; }
 /* státusz */
 .lb-mark { position: absolute; pointer-events: none; }
 .reading .lb-mark { top: -7px; left: 50%; margin-left: -3px; width: 6px; height: 17px; background: #c43d4b; box-shadow: 0 1px 2px rgba(0, 0, 0, .4); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%); }
 .done .lb-mark { bottom: 5px; left: 50%; margin-left: -4px; width: 8px; height: 8px; border-radius: 50%; background: #e8c765; box-shadow: 0 0 0 1px rgba(0, 0, 0, .3); }
 .s3.done .lb-mark { bottom: 20px; }
 /* billenés egérrávitelre / fókuszra */
-@media (hover: hover) { .lb:not(.edit) .lb-sp:hover .lb-bk { transform: translateY(-4px) rotate(-6deg); box-shadow: 4px 7px 12px rgba(0, 0, 0, .5), 1px 0 0 rgba(0, 0, 0, .35); z-index: 3; } }
-.lb:not(.edit) .lb-sp:focus-visible .lb-bk { transform: translateY(-4px) rotate(-6deg); }
-.lb:not(.edit) .lb-sp:active .lb-bk { transform: translateY(-2px) rotate(-3deg); }
+@media (hover: hover) { .lb:not(.edit) .lb-sp:hover .lb-bk { transform: translateY(-9px) rotate(-11deg); box-shadow: 6px 10px 16px rgba(0, 0, 0, .55), 1px 0 0 rgba(0, 0, 0, .35); z-index: 3; } }
+.lb:not(.edit) .lb-sp:focus-visible .lb-bk { transform: translateY(-9px) rotate(-11deg); }
+.lb:not(.edit) .lb-sp:active .lb-bk { transform: translateY(-4px) rotate(-5deg); }
 .lb.edit .lb-sp { cursor: grab; touch-action: none; }
 .lb.edit .lb-sp:hover .lb-bk { transform: translateY(-3px); }
 .lb-sp.picked .lb-bk { transform: translateY(-12px); box-shadow: 0 0 0 2px #f4d37a, 0 0 14px 2px rgba(244, 211, 122, .55), 3px 8px 12px rgba(0, 0, 0, .45); }
-.lb-sp.picked::before { content: '♥'; position: absolute; top: -34px; left: 50%; transform: translateX(-50%); color: #ff7a90; font-size: 15px; line-height: 1; pointer-events: none; }
+.lb-sp.picked::before { content: '♥'; position: absolute; top: -34px; left: 50%; transform: translateX(-50%); color: #d0445c; font-size: 15px; line-height: 1; pointer-events: none; }
 .lb-sp.flash .lb-bk { animation: lbflash .5s 3; }
 @keyframes lbflash { 50% { transform: translateY(-20px) rotate(-8deg); } }
 .lb-sp.dim .lb-bk { opacity: .22; filter: grayscale(.6); }
@@ -580,12 +577,12 @@ input[type=checkbox], input[type=radio] { accent-color: var(--tc); width: 18px; 
 .lb-sws { display: flex; flex-wrap: wrap; gap: 6px; }
 .lb-sw { position: relative; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line2); cursor: pointer; padding: 0; display: inline-grid; place-items: center; }
 .lb-sw.on { border-color: var(--fg); box-shadow: 0 0 0 2px var(--surface2), 0 0 0 4px var(--tc); }
-.lb-sw.custom { background: conic-gradient(#e0555a, #e8b04a, #7bc46b, #4aa8c8, #8a6bd0, #e0555a); color: #fff; overflow: hidden; }
+.lb-sw.custom { background: conic-gradient(#8f1d2c, #c9923a, #3a8060, #2f7d86, #6b4a9c, #8f1d2c); color: #fff; overflow: hidden; }
 .lb-sw.custom .lb-color { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; padding: 0; border: 0; }
 .lb-shelfsel select { width: auto; min-width: 180px; }
 .ar-list { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
 @media (max-width: 560px) {
-  :root { --lh: 190px; }
+  :root { --lh: 212px; }
   .lb-frame { padding: 8px 8px 8px; }
   .lb-row { padding: 0 4px; }
   .lb-top { flex-direction: column; align-items: stretch; }
@@ -594,6 +591,22 @@ input[type=checkbox], input[type=radio] { accent-color: var(--tc); width: 18px; 
 }
 .lite .lb-bk { transition: none; }
 @media (prefers-reduced-motion: reduce) { .lb-bk { transition: none; } .lb-sp.flash .lb-bk { animation: none; } }
+
+/* ===== Könyv-szerkesztő (v12): nagy előnézet, miniatűr-választók ===== */
+.lb-prev { padding: 14px 18px 0; }
+.lb-bigspine { display: block; border-radius: 3px 3px 1px 1px; box-shadow: 4px 0 10px rgba(0, 0, 0, .5), inset 0 0 0 1px rgba(0, 0, 0, .25); }
+.lb-top .lb-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; align-self: center; }
+.lb-quick { margin-top: 8px; }
+.lb-ths { display: flex; flex-wrap: wrap; gap: 8px; flex: 1 1 260px; min-width: 0; }
+.lb-th { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 64px; padding: 6px 4px 5px; border-radius: 10px; border: 1px solid var(--line2); background: var(--surface); color: var(--fg2); cursor: pointer; font: inherit; transition: background .15s, border-color .15s, transform .15s; }
+.lb-th:hover { background: var(--raise); transform: translateY(-1px); }
+.lb-th.on { border-color: var(--tc); background: color-mix(in srgb, var(--tc) 14%, var(--surface)); color: var(--fg); box-shadow: 0 0 0 1px color-mix(in srgb, var(--tc) 40%, transparent); }
+.lb-th canvas { display: block; border-radius: 2px; box-shadow: 1px 0 3px rgba(0, 0, 0, .35); }
+.lb-th-n { font-size: .68rem; font-weight: 600; line-height: 1.1; text-align: center; max-width: 100%; overflow-wrap: anywhere; }
+.lb-sw.foil { border-radius: 8px; }
+.lb-sw.foil.metal { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5), inset 0 -6px 8px rgba(0, 0, 0, .2); }
+@media (max-width: 560px) { .lb-th { width: 56px; } }
+.lb-opt { align-items: flex-start; }
 
 
 /* ===== Díszek (v2): méretek + egyéni animációk. Csak transform/opacity, egyszeri lejátszás (nincs végtelen animáció). ===== */
@@ -1672,14 +1685,22 @@ const Seed = (() => {
     return { replaced, kept };
   }
 
-  return { VERSION, themes, books, BOOK_GENRES, BOOK_MOODS, T, migrate, sig };
+  /* v12: a rózsaszínes/barbie alap-témaszínek helyett sötét, „dark romance” tónusok — csak az érintetlen (nem átszínezett) alap témákon */
+  const RECOLOR = { randi: ['#e04a5f', '#a8233a'], utazas: ['#2c9bb8', '#2f7d86'], kaja: ['#e8832a', '#b5632a'], fozes: ['#d9622b', '#a6482a'], mozi: ['#9b6bdb', '#6b4a9c'], kezmuves: ['#3fae7b', '#3a8060'], konyv: ['#c9923a', '#a67a32'], meghitt: ['#c2335f', '#7d1d3a'] };
+  function recolor(S) {
+    if (!S.settings) S.settings = {}; if ((S.settings.palV || 0) >= 12) return 0;
+    let n = 0; S.themes.forEach(t => { const r = t.builtin && RECOLOR[t.id]; if (r && String(t.color).toLowerCase() === r[0]) { t.color = r[1]; n++; } });
+    S.settings.palV = 12; return n;
+  }
+
+  return { VERSION, themes, books, BOOK_GENRES, BOOK_MOODS, T, migrate, recolor, sig };
 })();
 
 
 /* ===== Randi téma (v2: minden Mit/Étel opciónak kötelező helyszín-whitelistje van → nincs értelmetlen párosítás) =====
    Helyszín-címkék (Hol): nappali, konyha, terasz, utca, természet, víz, kávézó, étterem, kilátó, mozi, múzeum, új
    Osztály-címkék (Hol): otthon, kint, város, bent. Napszak-címkék (Mikor): reggel, délelőtt, délután, naplemente, este, éjjel, egésznap */
-SeedParts.randi = T => T.theme('randi', 'Randi', '💞', '#e04a5f', 'Randitervező: mikor, hol, mit csinálunk, és milyen hangulatban.', [
+SeedParts.randi = T => T.theme('randi', 'Randi', '💞', '#a8233a', 'Randitervező: mikor, hol, mit csinálunk, és milyen hangulatban.', [
   T.die('randi-mikor', 'Mikor', '⏰', `
 Reggeli randi, korán kelve #reggel #nappal
 Hétvégi délelőtt #délelőtt #nappal
@@ -1772,7 +1793,7 @@ Csak olyat mondunk, ami a másiknak jólesik
 
 /* ===== Utazás (v2). Úticél-címkék: távolság (közel/közepes/messze), jelleg (város, tenger, víz, hegy, falu, bor, természet, hajózható, kempingezhető),
    éghajlat (meleg, hideg). A Hossz-ra, Közlekedésre, Szállásra, Programra szigorú „kell" szabályok vonatkoznak. */
-SeedParts.utazas = T => T.theme('utazas', 'Utazás', '✈️', '#2c9bb8', 'Úti cél, hossz, közlekedés, szállás és program: egyben vagy egyenként.', [
+SeedParts.utazas = T => T.theme('utazas', 'Utazás', '✈️', '#2f7d86', 'Úti cél, hossz, közlekedés, szállás és program: egyben vagy egyenként.', [
   T.die('utazas-hossz', 'Hossz', '⏳', `
 Egy nap #egy-nap
 Hétvége (2–3 nap) #hétvége
@@ -1854,7 +1875,7 @@ Tél #tél +hegy +hideg
 
 /* ===== Kajasorsoló (v2). Fő fogás: konyha-whitelist + alkalom-tiltás; #kézben (utcai), #hordozható (piknik), #házi (csak otthon).
    Desszert: nemzeti desszert csak a megfelelő konyhához; Kihívás csak olyan módhoz, amihez értelme van. */
-SeedParts.kaja = T => T.theme('kaja', 'Kajasorsoló', '🍝', '#e8832a', 'Mit együnk ma? Alkalom, konyha, fő fogás, ital és desszert.', [
+SeedParts.kaja = T => T.theme('kaja', 'Kajasorsoló', '🍝', '#b5632a', 'Mit együnk ma? Alkalom, konyha, fő fogás, ital és desszert.', [
   T.die('kaja-alkalom', 'Alkalom', '🕑', `
 Reggeli #reggeli
 Brunch #brunch
@@ -2015,7 +2036,7 @@ SeedParts.fozes = T => {
     ['Gofri, friss gyümölcsökkel', 'reggeli-étel|sütemény', 'gyümölcs|tojás', 'közepes'], ['Joghurtos-gyümölcsös reggeli tál', 'reggeli-étel', 'gyümölcs', 'gyors'], ['Sajtos-sonkás melegszendvics', 'reggeli-étel', 'sajt|sertés', 'gyors']
   ];
   const dishLines = DISHES.map(d => d[0] + ' ?' + d[1] + ' ?' + d[2] + ' ?' + d[3]).join('\n');
-  return T.theme('fozes', 'Otthoni főzés és sütés', '🍳', '#d9622b', 'Nem tudjátok, mit főzzetek vagy süssetek? A kockák döntenek: alkalom, típus, alapanyag, nehézség, és a konkrét étel.', [
+  return T.theme('fozes', 'Otthoni főzés és sütés', '🍳', '#a6482a', 'Nem tudjátok, mit főzzetek vagy süssetek? A kockák döntenek: alkalom, típus, alapanyag, nehézség, és a konkrét étel.', [
     T.die('foz-alkalom', 'Alkalom', '📅', `
 Hétköznap esti vacsora ?leves|főétel|tészta|saláta #hétköznap !hosszú
 Hétvégi ebéd ?leves|főétel|tészta|saláta|pékáru #hétvége
@@ -2222,7 +2243,7 @@ SeedParts.mozi = T => {
   const lenTag = m => m < 105 ? 'rövid' : m <= 135 ? 'átlagos' : 'hosszú';
   const eraTag = y => y < 1980 ? 'klasszikus' : y < 2000 ? 'retro' : y < 2011 ? 'e2000' : 'új';
   const filmLines = FILMS.map(f => f[0] + ' (' + f[3] + ') ?' + f[1] + ' ?' + lenTag(f[2]) + ' ?' + eraTag(f[3])).join('\n');
-  return T.theme('mozi', 'Mozi', '🎬', '#9b6bdb', 'Hangulat, műfaj, hossz, korszak és konkrét film: az estére való film kisorsolása.', [
+  return T.theme('mozi', 'Mozi', '🎬', '#6b4a9c', 'Hangulat, műfaj, hossz, korszak és konkrét film: az estére való film kisorsolása.', [
     T.die('mozi-hol', 'Hogyan nézzük', '📺', `
 A moziban, hátsó sorban #mozi !klasszikus !retro
 Otthon, takaró alatt #otthon
@@ -2286,7 +2307,7 @@ Semmi: csak a film számít
 
 /* ===== Kézműves (v2). Technika-címkék: akvarell, akril, gyurma, origami, horgolás, kötés, makramé, hímzés, gyertya, szappan, gyöngy, kollázs, nyomat,
    textilfesték, fafaragás, mozaik, gipsz, papírmasé, üvegfestés. Minden tárgy csak az észszerű technikákhoz kapcsolódik. */
-SeedParts.kezmuves = T => T.theme('kezmuves', 'Kézműves', '🎨', '#3fae7b', 'Ötletadó alkotáshoz: technika, tárgy, kinek, stílus, idő és közös szabály.', [
+SeedParts.kezmuves = T => T.theme('kezmuves', 'Kézműves', '🎨', '#3a8060', 'Ötletadó alkotáshoz: technika, tárgy, kinek, stílus, idő és közös szabály.', [
   T.die('kez-technika', 'Technika', '🧵', `
 Akvarellfestés #akvarell
 Akrilfestés vászonra #akril
@@ -2367,7 +2388,7 @@ Amit elrontunk, az ma a stílus része
 
 
 /* ===== Könyv (v2): a műfaj/hangulat/hossz kockák a polcról szűrnek; a „Hogyan"/„Hol" kockák illeszkedő párokat adnak. ===== */
-SeedParts.konyv = T => T.theme('konyv', 'Könyv', '📚', '#c9923a', 'A polcodról sorsol: műfaj, hangulat és hossz alapján választ könyvet.', [
+SeedParts.konyv = T => T.theme('konyv', 'Könyv', '📚', '#a67a32', 'A polcodról sorsol: műfaj, hangulat és hossz alapján választ könyvet.', [
   T.die('konyv-mufaj', 'Műfaj', '🏷️', Seed.BOOK_GENRES.map(g => g + ' #' + Engine.slug(g)).join('\n') + '\nBármi, lepj meg #barmi', { role: 'genre' }),
   T.die('konyv-hangulat', 'Hangulat', '🌗', `
 Megnyugtató #megnyugtató !sötét
@@ -2404,7 +2425,7 @@ Séta vagy főzés közben, fülhallgatóval #mozgás
 
 
 /* ===== Meghitt idő (v2). Helyszín-címkék: hálószoba, nappali, fürdő, erkély, hotel; időtartam-címkék: fél-óra, este, reggel, nap. */
-SeedParts.meghitt = T => T.theme('meghitt', 'Meghitt idő', '🕯️', '#c2335f', 'Romantikus, tapintatos esték kettesben. Írd át a saját ízlésed szerint.', [
+SeedParts.meghitt = T => T.theme('meghitt', 'Meghitt idő', '🕯️', '#7d1d3a', 'Romantikus, tapintatos esték kettesben. Írd át a saját ízlésed szerint.', [
   T.die('meg-hangulat', 'Hangulat', '🌹', `
 Lassú és romantikus #lassú
 Játékos és nevetős #játékos
@@ -2725,7 +2746,7 @@ const FX = {
     }
     if (!this.raf) { this.last = performance.now(); this.raf = requestAnimationFrame(t => this.loop(t)); }
   },
-  hearts(x, y, n) { this.add(x, y, n || 22, { colors: ['#e0526a', '#ff8fa3', '#ffb3c1', '#f4c26b', '#fff1d6'], kind: 'heart', speed: 8, spread: Math.PI * 1.1, size: 9, life: 100 }); },
+  hearts(x, y, n) { this.add(x, y, n || 22, { colors: ['#b3243a', '#d0445c', '#8c1d2f', '#e0b45a', '#f3e6cc'], kind: 'heart', speed: 8, spread: Math.PI * 1.1, size: 9, life: 100 }); },
   sparks(x, y, n) { this.add(x, y, n || 10, { colors: ['#ffe9b0', '#ffd27a', '#fff6dc'], kind: 'spark', speed: 3.2, spread: Math.PI * 2, size: 6, life: 34, gravity: 0.03 }); },
   loop(t) {
     const cx = this.cx, d = this.d; this.raf = 0;
@@ -2795,7 +2816,7 @@ function initState() {
     S.ui = Object.assign({ themeId: S.themes[0].id, view: 'dobas' }, S.ui || {});
     S.rolls = S.rolls || {};
     S.fresh = false;
-    S.migrated = Seed.migrate(S);
+    S.migrated = Seed.migrate(S); Seed.recolor(S);
   } else {
     S = { v: 1, themes: Seed.themes(), books: Seed.books(), shelves: [], history: [], settings: Object.assign({}, DEFAULTS, (st && st.settings) || {}), ui: { themeId: 'randi', view: 'dobas' }, rolls: {}, fresh: true, seedV: Seed.VERSION };
   }
@@ -3438,7 +3459,7 @@ function aspectsModal() {
 'use strict';
 
 const EMOJIS = ['💞', '❤️', '💌', '🌹', '🕯️', '🥂', '🍷', '🍸', '☕', '🍰', '🍕', '🍝', '🍣', '🌮', '🍔', '🍓', '🥐', '🧁', '🍫', '✈️', '🚆', '🚗', '🚲', '⛵', '🏖️', '🏔️', '🏕️', '🌍', '🗺️', '🧳', '🎒', '🏨', '🎬', '🍿', '🎭', '🎞️', '📺', '🎶', '🎧', '🎤', '🎸', '🎨', '🖌️', '🧵', '🧶', '✂️', '🎁', '🎀', '📚', '📖', '✏️', '📝', '🏷️', '📏', '🗣️', '🪑', '🛋️', '🛁', '🏠', '📍', '⏰', '⏳', '⏱️', '🕑', '🌙', '⭐', '✨', '🌈', '🔥', '❄️', '🌸', '🌿', '🍂', '🌗', '🔮', '🪄', '🎲', '🎯', '🎮', '🧩', '♟️', '🎳', '📸', '💡', '🐾', '🤝', '⚡', '🌍', '🎡', '🛍️', '🧘', '🏃', '🚿'];
-const COLORS = ['#e04a5f', '#e8832a', '#c9923a', '#3fae7b', '#2c9bb8', '#5b7bd6', '#9b6bdb', '#c2335f', '#d96ca4', '#6b7a8c'];
+const COLORS = ['#a8233a', '#b5632a', '#a67a32', '#3a8060', '#2f7d86', '#4a63a8', '#6b4a9c', '#7d1d3a', '#5e2a45', '#6b7a8c'];
 const E = { tid: null, open: {}, adv: {}, focus: null, lastField: null };
 
 function toastAction(msg, label, fn) {
@@ -4101,11 +4122,11 @@ function exportModal() {
    Könyv-megjelenés (opcionális mezők): color '#rrggbb', style 0-4, h 0.7-1 (magasság), th 1-3 (vastagság). Ha nincs, a címből számolt, stabil alapérték. */
 'use strict';
 
-const PALETTE = ['#7b2d26', '#a63d2f', '#c4572f', '#d08c2f', '#c9a227', '#8a8f3c', '#4f6f3a', '#2f5d50', '#2c7a7b', '#2a4a6e', '#1f3558', '#4b3b7a', '#7a3b6a', '#a14a76', '#5c4033', '#3b3a36', '#8c8577', '#e0d5bf', '#d9c3a0', '#b34a5e'];
-const SPINE_STYLES = ['Sima', 'Csíkos', 'Díszes', 'Modern', 'Kopott'];
-const SPINE_H = [['Alacsony', 0.74], ['Közepes', 0.87], ['Magas', 1]];
+const PALETTE = ['#5c1320', '#7a1b2e', '#8f1d2c', '#4a1627', '#3f1d38', '#2a1630', '#14192e', '#1b2a4a', '#34506b', '#17353b', '#1f4a4a', '#1f3a2c', '#4a4a22', '#4a2c1c', '#33201a', '#7b3a22', '#9c7a3c', '#25232a', '#14110f', '#3f4552', '#6b6560', '#d8ccb4', '#c9b891', '#e8dfcc'];   // dark romance: vérvörös, szilva, éjkék, erdőzöld, bőrbarna, fekete + 3 világos (csont, pergamen, elefántcsont)
+const SPINE_STYLES = ['Sima', 'Csíkos', 'Díszes', 'Modern', 'Kopott', 'Bőrkötés', 'Keretes', 'Kéttónusú'];
+const SPINE_H = [['Alacsony', 0.76], ['Közepes', 0.88], ['Magas', 1]];
 const SPINE_TH = [['Auto', 0], ['Vékony', 1], ['Közepes', 2], ['Vastag', 3]];
-const TH_W = [0, 24, 36, 50];
+const TH_W = [0, 28, 41, 57];
 const hashStr = s => { let x = 5381; s = String(s); for (let i = 0; i < s.length; i++) x = ((x << 5) + x + s.charCodeAt(i)) >>> 0; return x; };
 const isHex = c => typeof c === 'string' && /^#[0-9a-f]{6}$/i.test(c);
 function inkFor(hex) {
@@ -4119,15 +4140,19 @@ function hueSortKey(hex) {   // színkör szerinti sorrend: előbb a színesek, 
   const hh = mx === r ? ((g - b) / d + 6) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
   return hh * 60 + l;
 }
+const lumOf = hex => { const n = parseInt(hex.slice(1), 16); return (0.2126 * (n >> 16 & 255) + 0.7152 * (n >> 8 & 255) + 0.0722 * (n & 255)) / 255; };
 function spineLook(b) {
   const hs = hashStr(b.id + '|' + b.title);
-  const color = isHex(b.color) ? b.color : PALETTE[hs % PALETTE.length];
-  const style = b.style != null && b.style >= 0 && b.style < SPINE_STYLES.length ? b.style | 0 : (hs >>> 5) % 5;
-  const k = b.h != null ? clamp(+b.h || 0.87, 0.6, 1) : [0.74, 0.8, 0.87, 0.93, 1][(hs >>> 9) % 5];
+  const color = isHex(b.color) ? b.color : PALETTE[hs % PALETTE.length], lum = lumOf(color);
+  const style = b.style != null && b.style >= 0 && b.style < SPINE_STYLES.length ? b.style | 0 : (hs >>> 5) % SPINE_STYLES.length;
+  const pr = (hs >>> 13) % 11, pat = b.pat != null && b.pat >= 0 && b.pat < SPINE_PATS.length ? b.pat | 0 : (pr > 8 ? 0 : pr);   // alapból a könyvek ~80%-a mintás
+  const fp = lum < 0.45 ? [0, 0, 0, 1, 2, 5] : [3, 4, 3, 4, 2], acc = isHex(b.acc) ? b.acc : FOILS[fp[(hs >>> 17) % fp.length]][1];
+  const k = b.h != null ? clamp(+b.h || 0.88, 0.6, 1) : [0.76, 0.82, 0.88, 0.94, 1][(hs >>> 9) % 5];
   const pages = +b.pages || 0;
-  const auto = pages ? 22 + clamp(pages, 60, 900) / 900 * 34 : 26 + (hs >>> 3) % 12;
-  const w = Math.round(TH_W[b.th] || auto);
-  return { color: color, ink: inkFor(color), style: style, k: k, w: w };
+  const auto = (pages ? 22 + clamp(pages, 60, 900) / 900 * 34 : 26 + (hs >>> 3) % 12) * 1.14;
+  const w = Math.round(TH_W[b.th] || auto), ink = inkFor(color), metal = foilMetal(acc), contrast = Math.abs(lumOf(acc) - lum) > 0.4;
+  const tfoil = metal && contrast && (style === 2 || style === 5 || style === 6);
+  return { color: color, ink: ink, style: style, k: k, w: w, pat: pat, acc: acc, metal: metal, lum: lum, tfoil: tfoil, tink: tfoil ? acc : ink };
 }
 
 /* ---------- modell ---------- */
@@ -4149,6 +4174,7 @@ function syncShelves() {
   if (!S) return;
   const firstTime = !Array.isArray(S.decor);
   S.decor = dragonMigrate(Array.isArray(S.decor) ? S.decor : []).filter(d => d && typeof d.id === 'string' && DECOR[d.type]);
+  let wiped = 0; if (!S.settings.decor12) { wiped = S.decor.length; S.decor = []; S.settings.decor12 = true; }   // v12: a díszek újrakezdése — mindent levesz egyszer, utána egyszerre csak egy lehet kint
   const have = new Set(S.books.map(b => b.id).concat(S.decor.map(d => d.id))), seen = new Set();
   S.shelves = (Array.isArray(S.shelves) ? S.shelves : []).filter(s => s && Array.isArray(s.ids));
   S.shelves.forEach(s => {
@@ -4158,8 +4184,9 @@ function syncShelves() {
   const missing = S.decor.filter(d => !seen.has(d.id)).map(d => d.id).concat(S.books.filter(b => !seen.has(b.id)).map(b => b.id));
   if (!S.shelves.length) S.shelves = defaultShelves(S.books);
   else if (missing.length) { const last = S.shelves[S.shelves.length - 1]; missing.forEach(id => last.ids.push(id)); }
-  if (firstTime && !S.decor.length) { const st = starterDecor(); S.decor = st.decor; placeDecor(st.place, 0); }
-  const cut = trimDecor(); if (cut > 0) { persist(); setTimeout(() => toast('Túl sok dísz volt kint, ezért ' + cut + ' dísz lekerült a polcról (legfeljebb ' + MAX_DECOR + ' lehet, hogy az oldal gyors maradjon). A Díszek gombbal bármikor újat tehetsz ki.'), 600); }
+  if (firstTime && !S.decor.length && window.__STARTER) { const st = starterDecor(); S.decor = st.decor; placeDecor(st.place, 0); }   // (csak a tesztek kérnek kezdő díszeket; az oldal díszek nélkül indul)
+  if (wiped) { persist(); setTimeout(() => toast('A díszek lekerültek a polcról. A Díszek gombbal egyet felrakhatsz (egyszerre csak egy lehet kint).'), 700); }
+  const cut = trimDecor(); if (cut > 0) { persist(); setTimeout(() => toast('Egyszerre csak ' + MAX_DECOR + ' dísz lehet kint, a többi lekerült a polcról. A Díszek gombbal bármikor cserélhetsz.'), 600); }
 }
 const shelfOf = id => S.shelves.find(s => s.ids.indexOf(id) >= 0);
 const bookById = id => S.books.find(b => b.id === id);
@@ -4178,20 +4205,21 @@ function pickedBooks() {   // a Dobás nézeten épp kiválasztott könyvek: [{b
 const libLH = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lh'), 10) || 214;
 function titleFit(b, L, lh) {   // betűméret + szerző-sáv magassága, hogy a cím lehetőleg kiférjen a gerincre
   const avail = L.k * (lh - 40) - 34, showA = L.w >= 34 && !!b.author;
-  const aH = showA ? Math.min(avail * 0.3, b.author.length * 5.4) : 0;
+  const aH = showA ? Math.min(avail * 0.36, b.author.length * 6) : 0;
   const tAvail = avail - aH - (showA ? 6 : 0);
   const fs = clamp(Math.floor(tAvail / (Math.max(4, b.title.length) * 0.54) * 2) / 2, 9.5, L.w < 30 ? 12 : 13.5);
   return { fs: fs, ah: Math.round(aH), showA: showA };
 }
+const spineBgCss = (b, L, lh) => { const u = spineBgUrl(b, L, L.w, Math.round(L.k * (lh - 40))); return u ? 'url(' + u + ')' : 'none'; };
 function slotEl(b, picked, lh) {
   const L = spineLook(b), F = titleFit(b, L, lh || libLH());
-  const cls = 'lb-sp s' + L.style + (picked ? ' picked' : '') + (b.status === 'olvasom' ? ' reading' : b.status === 'elolvastam' ? ' done' : '');
+  const cls = 'lb-sp s' + L.style + (L.pat ? ' pt' : '') + (picked ? ' picked' : '') + (b.status === 'olvasom' ? ' reading' : b.status === 'elolvastam' ? ' done' : '');
   const sp = h('button', { type: 'button', class: cls, dataset: { id: b.id }, title: b.title + (b.author ? ' – ' + b.author : '') + (picked ? ' (a dobásból kiválasztva)' : ''), 'aria-label': b.title + (b.author ? ', ' + b.author : '') + (picked ? ' (kiválasztva)' : '') },
     h('span', { class: 'lb-bk' },
       h('span', { class: 'lb-t' }, b.title),
       F.showA ? h('span', { class: 'lb-a' }, b.author) : null,
       b.status !== 'olvasatlan' ? h('i', { class: 'lb-mark', 'aria-hidden': 'true' }) : null));
-  return h('div', { class: 'lb-slot', dataset: { id: b.id }, style: { '--c': L.color, '--ink': L.ink, '--w': L.w + 'px', '--k': String(L.k), '--fs': F.fs + 'px', '--ah': F.ah + 'px' } }, sp);
+  return h('div', { class: 'lb-slot', dataset: { id: b.id }, style: { '--c': L.color, '--ink': L.ink, '--tink': L.tink, '--bgimg': spineBgCss(b, L, lh || libLH()), '--w': L.w + 'px', '--k': String(L.k), '--fs': F.fs + 'px', '--ah': F.ah + 'px' } }, sp);
 }
 function libStats() {
   const n = S.books.length, dc = S.decor.length;
@@ -4373,31 +4401,204 @@ function arrangeModal() {
 }
 
 
+/* ===== Könyvgerinc-művészet (v12): kötés-stílusok, minták, fólia =====
+   EGY rajzoló szolgálja a 3D textúrát, a könyv-szerkesztő előnézetét és a 2D háttérképet.
+   Két vászon készül egyszerre (Dual): szín (albedo) + maszk. A maszk R csatornája a dombormű magassága (bump), G az érdesség, B a fémesség,
+   így a fólia (arany/ezüst/réz) a 3D-ben tényleg fémesen csillog, a minták és a bőrkötés-bordák pedig kidomborodnak. */
+'use strict';
+
+const SPINE_PATS = ['Nincs', 'Damaszt', 'Rács', 'Inda és tüske', 'Csillagos ég', 'Pikkely', 'Marmor', 'Hullám', 'Gótikus ív'];
+const FOILS = [['Arany', '#d9b25a', 1], ['Ezüst', '#cdd2d8', 1], ['Réz', '#c98a55', 1], ['Vérvörös', '#b3243a', 0], ['Éjfekete', '#17110f', 0], ['Krém', '#efe2c4', 0]];
+const MASK = { base: 'rgb(60,158,0)', emb: 'rgb(150,150,0)', ink: 'rgb(190,140,0)', foil: 'rgb(255,66,255)', deb: 'rgb(8,172,0)' };
+const foilMetal = hex => FOILS.some(f => f[2] && f[1].toLowerCase() === String(hex).toLowerCase());
+
+/* két vászonra egyszerre rajzoló segéd: a szín- és a maszk-vászon ugyanazt az útvonalat kapja; a fill/stroke csak akkor érinti a maszkot, ha a stílusnak van „fajtája” */
+class Dual {
+  constructor(a, b) { this.a = a; this.b = b; this.m = false; }
+  set(col, kind) { this.a.fillStyle = this.a.strokeStyle = col; this.m = !!kind; if (kind) this.b.fillStyle = this.b.strokeStyle = MASK[kind]; return this; }
+  lw(x) { this.a.lineWidth = this.b.lineWidth = x; return this; }
+  font(f) { this.a.font = this.b.font = f; return this; }
+  fillRect(x, y, w, h) { this.a.fillRect(x, y, w, h); if (this.m) this.b.fillRect(x, y, w, h); return this; }
+  strokeRect(x, y, w, h) { this.a.strokeRect(x, y, w, h); if (this.m) this.b.strokeRect(x, y, w, h); return this; }
+  text(t, x, y) { this.a.fillText(t, x, y); if (this.m) this.b.fillText(t, x, y); return this; }
+  fill() { this.a.fill(); if (this.m) this.b.fill(); return this; }
+  stroke() { this.a.stroke(); if (this.m) this.b.stroke(); return this; }
+  rr(x, y, w, h, r) { return this.beginPath().moveTo(x + r, y).arcTo(x + w, y, x + w, y + h, r).arcTo(x + w, y + h, x, y + h, r).arcTo(x, y + h, x, y, r).arcTo(x, y, x + w, y, r).closePath(); }
+}
+['beginPath', 'moveTo', 'lineTo', 'arc', 'arcTo', 'ellipse', 'bezierCurveTo', 'quadraticCurveTo', 'closePath', 'rect', 'save', 'restore', 'translate', 'rotate'].forEach(n => { Dual.prototype[n] = function () { this.a[n].apply(this.a, arguments); this.b[n].apply(this.b, arguments); return this; }; });
+
+/* ---------- minták (logikai px-ben; w × h a gerinc) ---------- */
+const SP_PAT = [
+  null,
+  function damask(g, w, h, tone, fk) {   // tükrös levél-medalionok sorban
+    const cx = w / 2; g.set(tone(0.2), 'emb').lw(0.9);
+    for (let y = 24; y < h - 14; y += 31) {
+      [-1, 1].forEach(s => { g.beginPath().ellipse(cx + s * w * 0.21, y, w * 0.15, 7.5, s * 0.6, 0, 6.283).stroke(); g.beginPath().moveTo(cx, y + 9).quadraticCurveTo(cx + s * w * 0.34, y + 14, cx + s * w * 0.27, y + 27).stroke(); });
+      g.beginPath().ellipse(cx, y, 3, 9.5, 0, 0, 6.283).fill(); g.beginPath().arc(cx, y + 15, 2, 0, 6.283).fill(); g.beginPath().arc(cx, y - 14, 1.5, 0, 6.283).fill();
+    }
+  },
+  function lattice(g, w, h, tone) {   // art deco rombuszlánc pontokkal
+    const st = Math.max(13, w * 0.6); g.set(tone(0.22), 'emb').lw(0.8);
+    for (let y = st / 2; y < h; y += st) { g.beginPath().moveTo(0, y).lineTo(w / 2, y - st / 2).lineTo(w, y).lineTo(w / 2, y + st / 2).closePath().stroke(); g.beginPath().arc(w / 2, y, 1.1, 0, 6.283).fill(); }
+  },
+  function vine(g, w, h, tone, fk, acc, rng) {   // tüskés inda apró rózsákkal: a „dark romance” alapminta
+    const cx = w / 2, A = w * 0.3, lam = 20, col = acc ? acc : tone(0.32), kind = acc ? fk : 'emb';
+    g.set(col, kind).lw(1.15).beginPath(); for (let y = 0; y <= h; y += 2) { const x = cx + A * Math.sin(y / lam * 1.0); y ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
+    for (let y = 8, i = 0; y < h - 4; y += 9, i++) { const x = cx + A * Math.sin(y / lam), s = i % 2 ? 1 : -1; g.beginPath().moveTo(x, y).lineTo(x + s * 4.2, y - 3).lineTo(x + s * 1.2, y + 0.8).closePath().fill(); }
+    for (let y = 34, i = 0; y < h - 22; y += 56, i++) {
+      const x = cx + A * Math.sin(y / lam); g.set(col, kind).lw(0.9);
+      [-1, 1].forEach(s => { g.beginPath().ellipse(x + s * 5.4, y + 4, 3.8, 1.5, s * -0.55, 0, 6.283).fill(); });
+      g.beginPath().arc(x, y, 4.2, 0, 6.283).stroke(); g.beginPath().arc(x + 0.4, y - 0.2, 2.5, 0.6, 5.2).stroke(); g.beginPath().arc(x, y, 1.0, 0, 6.283).fill();
+    }
+  },
+  function stars(g, w, h, tone, fk, acc, rng) {   // csillagok és holdsarló
+    const col = acc ? acc : tone(0.3), kind = acc ? fk : 'emb';
+    g.set(col, kind);
+    for (let i = 0; i < 9; i++) { const x = 4 + rng() * (w - 8), y = 12 + rng() * (h - 24), r = 1.8 + rng() * 2.6; g.beginPath().moveTo(x, y - r).quadraticCurveTo(x, y, x + r, y).quadraticCurveTo(x, y, x, y + r).quadraticCurveTo(x, y, x - r, y).quadraticCurveTo(x, y, x, y - r).closePath().fill(); }
+    for (let i = 0; i < 22; i++) { g.beginPath().arc(2 + rng() * (w - 4), 4 + rng() * (h - 8), 0.55 + rng() * 0.5, 0, 6.283).fill(); }
+    const my = h * 0.2 + rng() * h * 0.5, mx = w / 2, R = Math.min(8, w * 0.22); g.beginPath().arc(mx, my, R, 0.35 * Math.PI, 1.65 * Math.PI, false).arc(mx + R * 0.5, my - R * 0.1, R * 0.82, 1.5 * Math.PI, 0.5 * Math.PI, true).closePath().fill();
+  },
+  function scales(g, w, h, tone) {   // halpikkely
+    const r = 6; g.set(tone(0.2), 'emb').lw(0.8);
+    for (let j = 0, y = 0; y < h + r; j++, y += r * 0.55) for (let x = -r + (j % 2) * r; x < w + r; x += r * 2) g.beginPath().arc(x, y, r, 0, Math.PI).stroke();
+  },
+  function marble(g, w, h, tone, fk, acc, rng) {   // márvány-erezet (csak szín)
+    for (let i = 0; i < 4; i++) { const x = rng() * w, y = rng() * h, r = 18 + rng() * 30, gr = g.a.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, tone(0.13)); gr.addColorStop(1, tone(0)); g.a.fillStyle = gr; g.a.fillRect(0, 0, w, h); }
+    g.set(tone(0.2), null);
+    for (let i = 0; i < 12; i++) { const y0 = rng() * h, A = 2 + rng() * 6, ph = rng() * 6.283, sl = (rng() - 0.5) * 0.9; g.a.strokeStyle = tone(0.08 + rng() * 0.18); g.a.lineWidth = 0.4 + rng() * 0.9; g.a.beginPath(); for (let x = 0; x <= w; x += 2) { const y = y0 + x * sl + Math.sin(x * 0.35 + ph) * A; x ? g.a.lineTo(x, y) : g.a.moveTo(x, y); } g.a.stroke(); }
+  },
+  function waves(g, w, h, tone) {   // seigaiha hullámok
+    g.set(tone(0.2), 'emb').lw(0.8);
+    for (let j = 0, y = 4; y < h + 8; j++, y += 6.5) for (let x = -7 + (j % 2) * 7; x < w + 7; x += 14) [7, 4.6, 2.2].forEach(r => g.beginPath().arc(x, y, r, Math.PI, 0).stroke());
+  },
+  function gothic(g, w, h, tone, fk, acc) {   // csúcsíves ablakok
+    const cx = w / 2, a = Math.min(w * 0.36, 11), col = acc ? acc : tone(0.26), kind = acc ? fk : 'emb'; g.set(col, kind).lw(0.9);
+    for (let y = 22; y < h - 8; y += 36) {
+      [[a, 0], [a * 0.55, 3.6]].forEach(q => { const aa = q[0], o = q[1]; g.beginPath().moveTo(cx - aa, y + 26 - o).lineTo(cx - aa, y + 11).quadraticCurveTo(cx - aa, y + 1 + o, cx, y - 6 + o).quadraticCurveTo(cx + aa, y + 1 + o, cx + aa, y + 11).lineTo(cx + aa, y + 26 - o).stroke(); });
+      g.beginPath().arc(cx, y + 9, 1.6, 0, 6.283).fill(); g.beginPath().moveTo(cx, y + 11).lineTo(cx, y + 26).stroke();
+    }
+  }
+];
+
+/* ---------- a gerinc ---------- */
+function spineDraw(b, L, F, w, h, S3, full) {
+  const S3m = S3 * 0.67, mk = k => { const c = document.createElement('canvas'); c.width = Math.ceil(w * k); c.height = Math.ceil(h * k); return c; };
+  const cv = mk(S3), mv = mk(S3m), A = cv.getContext('2d'), B = mv.getContext('2d'), g = new Dual(A, B), rng = dcRng(hashStr(b.id + '|' + L.color + L.pat + L.style + L.acc));
+  A.scale(S3, S3); B.scale(S3m, S3m);
+  const dark = L.lum < 0.45, tone = a => (dark ? 'rgba(255,238,214,' : 'rgba(34,14,8,') + a + ')', fk = L.metal ? 'foil' : 'ink', cx = w / 2, st = L.style;
+  g.set(L.color, 'base').fillRect(0, 0, w, h);
+  g.set(L.color, null);
+  for (let i = 0; i < w * h / 7; i++) { A.fillStyle = rng() < 0.5 ? 'rgba(0,0,0,.07)' : 'rgba(255,255,255,.05)'; A.fillRect(rng() * w, rng() * h, 0.35 + rng() * 0.5, 0.33); }   // bőr/vászon szemcse
+  if (st === 7) { g.set('rgba(0,0,0,.26)', null); g.fillRect(0, 0, w, h * 0.2); g.fillRect(0, h * 0.88, w, h * 0.12); }
+  if (SP_PAT[L.pat]) { A.save(); B.save(); SP_PAT[L.pat](g, w, h, tone, fk, (L.pat === 3 || L.pat === 4 || L.pat === 8) && L.metal ? L.acc : null, rng); A.restore(); B.restore(); }
+  if (st === 4) { const vg = A.createLinearGradient(0, 0, 0, h); vg.addColorStop(0, 'rgba(255,255,255,.2)'); vg.addColorStop(0.12, 'rgba(255,255,255,0)'); vg.addColorStop(0.85, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.3)'); A.fillStyle = vg; A.fillRect(0, 0, w, h); g.set('rgba(0,0,0,.2)', null).fillRect(w * 0.24, 0, 0.5, h); for (let i = 0; i < 16; i++) { A.fillStyle = rng() < 0.5 ? 'rgba(255,240,220,.16)' : 'rgba(0,0,0,.16)'; const yy = rng() < 0.5 ? rng() * 12 : h - rng() * 12; A.fillRect(rng() * w, yy, 1 + rng() * 5, 0.5 + rng() * 1.2); } }
+  /* kötés-stílusok: fólia-vonalak, bordák, keret */
+  const line = (y, th, kind) => { g.set(L.acc, kind || fk).fillRect(0, y, w, th); };
+  if (st === 1) { line(6.5, 1.6); line(10.5, 0.9); line(h - 12, 0.9); line(h - 8.2, 1.6); }
+  if (st === 2) { line(6.5, 1.6); line(10.5, 1.6); line(h - 12.1, 1.6); line(h - 8.1, 1.6); [-5, 0, 5].forEach(d => { g.set(L.acc, fk).beginPath().moveTo(cx + d, 14.5).lineTo(cx + d + 1.3, 15.8).lineTo(cx + d, 17.1).lineTo(cx + d - 1.3, 15.8).closePath().fill(); g.beginPath().moveTo(cx + d, h - 17.1).lineTo(cx + d + 1.3, h - 15.8).lineTo(cx + d, h - 14.5).lineTo(cx + d - 1.3, h - 15.8).closePath().fill(); }); }
+  if (st === 5) {   // bőrkötés: kidomborodó bordák, fólia-vonalakkal
+    [8, 15, 22, h - 22, h - 15, h - 8].forEach(y => {
+      const gr = A.createLinearGradient(0, y - 2, 0, y + 2); gr.addColorStop(0, 'rgba(255,240,220,.26)'); gr.addColorStop(0.5, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,.42)'); A.fillStyle = gr; A.fillRect(0, y - 2, w, 4); g.set(L.color, 'emb'); B.fillStyle = MASK.emb; B.fillRect(0, y - 1.8, w, 3.6);
+      g.set(L.acc, fk).fillRect(0, y - 2.6, w, 0.7); g.fillRect(0, y + 1.9, w, 0.7);
+    });
+  }
+  if (st === 6) {   // keretes: dupla fólia-keret, sarokdíszekkel
+    g.set(L.acc, fk).lw(1).strokeRect(2.6, 2.6, w - 5.2, h - 5.2); g.lw(0.55).strokeRect(4.8, 4.8, w - 9.6, h - 9.6);
+    [[2.6, 2.6], [w - 2.6, 2.6], [2.6, h - 2.6], [w - 2.6, h - 2.6]].forEach(p => { g.beginPath().arc(p[0], p[1], 1.5, 0, 6.283).fill(); });
+  }
+  if (st === 7) { g.set(L.acc, fk).fillRect(0, h * 0.2 - 0.6, w, 1.2); g.fillRect(0, h * 0.88 - 0.6, w, 1.2); }
+  /* fej- és lábszalag (headband) */
+  for (let x = 0; x < w; x += 2) { g.set(x % 4 ? L.acc : 'rgba(0,0,0,.55)', 'ink'); g.fillRect(x, 0, 1.2, 2.6); g.fillRect(x, h - 2.6, 1.2, 2.6); }
+  /* a gerinc élei és vége sötétebb (kerekség) – csak a színben */
+  { const eg = A.createLinearGradient(0, 0, w, 0); eg.addColorStop(0, 'rgba(0,0,0,.3)'); eg.addColorStop(0.13, 'rgba(0,0,0,0)'); eg.addColorStop(0.84, 'rgba(0,0,0,0)'); eg.addColorStop(1, 'rgba(0,0,0,.32)'); A.fillStyle = eg; A.fillRect(0, 0, w, h);
+    const vg2 = A.createLinearGradient(0, 0, 0, h); vg2.addColorStop(0, 'rgba(0,0,0,.2)'); vg2.addColorStop(0.05, 'rgba(0,0,0,0)'); vg2.addColorStop(0.95, 'rgba(0,0,0,0)'); vg2.addColorStop(1, 'rgba(0,0,0,.24)'); A.fillStyle = vg2; A.fillRect(0, 0, w, h); }
+  if (!full) return { cv: cv, mv: mv };
+
+  /* cím + szerző + állapot */
+  const topM = st === 5 ? 32 : 18, botM = st === 5 ? 32 : 16, aH = F.showA ? F.ah : 0, avail = h - topM - botM - (aH ? aH + 6 : 0);
+  const ff = s => s + 'px Marcellus, "Palatino Linotype", "Book Antiqua", Georgia, serif';
+  let fs = F.fs; g.font(ff(fs)); let tw = A.measureText(b.title).width; if (tw > avail) { fs = Math.max(8.5, fs * avail / tw); g.font(ff(fs)); tw = A.measureText(b.title).width; }
+  let tt = b.title; if (tw > avail) { while (tt.length > 3 && A.measureText(tt + '…').width > avail) tt = tt.slice(0, -1); tt += '…'; tw = A.measureText(tt).width; }
+  if (L.pat > 0 || st === 3) {   // címtábla: a minta ne zavarja az olvasást
+    const pw = Math.min(w - 3, fs * 1.5 + 5), py = topM - 5;
+    g.set(st === 3 ? (dark ? 'rgba(255,255,255,.16)' : 'rgba(0,0,0,.14)') : L.color, st === 3 ? null : 'base');
+    if (st !== 3) { A.globalAlpha = 0.9; g.rr(cx - pw / 2, py, pw, tw + 10, 2.2).fill(); A.globalAlpha = 1; g.set(tone(0.3), 'emb').lw(0.5); g.rr(cx - pw / 2 + 0.5, py + 0.5, pw - 1, tw + 9, 2).stroke(); }
+    else g.rr(cx - pw / 2, py, pw, tw + 10, 2).fill();
+  }
+  const foilT = !!L.tfoil;
+  g.set(foilT ? L.acc : L.tink, foilT ? 'foil' : null);
+  A.save(); B.save(); g.translate(cx, topM).rotate(Math.PI / 2); A.textBaseline = B.textBaseline = 'middle'; A.textAlign = B.textAlign = 'left';
+  if (!foilT && dark) { A.shadowColor = 'rgba(0,0,0,.45)'; A.shadowOffsetY = 0.6 * S3; A.shadowBlur = 0; }
+  g.text(tt, 0, 0); A.restore(); B.restore();
+  if (F.showA) {
+    const fa = Math.min(10.5, w * 0.3); g.font(ff(fa)); let at = b.author; while (at.length > 3 && A.measureText(at).width > aH) at = at.slice(0, -1);
+    A.save(); A.translate(cx, h - botM + 2 - Math.min(aH, A.measureText(at).width)); A.rotate(Math.PI / 2); A.globalAlpha = 0.8; A.fillStyle = L.tink; A.textBaseline = 'middle'; A.textAlign = 'left'; A.fillText(at, 0, 0); A.restore();
+  }
+  if (b.status === 'elolvastam') { g.set('#e8c765', 'foil').beginPath().arc(cx, h - 7, 3.9, 0, 6.283).fill(); g.set('rgba(0,0,0,.35)', null).lw(0.35).stroke(); }
+  if (st === 3) { g.set(L.tink, null); A.globalAlpha = 0.65; g.beginPath().arc(cx, h - 12, 4.2, 0, 6.283).fill(); A.globalAlpha = 1; }
+  return { cv: cv, mv: mv };
+}
+
+/* 2D háttérkép (a szöveg DOM-ban marad): gyorsítótárazott data-URL */
+const SP_BG = new Map();
+function spineBgUrl(b, L, w, h) {
+  const key = [L.color, L.style, L.pat, L.acc, w, h].join('|');
+  let u = SP_BG.get(key);
+  if (!u) { try { u = spineDraw(b, L, null, w, h, 2, false).cv.toDataURL('image/png'); } catch (e) { u = ''; } SP_BG.set(key, u); if (SP_BG.size > 400) SP_BG.delete(SP_BG.keys().next().value); }
+  return u;
+}
+
+
 /* ===== Könyvtár (v2): részletek-ablak, megjelenés-szerkesztés, húzás (pointer events) és billentyű-mozgatás ===== */
 'use strict';
 
 /* ---------- gerinc-részletek + megjelenés ---------- */
 function bookPopup(b) {
   const prev = h('div', { class: 'lb-prev', 'aria-hidden': 'true' });
-  const syncs = [];
-  const paint = () => { clear(prev); const sl = slotEl(b, false); sl.classList.add('static'); prev.appendChild(sl); };
+  const syncs = [], lhP = libLH();
+  const paint = () => {   // nagy, pontos előnézet: ugyanaz a rajzoló, mint a 3D polcon (cím, minta, fólia)
+    clear(prev);
+    const L = spineLook(b), F = titleFit(b, L, lhP), hh = Math.round(L.k * (lhP - 40)), sc = Math.min(1.7, 300 / hh);
+    let cv = null; try { cv = spineDraw(b, L, F, L.w, hh, 3, true).cv; } catch (e) { cv = null; }
+    if (cv) { cv.className = 'lb-bigspine'; cv.style.width = Math.round(L.w * sc) + 'px'; cv.style.height = Math.round(hh * sc) + 'px'; prev.appendChild(cv); }
+    else { const sl = slotEl(b, false); sl.classList.add('static'); prev.appendChild(sl); }
+  };
   const changed = () => { delete b.example; persist(); paint(); syncs.forEach(f => f()); };
   function chipRow(label, items, cur, set) {
     const chips = items.map(x => h('button', { type: 'button', class: 'chip sm', onclick: () => { set(x[1]); changed(); } }, x[0]));
     syncs.push(() => chips.forEach((c, i) => { const on = cur() === items[i][1]; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on); }));
     return h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, label), h('div', { class: 'row wrap' }, chips));
   }
+  /* miniatűr-választó: minden lehetőség a könyv SAJÁT színeivel, kicsiben megrajzolva */
+  function thumbRow(label, items, cur, setv, field) {
+    const btns = items.map(it => h('button', { type: 'button', class: 'lb-th', title: it[0], 'aria-label': label + ': ' + it[0], onclick: () => { setv(it[1]); changed(); } }, h('span', { class: 'lb-th-n' }, it[0])));
+    syncs.push(() => btns.forEach((bt, k) => {
+      const on = cur() === items[k][1]; bt.classList.toggle('on', on); bt.setAttribute('aria-pressed', on);
+      const old = bt.querySelector('canvas'); if (old) old.remove();
+      const vb = Object.assign({}, b); if (items[k][1] == null) delete vb[field]; else vb[field] = items[k][1];
+      try { const c = spineDraw(vb, spineLook(vb), null, 30, 84, 2, false).cv; c.style.width = '30px'; c.style.height = '84px'; bt.insertBefore(c, bt.firstChild); } catch (e) { }
+    }));
+    return h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, label), h('div', { class: 'lb-ths' }, btns));
+  }
   const look = () => spineLook(b);
   const swatches = PALETTE.map(c => h('button', { type: 'button', class: 'lb-sw', style: { background: c }, title: c, 'aria-label': 'Szín: ' + c, onclick: () => { b.color = c; changed(); } }));
   const custom = h('input', { type: 'color', class: 'lb-color', 'aria-label': 'Saját szín', value: look().color, oninput: e => { b.color = e.target.value; changed(); } });
   syncs.push(() => { const cur = look().color.toLowerCase(); swatches.forEach((s, i) => s.classList.toggle('on', PALETTE[i] === cur)); custom.value = cur; });
-  const colorRow = h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, 'Szín'), h('div', { class: 'lb-sws' }, swatches, h('label', { class: 'lb-sw custom', title: 'Saját szín választása' }, custom, ic('plus', 14))));
+  const colorRow = h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, 'Borító színe'), h('div', { class: 'lb-sws' }, swatches, h('label', { class: 'lb-sw custom', title: 'Saját szín választása' }, custom, ic('plus', 14))));
+  const foils = FOILS.map(f => h('button', { type: 'button', class: 'lb-sw foil' + (f[2] ? ' metal' : ''), style: { background: f[1] }, title: f[0], 'aria-label': 'Díszítés: ' + f[0], onclick: () => { b.acc = f[1]; changed(); } }));
+  syncs.push(() => { const cur = look().acc.toLowerCase(); foils.forEach((s, i) => s.classList.toggle('on', FOILS[i][1] === cur)); });
+  const foilRow = h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, 'Díszítés (fólia / festék)'), h('div', { class: 'lb-sws' }, foils, btn('Auto', { kind: 'ghost sm', onclick: () => { delete b.acc; changed(); } })));
+
+  const rnd = () => { const r = Math.random; b.color = PALETTE[Math.floor(r() * PALETTE.length)]; b.style = Math.floor(r() * SPINE_STYLES.length); b.pat = Math.floor(r() * SPINE_PATS.length); b.acc = FOILS[Math.floor(r() * FOILS.length)][1]; changed(); };
+  const shelfOf = () => S.shelves.find(s => s.ids.indexOf(b.id) >= 0);
+  const applyShelf = () => { const sh = shelfOf(); if (!sh) return; let n = 0; sh.ids.forEach(id => { const o = bookById(id); if (o && o !== b) { ['style', 'pat', 'acc'].forEach(k => { if (b[k] == null) delete o[k]; else o[k] = b[k]; }); n++; } }); persist(); toast(n ? 'A stílus átvéve a polc többi könyvén (' + n + ' db)' : 'Nincs másik könyv ezen a polcon'); };
 
   const sel = h('select', { id: 'lb-shelf', 'aria-label': 'Polc', onchange: e => moveToShelf(b.id, e.target.value) }, S.shelves.map(s => h('option', { value: s.id, selected: s.ids.indexOf(b.id) >= 0 }, s.name)));
   const info = h('div', { class: 'lb-info' },
     h('h3', null, b.title), b.author ? h('div', { class: 'bk-author' }, b.author) : null,
     h('div', { class: 'bk-tags' }, Engine.splitList(b.genre).map(g => h('span', { class: 'pill' }, g)), Engine.splitList(b.mood).map(g => h('span', { class: 'pill mood' }, g)), +b.pages ? h('span', { class: 'bk-pages' }, b.pages + ' oldal') : null),
-    b.note ? h('div', { class: 'bk-note' }, b.note) : null);
+    b.note ? h('div', { class: 'bk-note' }, b.note) : null,
+    h('div', { class: 'row wrap lb-quick' }, btn('Véletlen kinézet', { kind: 'sm', icon: 'shuffle', onclick: rnd }), btn('Stílus a polc többi könyvére', { kind: 'ghost sm', onclick: applyShelf }), btn('Alaphelyzet', { kind: 'ghost sm', onclick: () => { ['color', 'style', 'h', 'th', 'pat', 'acc'].forEach(k => delete b[k]); changed(); } })));
 
   paint();
   const m = openModal({
@@ -4407,10 +4608,11 @@ function bookPopup(b) {
       chipRow('Státusz', STATUSES.map(s => [s[1], s[0]]), () => b.status, v => { b.status = v; }),
       h('div', { class: 'lb-sec' }, h('h4', null, 'Megjelenés a polcon'),
         colorRow,
-        chipRow('Stílus', SPINE_STYLES.map((n, i) => [n, i]).concat([['Auto', null]]), () => (b.style == null ? null : b.style), v => { if (v == null) delete b.style; else b.style = v; }),
+        thumbRow('Kötés', SPINE_STYLES.map((n, i) => [n, i]).concat([['Auto', null]]), () => (b.style == null ? null : b.style), v => { if (v == null) delete b.style; else b.style = v; }, 'style'),
+        thumbRow('Minta', SPINE_PATS.map((n, i) => [n, i]).concat([['Auto', null]]), () => (b.pat == null ? null : b.pat), v => { if (v == null) delete b.pat; else b.pat = v; }, 'pat'),
+        foilRow,
         chipRow('Magasság', SPINE_H.map(x => [x[0], x[1]]).concat([['Auto', null]]), () => (b.h == null ? null : b.h), v => { if (v == null) delete b.h; else b.h = v; }),
-        chipRow('Vastagság', SPINE_TH.map(x => [x[0], x[1]]), () => b.th || 0, v => { if (v) b.th = v; else delete b.th; }),
-        h('div', { class: 'row wrap' }, btn('Megjelenés alaphelyzetbe', { kind: 'ghost sm', onclick: () => { ['color', 'style', 'h', 'th'].forEach(k => delete b[k]); changed(); } }))),
+        chipRow('Vastagság', SPINE_TH.map(x => [x[0], x[1]]), () => b.th || 0, v => { if (v) b.th = v; else delete b.th; })),
       h('div', { class: 'field lb-shelfsel' }, h('label', { for: 'lb-shelf' }, 'Melyik polcon áll'), sel)
     ],
     actions: [
@@ -4607,7 +4809,7 @@ function decorLifeStart(root) {
 
 /* ---------- modell: felvétel, törlés, kezdő díszek ---------- */
 /* a 3D polc sok díszt nem bír el (egy dísz 30–100 draw call): legfeljebb MAX_DECOR dísz lehet kint egyszerre */
-let MAX_DECOR = window.__MAX_DECOR || 8;   // (a tesztek az __MAX_DECOR-rel emelik)
+let MAX_DECOR = window.__MAX_DECOR || 1;   // egyszerre egy dísz (a tesztek az __MAX_DECOR-rel emelik)
 const decorLeft = () => Math.max(0, MAX_DECOR - (Array.isArray(S.decor) ? S.decor.length : 0));
 function trimDecor() {   // a limit feletti díszeket levesszük (a polcok sorrendjében az első MAX_DECOR marad); visszaadja, hányat vett le
   if (!Array.isArray(S.decor) || S.decor.length <= MAX_DECOR) return 0;
@@ -4626,8 +4828,9 @@ function placeDecor(pairs, shelfIdx) {
     if (p[1] === 'start') sh.ids.unshift(p[0]); else sh.ids.push(p[0]);
   });
 }
-function addDecorSet(set, shelfIdx) {
-  syncShelves(); if (set.parts.length > decorLeft()) return false;
+function addDecorSet(set, shelfIdx) {   // ha a polcon már áll dísz, az újjal lecseréljük (a limitnél a régi helyére kerül)
+  syncShelves(); if (set.parts.length > MAX_DECOR) return false;
+  while (S.decor.length && S.decor.length + set.parts.length > MAX_DECOR) { const o = S.decor.shift(); S.shelves.forEach(s => { s.ids = s.ids.filter(x => x !== o.id); }); }
   const link = set.parts.length > 1 ? Engine.uid() : null, pairs = [];
   set.parts.forEach(p => { const d = newDecor(p.type, link); S.decor.push(d); pairs.push([d.id, p.at]); });
   placeDecor(pairs, shelfIdx); return true;
@@ -4653,8 +4856,8 @@ function decorModal() {
   const list = h('div', { class: 'dc-list' }, DECOR_SETS.map(set => h('div', { class: 'dc-card panel' },
     decorPreviewEl(set),
     h('div', { class: 'dc-info' }, h('h3', null, set.name), h('p', { class: 'muted small' }, set.desc), h('p', { class: 'dc-tip small' }, ic('sparkle', 13), set.tip)),
-    btn('Hozzáadás', { icon: 'plus', kind: 'primary sm', onclick: () => { if (!addDecorSet(set, shelfIdx)) { toast('Elérted a limitet: legfeljebb ' + MAX_DECOR + ' dísz lehet kint. Vegyél le egyet (kattints rá, majd Eltávolítás).'); return; } persist(); m.close(); drawLibrary(); toast(set.name + ' a polcon. Kattints rá!'); } }))));
-  const m = openModal({ title: 'Díszek a polcra', wide: true, cls: 'dc-modal', body: [h('p', { class: 'muted' }, 'Kis kiegészítők, amik a polcon élnek: rájuk kattintva megmozdulnak. Hozzáadás után átrendezés módban a helyükre húzhatod őket.'), h('p', { class: 'small dc-count' + (decorLeft() ? '' : ' full') }, 'Kint van: ' + (S.decor || []).length + ' / ' + MAX_DECOR + ' dísz' + (decorLeft() ? '' : ' – tele. Hogy az oldal gyors maradjon, többet nem lehet kitenni; vegyél le egyet.')), h('div', { class: 'field dc-shelfsel' }, h('label', { for: 'dc-shelf' }, 'Melyik polcra kerüljön'), sel), list], actions: [{ label: 'Kész', kind: 'primary' }] });
+    btn((S.decor || []).length ? 'Csere erre' : 'Kirakom', { icon: 'plus', kind: 'primary sm', onclick: () => { if (!addDecorSet(set, shelfIdx)) { toast('Ez a készlet nem fér ki a polcra.'); return; } persist(); m.close(); drawLibrary(); toast(set.name + ' a polcon. Kattints rá!'); } }))));
+  const m = openModal({ title: 'Díszek a polcra', wide: true, cls: 'dc-modal', body: [h('p', { class: 'muted' }, 'Egy kis kiegészítő a polcra: rákattintva megmozdul. Hozzáadás után átrendezés módban a helyére húzhatod.'), h('p', { class: 'small dc-count' }, (S.decor || []).length ? 'Most kint van: ' + ((S.decor[0] && DECOR[S.decor[0].type]) ? DECOR[S.decor[0].type].name : 'egy dísz') + ' — az újjal lecseréled.' : 'Egyszerre egy dísz lehet kint, hogy az oldal gyors maradjon.'), h('div', { class: 'field dc-shelfsel' }, h('label', { for: 'dc-shelf' }, 'Melyik polcra kerüljön'), sel), list], actions: [{ label: 'Kész', kind: 'primary' }] });
   return m;
 }
 function decorPopup(el) {
@@ -4686,7 +4889,7 @@ function dragonMigrate(list) {   // régi sárkány-pár → egy fekvő sárkán
 }
 
 registerDecor({
-  id: 'sarkany-fekvo', name: 'Fekvő sárkány', hint: 'Bökd meg az orrát! Háromszor: tüzet okád. Ha csak megsimogatod, dorombol.', ar: 2.1, k: 0.58, look: true,
+  id: 'sarkany-fekvo', name: 'Fekvő sárkány', hint: 'Bökd meg az orrát! Háromszor: tüzet okád. Ha csak megsimogatod, dorombol.', ar: 2.1, k: 0.72, look: true,
   svg: u => {
     const O = 'stroke="rgba(10,3,4,.75)" stroke-width="1.3" stroke-linejoin="round"';
     const book = (x, y, w, h, c1, c2) => '<g><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="2" fill="' + c1 + '" ' + O + '/><rect x="' + (x + 3) + '" y="' + (y + 2.2) + '" width="' + (w - 5) + '" height="' + (h - 4.4) + '" rx="1" fill="#f6ecd2"/><path d="M' + (x + 5) + ' ' + (y + 4.6) + 'h' + (w - 9) + 'M' + (x + 5) + ' ' + (y + 7.4) + 'h' + (w - 9) + '" stroke="rgba(150,118,70,.45)" stroke-width=".8"/><rect x="' + x + '" y="' + y + '" width="4" height="' + h + '" rx="2" fill="' + c2 + '"/></g>';
@@ -4747,7 +4950,7 @@ registerSet({ id: 'sarkany', name: 'Fekvő sárkány', desc: 'Egész sárkány, 
 'use strict';
 
 registerDecor({
-  id: 'szellem', name: 'Olvasó szellem', hint: 'Bökd meg: megijed! A könyvére kattintva lapoz. Többször egymás után is próbáld.', ar: 1, k: 0.74, look: true,
+  id: 'szellem', name: 'Olvasó szellem', hint: 'Bökd meg: megijed! A könyvére kattintva lapoz. Többször egymás után is próbáld.', ar: 1, k: 0.9, look: true,
   svg: u => {
     let rays = '';
     for (let i = 0; i < 7; i++) { const a = (-160 + i * 23.3) * Math.PI / 180, c = 60, cy = 52, r1 = 58, r2 = 69; rays += 'M' + dcN(c + Math.cos(a) * r1) + ' ' + dcN(cy + Math.sin(a) * r1 * 0.95) + 'L' + dcN(c + Math.cos(a) * r2) + ' ' + dcN(cy + Math.sin(a) * r2 * 0.95); }
@@ -4940,7 +5143,7 @@ function glRoseScene(u) {
     '<path d="M29 100C37 113 63 113 71 100C69 113 60 120 50 120C40 120 31 113 29 100Z" fill="#8a0e26"/>' +
     '<path d="M37 82C37 69 63 69 63 82C63 95 57 105 50 105C43 105 37 95 37 82Z" fill="#f04a6e"/>' +
     '<path d="M41 80C43 73 57 73 59 80C59 88 53 92 50 88C48 85 52 82 54 84" fill="none" stroke="#7a0a20" stroke-width="1.5"/>' +
-    '<path d="M45 79C46 75 54 75 55 79C55 83 52 85.5 50 85.5C48 85.5 45 83 45 79Z" fill="#ff93ab"/>' +
+    '<path d="M45 79C46 75 54 75 55 79C55 83 52 85.5 50 85.5C48 85.5 45 83 45 79Z" fill="#d6566f"/>' +
     '<path d="M29 100C35 93 38 86 39.500 79M71 100C65 93 62 86 60.500 79M43 108C45 101 47 96.500 49 92M57 108C55 101 53 96.500 51 92M24 88C27 84 30 82 33 81M76 88C73 84 70 82 67 81" fill="none" stroke-width="1.3"/>' +
     '<path d="M30 78C32 70 37 65 43 63" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.6"/><path d="M62 70C67 72 71 77 72 83" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.4"/>' +
     '</g>';
@@ -4955,7 +5158,7 @@ function glRoseScene(u) {
 }
 registerDecor({
   id: 'uveg-rozsa', name: 'Rózsa és pillangó (üvegablak-lámpa)', hint: 'Az alján kapcsolod a fényt. Kattints az üvegre: a pillangó felrebben, egy szirom lehull.', ar: 100 / 170, k: 0.96,
-  svg: u => glFrame(u, glRoseScene(u), ['#ffb36b', '#ff7a8c']),
+  svg: u => glFrame(u, glRoseScene(u), ['#d99a4a', '#a8324a']),
   onClick(el, ev, A) {
     const sw = ev.detail !== 0 && ev.target.closest && ev.target.closest('.d-sw');
     if (sw) { const on = A.toggle(el); el.classList.remove('is-bloom'); A.play(el, on ? 'is-lit' : 'is-dark', 900); return; }
@@ -5173,7 +5376,7 @@ registerSet({ id: 'kis-sarkany', name: 'Repülő sárkány és füstje', desc: '
 'use strict';
 
 registerDecor({
-  id: 'macska', name: 'Alvó macska', hint: 'Ébreszd fel! Simogasd meg (még egyszer kattintva dorombol). Háromszor már morcos.', ar: 1.56, k: 0.5, look: true,
+  id: 'macska', name: 'Alvó macska', hint: 'Ébreszd fel! Simogasd meg (még egyszer kattintva dorombol). Háromszor már morcos.', ar: 1.56, k: 0.62, look: true,
   svg: u => {
     const O = 'stroke="rgba(40,40,56,.7)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"';
     const open = x => '<g class="d-look' + (x < 30 ? ' d-eye' : '') + '"><ellipse cx="' + x + '" cy="58" rx="5.3" ry="5.8" fill="#c0ee6f" stroke="#2c3a16" stroke-width="1.2"/><ellipse cx="' + x + '" cy="58" rx="1.7" ry="4.6" fill="#15180e"/><circle cx="' + (x - 1.8) + '" cy="55.6" r="1.3" fill="#fff" opacity=".85"/></g>';
@@ -5230,7 +5433,7 @@ registerSet({ id: 'macska', name: 'Alvó macska', desc: 'Szürke cirmos cica, ak
 'use strict';
 
 registerDecor({
-  id: 'bagoly', name: 'Bagoly', hint: 'Kattints: körülnéz. Még egyszer: huhog. Harmadszor megrémül!', ar: 0.86, k: 0.66, look: true,
+  id: 'bagoly', name: 'Bagoly', hint: 'Kattints: körülnéz. Még egyszer: huhog. Harmadszor megrémül!', ar: 0.86, k: 0.82, look: true,
   svg: u => {
     const O = 'stroke="rgba(50,30,14,.65)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"';
     let chev = '';
@@ -5285,7 +5488,7 @@ registerSet({ id: 'bagoly', name: 'Bagoly', desc: 'Pufi, barna bagoly. Körüln�
 'use strict';
 
 registerDecor({
-  id: 'noveny', name: 'Cserepes pozsgás', hint: 'Kattints: megrezzen. Még egyszer: kinyílik a virága. Harmadszor katicabogár mászik rajta.', ar: 0.82, k: 0.56,
+  id: 'noveny', name: 'Cserepes pozsgás', hint: 'Kattints: megrezzen. Még egyszer: kinyílik a virága. Harmadszor katicabogár mászik rajta.', ar: 0.82, k: 0.7,
   svg: u => {
     const O = 'stroke="rgba(20,70,40,.6)" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"';
     const leaf = (a, len, w, cls, fill) => '<g transform="translate(45 72) rotate(' + a + ')"><path class="d-lf ' + cls + '" d="M0 0C' + (-w) + ' ' + (-len * 0.22) + ' ' + (-w * 1.05) + ' ' + (-len * 0.7) + ' 0 ' + (-len) + 'C' + w * 1.05 + ' ' + (-len * 0.7) + ' ' + w + ' ' + (-len * 0.22) + ' 0 0Z" fill="' + fill + '" ' + O + '/><path d="M0 -3L0 ' + dcN(-len * 0.72) + '" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.200" stroke-linecap="round"/></g>';
@@ -5293,8 +5496,8 @@ registerDecor({
     for (let i = 0; i < 6; i++) pet += '<g transform="translate(45 27) rotate(' + i * 60 + ')"><path class="d-pp p' + (i + 1) + '" d="M0 0C-6.500 -4 -8 -15 0 -20.500C8 -15 6.500 -4 0 0Z" fill="url(#pk' + u + ')" stroke="rgba(150,30,80,.55)" stroke-width="1" stroke-linejoin="round"/></g>';
     const spark = (x, y, c) => '<path class="d-spk ' + c + '" d="M' + x + ' ' + (y - 4) + 'L' + (x + 1.2) + ' ' + (y - 1.2) + 'L' + (x + 4) + ' ' + y + 'L' + (x + 1.2) + ' ' + (y + 1.2) + 'L' + x + ' ' + (y + 4) + 'L' + (x - 1.2) + ' ' + (y + 1.2) + 'L' + (x - 4) + ' ' + y + 'L' + (x - 1.2) + ' ' + (y - 1.2) + 'Z" fill="#fff4b0"/>';
     return '<svg class="dc-svg pl-svg" viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>' +
-      '<linearGradient id="pt' + u + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cf6f43"/><stop offset=".4" stop-color="#ee9a68"/><stop offset="1" stop-color="#a94e2a"/></linearGradient>' +
-      '<linearGradient id="pk' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8fb8"/><stop offset="1" stop-color="#ff5c93"/></linearGradient>' +
+      '<linearGradient id="pt' + u + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a2e26"/><stop offset=".4" stop-color="#7e463a"/><stop offset="1" stop-color="#4a241e"/></linearGradient>' +
+      '<linearGradient id="pk' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c0405c"/><stop offset="1" stop-color="#9c1f3c"/></linearGradient>' +
       '</defs>' +
       '<ellipse cx="45" cy="107.500" rx="32" ry="3.200" fill="rgba(0,0,0,.38)"/>' +
       '<g class="d-plant">' +
@@ -5305,7 +5508,7 @@ registerDecor({
       '</g>' +
       /* cserép */
       '<path d="M19 74H71L65 105Q64.500 107 62.500 107H27.500Q25.500 107 25 105Z" fill="url(#pt' + u + ')" stroke="rgba(110,50,20,.7)" stroke-width="1.400" stroke-linejoin="round"/>' +
-      '<path d="M21 88L69 88" stroke="rgba(255,235,205,.8)" stroke-width="6.500"/><path d="M21 84.800L69 84.800M21 91.200L69 91.200" stroke="rgba(110,50,20,.55)" stroke-width="1"/><path d="M26 90L30 86L34 90L38 86L42 90L46 86L50 90L54 86L58 90L62 86L66 90" fill="none" stroke="#b8582f" stroke-width="1.300" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '<path d="M21 88L69 88" stroke="rgba(255,235,205,.8)" stroke-width="6.500"/><path d="M21 84.800L69 84.800M21 91.200L69 91.200" stroke="rgba(110,50,20,.55)" stroke-width="1"/><path d="M26 90L30 86L34 90L38 86L42 90L46 86L50 90L54 86L58 90L62 86L66 90" fill="none" stroke="#6a2a24" stroke-width="1.300" stroke-linejoin="round" stroke-linecap="round"/>' +
       '<rect x="14" y="68" width="62" height="10" rx="4" fill="url(#pt' + u + ')" stroke="rgba(110,50,20,.7)" stroke-width="1.400"/><path d="M18 71.500H72" stroke="rgba(255,225,190,.55)" stroke-width="1.600" stroke-linecap="round"/>' +
       '<g class="d-bug"><ellipse cx="0" cy="0" rx="4.600" ry="3.800" fill="#e8322b" stroke="#2a1010" stroke-width="1"/><path d="M0 -3.800V3.800" stroke="#2a1010" stroke-width="1"/><circle cx="-1.900" cy="-1" r=".9" fill="#2a1010"/><circle cx="1.900" cy="-1" r=".9" fill="#2a1010"/><circle cx="-1.700" cy="1.600" r=".8" fill="#2a1010"/><circle cx="1.700" cy="1.600" r=".8" fill="#2a1010"/><circle cx="5" cy="0" r="2.200" fill="#2a1010"/></g>' +
       '<g class="d-sparks">' + spark(24, 44, 's1') + spark(66, 36, 's2') + spark(58, 14, 's3') + spark(30, 22, 's4') + '</g>' +
@@ -5357,9 +5560,9 @@ function nkScene(u) {
   s += '<g class="d-lit"><path d="' + nkQ('L', .12, .32, .52, .84) + '" fill="url(#ng' + u + ')"/><path d="' + nkQ('L', .58, .72, .46, .74) + '" fill="url(#ng' + u + ')"/></g>';
   s += '<g fill="none" stroke="' + LEAD + '" stroke-width="1.200" stroke-linejoin="round"><path d="' + nkQ('L', .12, .32, .52, .84) + '"/><path d="' + nkQ('L', .58, .72, .46, .74) + '"/>' + nkL('L', .22, .52, .22, .84) + nkL('L', .12, .68, .32, .68) + nkL('L', .65, .46, .65, .74) + '</g>';
   s += '<g class="d-shadow" fill="#1a0f1c"><circle cx="18.400" cy="58.200" r="2.500"/><path d="M13.800 70C13.800 62.500 23 62.500 23 70Z"/></g>';
-  s += '<path d="' + nkQ('L', .04, .12, .5, .88) + '" fill="#2f6b5a" stroke="' + LEAD + '" stroke-width="1"/><path d="' + nkQ('L', .32, .4, .5, .88) + '" fill="#2f6b5a" stroke="' + LEAD + '" stroke-width="1"/>';
+  s += '<path d="' + nkQ('L', .04, .12, .5, .88) + '" fill="#2a4f43" stroke="' + LEAD + '" stroke-width="1"/><path d="' + nkQ('L', .32, .4, .5, .88) + '" fill="#2a4f43" stroke="' + LEAD + '" stroke-width="1"/>';
   s += '<path d="' + nkQ('L', .1, .34, .42, .52) + '" fill="#6a3f25" stroke="' + LEAD + '" stroke-width="1"/>';
-  for (let i = 0; i < 6; i++) { const p = nkW('L', .13 + i * .035, .56); s += '<circle cx="' + dcN(p[0]) + '" cy="' + dcN(p[1]) + '" r="1.900" fill="' + ['#ff7aa8', '#ffd24a', '#ff9a6a'][i % 3] + '"/>'; }
+  for (let i = 0; i < 6; i++) { const p = nkW('L', .13 + i * .035, .56); s += '<circle cx="' + dcN(p[0]) + '" cy="' + dcN(p[1]) + '" r="1.900" fill="' + ['#b8324f', '#d9a84a', '#8a2a3a'][i % 3] + '"/>'; }
   /* jobb fal */
   s += '<path d="M120 10L82 70.800V116.500L120 158Z" fill="url(#nr' + u + ')" stroke="' + LEAD + '" stroke-width="1.200" stroke-linejoin="round"/>';
   s += '<g stroke="#241526" stroke-width="2" stroke-linecap="round" fill="none">' + nkL('R', 0, .3, 1, .3) + nkL('R', 0, .92, 1, .92) + nkL('R', .5, 0, .5, 1) + nkL('R', 1, 0, 1, 1) + '</g>';
@@ -5374,7 +5577,7 @@ function nkScene(u) {
   s += '<g class="d-lit"><path class="d-spill" d="M59 116.500H71L92 158H44Z" fill="url(#nspill' + u + ')"/><ellipse cx="100" cy="151" rx="30" ry="8" fill="url(#nhh' + u + ')"/></g>';
   /* zászlófüzér */
   let flags = '';
-  const cols = ['#ff7aa8', '#ffd24a', '#6ad0c0', '#ff9a6a', '#9a8cff'];
+  const cols = ['#9a2a44', '#c9973f', '#3f6f66', '#7a2a3a', '#5a4a8a'];
   for (let i = 0; i < 9; i++) { const t = (i + 0.7) / 9.4, x = (1 - t) * (1 - t) * 18 + 2 * t * (1 - t) * 65 + t * t * 112, y = (1 - t) * (1 - t) * 36 + 2 * t * (1 - t) * 60 + t * t * 38; flags += '<path class="d-flag f' + (i + 1) + '" d="M' + dcN(x - 3.700) + ' ' + dcN(y) + 'H' + dcN(x + 3.700) + 'L' + dcN(x) + ' ' + dcN(y + 8.500) + 'Z" fill="' + cols[i % 5] + '" stroke="' + LEAD + '" stroke-width=".8" stroke-linejoin="round"/>'; }
   s += '<path d="M18 36Q65 60 112 38" fill="none" stroke="#1d121f" stroke-width="1.200"/>' + flags;
   /* utcai lámpa */
@@ -5387,12 +5590,12 @@ function nkScene(u) {
 }
 
 registerDecor({
-  id: 'book-nook', name: 'Book nook: mini világ', hint: 'A lámpára kattintva fel/le kapcsolod a fényt. A szobára kattintva felnagyul a kis világ (3D nézetben), és bele lehet nézni. 2D-ben kinyílik az ajtó.', ar: 1.04, k: 0.94,
+  id: 'book-nook', name: 'Book nook: mini világ', hint: 'A lámpára kattintva fel/le kapcsolod a fényt. A szobára kattintva felnagyul a kis világ (3D nézetben), és bele lehet nézni. 2D-ben kinyílik az ajtó.', ar: 1.04, k: 1.04,
   svg: u => {
     return '<svg class="dc-svg nk-svg" viewBox="-24 0 178 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>' +
       '<clipPath id="nc' + u + '"><path d="M10 10H120V158H10Z"/></clipPath>' +
       '<linearGradient id="nw' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8c6338"/><stop offset=".5" stop-color="#5c3a1e"/><stop offset="1" stop-color="#2f1c0e"/></linearGradient>' +
-      '<linearGradient id="ns' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121a52"/><stop offset=".55" stop-color="#3d3a8e"/><stop offset="1" stop-color="#cf78a0"/></linearGradient>' +
+      '<linearGradient id="ns' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121a52"/><stop offset=".55" stop-color="#3d3a8e"/><stop offset="1" stop-color="#8a3a52"/></linearGradient>' +
       '<linearGradient id="nb' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e5a86"/><stop offset="1" stop-color="#47385c"/></linearGradient>' +
       '<linearGradient id="nl' + u + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f2340"/><stop offset="1" stop-color="#6a5584"/></linearGradient>' +
       '<linearGradient id="nr' + u + '" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#34273f"/><stop offset="1" stop-color="#6f5a82"/></linearGradient>' +
@@ -5726,36 +5929,27 @@ function l3Glow() {   // lágy, kerek árnyék/fény-folt
   gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.45, 'rgba(255,255,255,.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
   return (L3.glow = new THREE.CanvasTexture(c));
 }
-function l3SpineTex(b, L, F, w, h) {
-  const key = [b.title, b.author, L.color, L.style, w, h, F.fs, F.ah, F.showA, b.status, L3.fonts].join('|');
+function l3SpineTex(b, L, F, w, h) {   // → {t: szín-textúra, m: maszk (R dombormű · G érdesség · B fémesség)}; a rajzot a spine.js készíti
+  const key = [b.title, b.author, L.color, L.style, L.pat, L.acc, w, h, F.fs, F.ah, F.showA, b.status, L3.fonts, L3.deg ? 2 : 3].join('|');
   let e = L3.tex.get(key);
   if (!e) {
-    const S3 = 3, cw = Math.ceil(w * S3), ch = Math.ceil(h * S3), cv = document.createElement('canvas'); cv.width = cw; cv.height = ch; const g = cv.getContext('2d'), rng = dcRng(hashStr(key));
-    g.fillStyle = L.color; g.fillRect(0, 0, cw, ch);
-    if (L.style === 4) { const vg = g.createLinearGradient(0, 0, 0, ch); vg.addColorStop(0, 'rgba(255,255,255,.2)'); vg.addColorStop(0.12, 'rgba(255,255,255,0)'); vg.addColorStop(0.85, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.3)'); g.fillStyle = vg; g.fillRect(0, 0, cw, ch); }
-    for (let i = 0; i < cw * ch / 26; i++) { g.fillStyle = rng() < 0.5 ? 'rgba(0,0,0,.07)' : 'rgba(255,255,255,.05)'; g.fillRect(rng() * cw, rng() * ch, 1 + rng() * 1.5, 1); }   // bőr/vászon szemcse
-    const line = (y, col, th) => { g.fillStyle = col; g.fillRect(0, y * S3, cw, th * S3); };
-    if (L.style === 1) { [7, 11.5].forEach(y => line(y, L.ink, 1.6)); [h - 13, h - 8.5].forEach(y => line(y, L.ink, 1.6)); g.globalAlpha = 1; }
-    if (L.style === 2) { [7, 11].forEach(y => line(y, '#d9b25a', 1.6)); [h - 12.5, h - 8.5].forEach(y => line(y, '#d9b25a', 1.6)); }
-    if (L.style === 4) { g.fillStyle = 'rgba(0,0,0,.2)'; g.fillRect(cw * 0.24, 0, 1.5, ch); }
-    const ink = L.style === 2 ? '#f3deaa' : L.ink, top = 18 * S3, aH = F.showA ? F.ah * S3 : 0, avail = ch - top - 16 * S3 - (aH ? aH + 6 * S3 : 0);
-    if (L.style === 3) { g.fillStyle = 'rgba(255,255,255,.16)'; g.fillRect(cw * 0.1, top - 6 * S3, cw * 0.8, Math.min(avail, g.measureText ? ch : ch) - 0); g.fillStyle = L.color; }
-    const ff = (s, wgt) => (wgt || '') + ' ' + s + 'px Marcellus, "Palatino Linotype", "Book Antiqua", Georgia, serif';
-    let fs = F.fs * S3; g.font = ff(fs); let tw = g.measureText(b.title).width; if (tw > avail) { fs = Math.max(8.5 * S3, fs * avail / tw); g.font = ff(fs); tw = g.measureText(b.title).width; }
-    g.save(); g.translate(cw / 2, top); g.rotate(Math.PI / 2); g.fillStyle = ink; g.textBaseline = 'middle'; g.textAlign = 'left';
-    let tt = b.title; if (tw > avail) { while (tt.length > 3 && g.measureText(tt + '…').width > avail) tt = tt.slice(0, -1); tt += '…'; }
-    if (L.style === 2) { g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowOffsetY = 1; }
-    g.fillText(tt, 0, 0); g.restore();
-    if (F.showA) {
-      let fa = Math.min(10.5 * S3, cw * 0.3); g.font = ff(fa, ''); let at = b.author, mw = aH; while (at.length > 3 && g.measureText(at).width > mw) at = at.slice(0, -1);
-      g.save(); g.translate(cw / 2, ch - 14 * S3 - Math.min(aH, g.measureText(at).width)); g.rotate(Math.PI / 2); g.globalAlpha = 0.78; g.fillStyle = ink; g.textBaseline = 'middle'; g.textAlign = 'left'; g.fillText(at, 0, 0); g.restore();
-    }
-    if (b.status === 'elolvastam') { g.fillStyle = '#e8c765'; g.beginPath(); g.arc(cw / 2, ch - 7 * S3, 4 * S3, 0, 6.283); g.fill(); g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 1; g.stroke(); }
-    if (L.style === 3) { g.fillStyle = ink; g.globalAlpha = 0.65; g.beginPath(); g.arc(cw / 2, ch - 12 * S3, 4.5 * S3, 0, 6.283); g.fill(); g.globalAlpha = 1; }
-    const t = new THREE.CanvasTexture(cv); t.encoding = THREE.sRGBEncoding; t.anisotropy = Math.min(8, L3.r.capabilities.getMaxAnisotropy()); e = { t: t };
-    L3.tex.set(key, e);
+    const d = spineDraw(b, L, F, w, h, L3.deg ? 2 : 3, true), an = Math.min(8, L3.r.capabilities.getMaxAnisotropy());
+    const t = new THREE.CanvasTexture(d.cv); t.encoding = THREE.sRGBEncoding; t.anisotropy = an;
+    const m = new THREE.CanvasTexture(d.mv); m.anisotropy = Math.min(4, an);
+    e = { t: t, m: m }; L3.tex.set(key, e);
   }
-  e.used = true; return e.t;
+  e.used = true; return e;
+}
+function l3Paper() {   // közös textúrák: lapélek (finom vonalak) és kötésvászon-szövés
+  if (L3.paper) return L3.paper;
+  const mkc = n => { const c = document.createElement('canvas'); c.width = c.height = n; return c; }, rng = dcRng(41);
+  const pc = mkc(128), pg = pc.getContext('2d'); pg.fillStyle = '#f4ead2'; pg.fillRect(0, 0, 128, 128);
+  for (let y = 0; y < 128; y += 1.5) { pg.fillStyle = 'rgba(120,90,50,' + (0.05 + rng() * 0.1).toFixed(3) + ')'; pg.fillRect(0, y, 128, 0.7); }
+  const cc = mkc(128), cg = cc.getContext('2d'); cg.fillStyle = '#ffffff'; cg.fillRect(0, 0, 128, 128);
+  for (let i = 0; i < 900; i++) { cg.fillStyle = rng() < 0.5 ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.5)'; cg.fillRect(rng() * 128, rng() * 128, 1 + rng() * 3, 1); }
+  for (let y = 0; y < 128; y += 2) { cg.fillStyle = 'rgba(0,0,0,.035)'; cg.fillRect(0, y, 128, 1); }
+  const mk = c => { const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t; };
+  return (L3.paper = { pages: mk(pc), cloth: mk(cc) });
 }
 
 /* ---------- elrendezés (2D-vel azonos logika: balról jobbra, sortörés polcszintenként) ---------- */
@@ -5803,7 +5997,7 @@ function l3Init() {
     const cv = document.createElement('canvas'); cv.id = 'l3'; cv.setAttribute('aria-hidden', 'true'); document.body.insertBefore(cv, $('#app'));
     const lowq = !!window.__L3_LOWQ, weak = !lowq && l3WeakGPU(), r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq && !weak, alpha: true, powerPreference: 'high-performance' });
     L3.lowq = lowq; L3.weak = weak; if (weak) L3.deg = Math.max(L3.deg || 0, 1);
-    r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.12;
+    r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.0;
     r.shadowMap.enabled = true; r.shadowMap.type = T.VSMShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
     L3.cv = cv; L3.r = r; L3.scene = new T.Scene(); L3.cam = new T.PerspectiveCamera(L3K.FOV, 1, 10, 6000); L3.ray = new T.Raycaster();
     cv.addEventListener('webglcontextlost', e => { e.preventDefault(); L3.st = 'failed'; l3Hide(); if ($('.lb')) drawLibrary(); });
@@ -5844,7 +6038,7 @@ function l3Hide() { L3.on = false; clearTimeout(L3.idleT); if (L3.cv) L3.cv.styl
 /* ---------- szekrény ---------- */
 function l3BuildCase(W, Hc, levels, lh) {
   const T = THREE, K = L3K, D = K.DEPTH, g = new L3Geo();
-  const side = l3Col('#a46d3d'), mold = l3Col('#bb8450'), back = l3Col('#4c2f1b'), board = l3Col('#b57c48'), plinth = l3Col('#8a5832');
+  const side = l3Col('#40261a'), mold = l3Col('#523020'), back = l3Col('#26150f'), board = l3Col('#4a2a1b'), plinth = l3Col('#32190f');   // sötét dió/mahagóni (v12: dark romance)
   g.box(0, -Hc, -D, K.SIDE, 0, 0, side); g.box(W - K.SIDE, -Hc, -D, W, 0, 0, side);                          // oldalak
   g.box(-4, -14, -D, W + 4, 0, 7, mold); g.box(0, -K.TOPH, -D, W, -14, 0, side); g.box(-2, -K.TOPH - 5, -D + 4, W + 2, -K.TOPH, 4, mold);   // korona + tető
   g.box(K.SIDE, -(Hc - K.PLINTH), -D, W - K.SIDE, -K.TOPH, -D + 4, back, 160);                                   // hátlap
@@ -5854,30 +6048,34 @@ function l3BuildCase(W, Hc, levels, lh) {
     const kv = y => { const t = (y - bot) / h; return t < 0.1 ? 0.8 + t * 2 : t > 0.7 ? 1 - (t - 0.7) / 0.3 * 0.5 : 1; }, kh = x => { const e = Math.min(x - x0, x1 - x) / ew; return 0.72 + 0.28 * Math.max(0, Math.min(1, e)); };
     g.shade(x0, x1, bot, top, -D + 4.4, xs, ys, (x, y) => back.clone().multiplyScalar(kv(y) * kh(x)), 160);
   }
-  for (let l = 0; l < levels; l++) { const yb = -(K.TOPH + (l + 1) * lh); g.box(K.SIDE, yb, -D + 4, W - K.SIDE, yb + K.BOARD, -1.5, board); g.box(K.SIDE, yb + K.BOARD - 2.4, -3, W - K.SIDE, yb + K.BOARD, -1.5, l3Col('#d09a63')); }  // deszkák + élfény
+  for (let l = 0; l < levels; l++) { const yb = -(K.TOPH + (l + 1) * lh); g.box(K.SIDE, yb, -D + 4, W - K.SIDE, yb + K.BOARD, -1.5, board); g.box(K.SIDE, yb + K.BOARD - 2.4, -3, W - K.SIDE, yb + K.BOARD, -1.5, l3Col('#8f5d38')); }  // deszkák + élfény
   g.box(K.SIDE - 5, -Hc, -D + 6, W - K.SIDE + 5, -(K.TOPH + levels * lh), 5, plinth); g.box(K.SIDE - 8, -Hc, -D + 6, K.SIDE - 2, -Hc + 6, 5, plinth); g.box(W - K.SIDE + 2, -Hc, -D + 6, W - K.SIDE + 8, -Hc + 6, 5, plinth);   // lábazat
-  [[0, 0], [W - 3, 0]].forEach(p => g.box(p[0], -Hc + K.PLINTH, -1, p[0] + 3, -K.TOPH, 1.6, l3Col('#c89560')));   // élléc a szélén
+  [[0, 0], [W - 3, 0]].forEach(p => g.box(p[0], -Hc + K.PLINTH, -1, p[0] + 3, -K.TOPH, 1.6, l3Col('#86583a')));   // élléc a szélén
   const mat = new T.MeshStandardMaterial({ map: l3Wood(), bumpMap: l3Wood(), bumpScale: 1.4, vertexColors: true, roughness: 0.6, metalness: 0, envMapIntensity: 0.55 });
   const m = new T.Mesh(g.build(), mat); m.castShadow = m.receiveShadow = true; return m;
 }
 
 /* ---------- könyv ---------- */
 function l3BuildBook(it, lh) {
-  const T = THREE, b = it.b, L = it.L, w = it.w, h = it.h, hs = hashStr(b.id), d = 98 + (hs % 30), ct = Math.min(2.6, w * 0.09), bulge = Math.min(2.8, w * 0.08);
-  const F = titleFit(b, L, lh), grp = new T.Group();
-  const sg = new T.PlaneGeometry(w, h, 10, 1); sg.translate(0, h / 2, 0); const pp = sg.attributes.position; for (let i = 0; i < pp.count; i++) { const x = pp.getX(i) / (w / 2); pp.setZ(i, bulge * (1 - x * x)); } sg.computeVertexNormals();
-  const smat = new T.MeshStandardMaterial({ map: l3SpineTex(b, L, F, w, h), roughness: L.style === 2 ? 0.42 : 0.58, metalness: 0, envMapIntensity: 0.7 });
+  const T = THREE, b = it.b, L = it.L, w = it.w, h = it.h, hs = hashStr(b.id), d = 98 + (hs % 30), ct = Math.min(2.8, w * 0.085), bulge = Math.min(3.4, w * 0.09);
+  const F = titleFit(b, L, lh), grp = new T.Group(), px = l3Paper();
+  const sg = new T.PlaneGeometry(w, h, 12, 2); sg.translate(0, h / 2, 0); const pp = sg.attributes.position; for (let i = 0; i < pp.count; i++) { const x = pp.getX(i) / (w / 2), y = pp.getY(i) / h; pp.setZ(i, bulge * (1 - x * x) * (1 - 0.1 * Math.pow(2 * y - 1, 2))); } sg.computeVertexNormals();
+  const tx = l3SpineTex(b, L, F, w, h), glossy = L.style === 2 || L.style === 5 || L.style === 6;
+  const smat = new T.MeshStandardMaterial({ map: tx.t, roughnessMap: tx.m, metalnessMap: tx.m, bumpMap: tx.m, bumpScale: 1.6, roughness: glossy ? 0.82 : 1, metalness: 1, envMapIntensity: 0.9 });
+  smat.color.setScalar(0.62); smat.userData.k = 0.62;   // a erős fény felmossa a sötét színeket: a dark romance hangulathoz visszavesszük
   const spine = new T.Mesh(sg, smat); spine.castShadow = spine.receiveShadow = true; grp.add(spine);
-  const cov = l3Col(L.color, 0.8), pg = l3Col('#efe3c6'), g = new L3Geo();
+  const cov = l3Col(L.color, 0.56), g = new L3Geo(), gp = new L3Geo();
   g.box(-w / 2, 0, -d, -w / 2 + ct, h, -0.3, cov, 80); g.box(w / 2 - ct, 0, -d, w / 2, h, -0.3, cov, 80); g.box(-w / 2, 0, -d, w / 2, h, -d + ct, cov, 80);
-  g.box(-w / 2 + ct + 0.2, 2.2, -d + ct, w / 2 - ct - 0.2, h - 2.2, -3.2, pg, 60);
-  const bmat = new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.78, metalness: 0, envMapIntensity: 0.35 });
+  gp.box(-w / 2 + ct + 0.2, 2.2, -d + ct, w / 2 - ct - 0.2, h - 2.2, -3.2, null, 60);
+  const bmat = new T.MeshStandardMaterial({ vertexColors: true, map: px.cloth, roughness: 0.74, metalness: 0, envMapIntensity: 0.4 });
   const body = new T.Mesh(g.build(), bmat); body.castShadow = body.receiveShadow = true; grp.add(body);
+  const pmat = new T.MeshStandardMaterial({ map: px.pages, roughness: 0.92, metalness: 0, envMapIntensity: 0.25 });
+  const pages = new T.Mesh(gp.build(), pmat); pages.castShadow = pages.receiveShadow = true; grp.add(pages);
   if (b.status === 'olvasom') {   // könyvjelző-szalag a gerinc tetején
     const sh = new T.Shape(); sh.moveTo(-2.6, 0); sh.lineTo(2.6, 0); sh.lineTo(2.6, 28); sh.lineTo(0, 23); sh.lineTo(-2.6, 28); sh.closePath();
-    const rb = new T.Mesh(new T.ShapeGeometry(sh), new T.MeshStandardMaterial({ color: l3Col('#c43d4b'), roughness: 0.5, side: T.DoubleSide })); rb.position.set(0, h - 22, bulge + 0.8); rb.castShadow = true; grp.add(rb);
+    const rb = new T.Mesh(new T.ShapeGeometry(sh), new T.MeshStandardMaterial({ color: l3Col('#8f1d2c'), roughness: 0.45, side: T.DoubleSide })); rb.position.set(0, h - 22, bulge + 0.8); rb.castShadow = true; grp.add(rb);
   }
-  return { grp: grp, parts: [spine, body], mats: [smat, bmat], d: d, bulge: bulge };
+  return { grp: grp, parts: [spine, body, pages], mats: [smat, bmat, pmat], d: d, bulge: bulge };
 }
 
 /* ---------- dísz: ideiglenes (lapos) alak az SVG-ből; a valódi 3D modellek a DECOR3 katalógusból jönnek ---------- */
@@ -5917,11 +6115,16 @@ function l3Sync() {
       const item = { id: it.id, kind: it.kind, b: it.b, d: it.d, T: it.T, w: it.w, h: it.h, grp: o.grp, parts: o.parts, mats: o.mats, ctl: o.ctl, bx: bx, by: by, bz: it.kind === 'book' ? -rec : 0, hv: 0, ht: 0, pk: 0, lf: 0, dim: 0, depth: o.d, shelf: si, lvl: it.lvl };
       o.grp.position.set(bx, by, item.bz); cg.add(o.grp); o.parts.forEach(p => { p.userData.item = item; L3.pick.push(p); });
       L3.items.set(it.id, item);
+      if (it.kind === 'decor' && (L3.deg || 0) < 2) {   // v12: meleg "spotlámpa"-folt a díszek mögött a hátlapon (additív, olcsó)
+        if (!L3.glowTex) { const c = document.createElement('canvas'); c.width = c.height = 128; const g2 = c.getContext('2d'), gr = g2.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,170,90,1)'); gr.addColorStop(0.45, 'rgba(210,110,60,.45)'); gr.addColorStop(1, 'rgba(120,40,40,0)'); g2.fillStyle = gr; g2.fillRect(0, 0, 128, 128); L3.glowTex = new T.CanvasTexture(c); L3.glowTex.encoding = T.sRGBEncoding; }
+        const gm = new T.Mesh(new T.PlaneGeometry(it.w * 2.1, it.h * 1.9), new T.MeshBasicMaterial({ map: L3.glowTex, transparent: true, opacity: 0.34, blending: T.AdditiveBlending, depthWrite: false, toneMapped: false }));
+        gm.position.set(bx, by + it.h * 0.5, -K.DEPTH + 7); gm.renderOrder = -1; cg.add(gm);
+      }
     });
     L3.scene.add(cg); L3.cases.push(cg);
   });
   const pk = new Set(pickedBooks().map(x => x.book.id)); L3.items.forEach(it => { it.pk = pk.has(it.id) ? 1 : 0; l3Pose(it); });
-  L3.tex.forEach((e, k) => { if (!e.used) { e.t.dispose(); L3.tex.delete(k); } });
+  L3.tex.forEach((e, k) => { if (!e.used) { e.t.dispose(); if (e.m) e.m.dispose(); L3.tex.delete(k); } });
   l3Filter();
   if (!L3.fonts && document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(() => { L3.fonts = true; if (L3.on && $('.lb.l3')) l3Sync(); });
   l3Inv();
@@ -5931,15 +6134,15 @@ function l3Filter() {
   L3.items.forEach(it => {
     if (it.kind !== 'book') return;
     const dim = !!q && Engine.slug([it.b.title, it.b.author, it.b.genre, it.b.mood].join(' ')).indexOf(q) < 0;
-    if (dim !== !!it.dim) { it.dim = dim ? 1 : 0; it.mats.forEach(m => { m.color.setScalar(dim ? 0.28 : 1); }); }
+    if (dim !== !!it.dim) { it.dim = dim ? 1 : 0; it.mats.forEach(m => { m.color.setScalar((dim ? 0.28 : 1) * (m.userData.k || 1)); }); }
   });
   l3Inv();
 }
 function l3Pose(it) {   // könyv: kihúzódik és megdől hover/fókusz/kiválasztás esetén; a forgáspont a könyv alja
   L3.sd = true; if (it.drag) return;
   const hv = it.hv, lift = it.lf || 0;
-  it.grp.position.set(it.bx, it.by + lift * 0.35, it.bz + 10 * hv + 15 * it.pk + lift);
-  it.grp.rotation.x = it.kind === 'book' ? 0.085 * hv + 0.03 * it.pk + 0.05 * (lift ? 1 : 0) : 0;
+  it.grp.position.set(it.bx, it.by + lift * 0.35 + (it.kind === 'book' ? 4 * hv : 0), it.bz + (it.kind === 'book' ? 30 : 10) * hv + 15 * it.pk + lift);
+  it.grp.rotation.x = it.kind === 'book' ? 0.3 * hv + 0.03 * it.pk + 0.05 * (lift ? 1 : 0) : 0;
 }
 
 /* ---------- kamera, fény, kirajzolás ---------- */
@@ -6434,7 +6637,7 @@ const NK_LABEL = { sw: 'Lámpa', fire: 'Kandalló', window: 'Ablak', cat: 'Cica'
 const nkRep = (t, x, y) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(x, y); return t; };
 function nkTexPlanks() {
   return nkRep(kTex(256, 256, (g, W, H) => {
-    const rng = dcRng(5), cols = ['#b5834f', '#a8763f', '#be8d58', '#ac7c47'], ph = H / 6;
+    const rng = dcRng(5), cols = ['#4c2e1e', '#40261a', '#55331f', '#46291b'], ph = H / 6;
     for (let i = 0; i < 6; i++) {
       g.fillStyle = cols[i % 4]; g.fillRect(0, i * ph, W, ph);
       for (let k = 0; k < 14; k++) { g.strokeStyle = 'rgba(70,38,14,' + (0.06 + rng() * 0.14).toFixed(2) + ')'; g.lineWidth = 0.6 + rng(); const y = i * ph + rng() * ph; g.beginPath(); g.moveTo(0, y); g.bezierCurveTo(W * .3, y + (rng() - .5) * 6, W * .6, y + (rng() - .5) * 6, W, y + (rng() - .5) * 4); g.stroke(); }
@@ -6444,27 +6647,27 @@ function nkTexPlanks() {
 }
 function nkTexPaper() {
   return nkRep(kTex(128, 128, (g, W, H) => {
-    g.fillStyle = '#4a8a82'; g.fillRect(0, 0, W, H);
-    for (let x = 0; x < W; x += 32) { g.fillStyle = 'rgba(255,245,215,.10)'; g.fillRect(x, 0, 16, H); }
+    g.fillStyle = '#3d1019'; g.fillRect(0, 0, W, H);
+    for (let x = 0; x < W; x += 32) { g.fillStyle = 'rgba(214,170,90,.09)'; g.fillRect(x, 0, 16, H); }
     [[16, 20], [48, 52], [80, 20], [112, 52], [16, 84], [48, 116], [80, 84], [112, 116]].forEach(p => {
-      g.fillStyle = 'rgba(240,222,170,.5)'; for (let a = 0; a < 5; a++) { g.beginPath(); g.arc(p[0] + Math.cos(a * 1.2566) * 4.4, p[1] + Math.sin(a * 1.2566) * 4.4, 1.7, 0, 6.283); g.fill(); }
-      g.fillStyle = 'rgba(244,214,130,.9)'; g.beginPath(); g.arc(p[0], p[1], 2.3, 0, 6.283); g.fill();
+      g.fillStyle = 'rgba(200,160,86,.45)'; for (let a = 0; a < 5; a++) { g.beginPath(); g.arc(p[0] + Math.cos(a * 1.2566) * 4.4, p[1] + Math.sin(a * 1.2566) * 4.4, 1.7, 0, 6.283); g.fill(); }
+      g.fillStyle = 'rgba(214,174,92,.85)'; g.beginPath(); g.arc(p[0], p[1], 2.3, 0, 6.283); g.fill();
     });
   }, 'nkPaper'), 1 / 32, 1 / 32);
 }
 function nkTexRug() {
   return kTex(256, 256, (g, W, H) => {
-    const c = W / 2; g.fillStyle = '#a83e36'; g.beginPath(); g.arc(c, c, c, 0, 6.283); g.fill();
-    [[118, '#f0d9a0'], [108, '#2f6577'], [92, '#e8b04a'], [80, '#a83e36'], [66, '#f0d9a0']].forEach(r => { g.fillStyle = r[1]; g.beginPath(); g.arc(c, c, r[0], 0, 6.283); g.fill(); });
-    g.fillStyle = '#2f6577'; g.beginPath(); g.arc(c, c, 52, 0, 6.283); g.fill();
-    g.fillStyle = '#f0d9a0'; for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; g.save(); g.translate(c + Math.cos(a) * 72, c + Math.sin(a) * 72); g.rotate(a + 1.5708); g.beginPath(); g.moveTo(0, -8); g.lineTo(6, 0); g.lineTo(0, 8); g.lineTo(-6, 0); g.closePath(); g.fill(); g.restore(); }
-    g.fillStyle = '#e8b04a'; g.beginPath(); for (let i = 0; i < 16; i++) { const a = i / 16 * 6.283, r = i % 2 ? 20 : 44; g.lineTo(c + Math.cos(a) * r, c + Math.sin(a) * r); } g.closePath(); g.fill();
+    const c = W / 2; g.fillStyle = '#4e0f1c'; g.beginPath(); g.arc(c, c, c, 0, 6.283); g.fill();
+    [[118, '#b99a52'], [108, '#1c2a3a'], [92, '#a8802f'], [80, '#4e0f1c'], [66, '#b99a52']].forEach(r => { g.fillStyle = r[1]; g.beginPath(); g.arc(c, c, r[0], 0, 6.283); g.fill(); });
+    g.fillStyle = '#1c2a3a'; g.beginPath(); g.arc(c, c, 52, 0, 6.283); g.fill();
+    g.fillStyle = '#b99a52'; for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; g.save(); g.translate(c + Math.cos(a) * 72, c + Math.sin(a) * 72); g.rotate(a + 1.5708); g.beginPath(); g.moveTo(0, -8); g.lineTo(6, 0); g.lineTo(0, 8); g.lineTo(-6, 0); g.closePath(); g.fill(); g.restore(); }
+    g.fillStyle = '#a8802f'; g.beginPath(); for (let i = 0; i < 16; i++) { const a = i / 16 * 6.283, r = i % 2 ? 20 : 44; g.lineTo(c + Math.cos(a) * r, c + Math.sin(a) * r); } g.closePath(); g.fill();
     g.strokeStyle = 'rgba(60,20,16,.35)'; g.lineWidth = 2; g.beginPath(); g.arc(c, c, c - 2, 0, 6.283); g.stroke();
   }, 'nkRug');
 }
 function nkTexWin() {   // az ablak mögötti éjszakai táj: hold, csillagok, háztetők
   return kTex(250, 400, (g, W, H) => {
-    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#0f1646'); gr.addColorStop(0.55, '#38358a'); gr.addColorStop(0.85, '#c8719c'); gr.addColorStop(1, '#f0a07a'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#0f1646'); gr.addColorStop(0.55, '#2a2860'); gr.addColorStop(0.85, '#5a2038'); gr.addColorStop(1, '#b8643a'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
     const rng = dcRng(9); g.fillStyle = '#fff6c8'; for (let i = 0; i < 34; i++) { g.globalAlpha = 0.35 + rng() * 0.65; g.beginPath(); g.arc(rng() * W, rng() * H * 0.62, 0.8 + rng() * 1.6, 0, 6.283); g.fill(); } g.globalAlpha = 1;
     const mg = g.createRadialGradient(168, 112, 14, 168, 112, 110); mg.addColorStop(0, 'rgba(255,240,190,.55)'); mg.addColorStop(1, 'rgba(255,240,190,0)'); g.fillStyle = mg; g.fillRect(0, 0, W, H);
     g.fillStyle = '#fff1bb'; g.beginPath(); g.arc(168, 112, 36, 0, 6.283); g.fill(); g.fillStyle = '#ecd88a'; [[-10, -12, 8], [12, 10, 6], [-4, 16, 4.5]].forEach(c => { g.beginPath(); g.arc(168 + c[0], 112 + c[1], c[2], 0, 6.283); g.fill(); });
@@ -6473,12 +6676,12 @@ function nkTexWin() {   // az ablak mögötti éjszakai táj: hold, csillagok, h
   }, 'nkWin');
 }
 function nkTexGlobe() {
-  return kTex(128, 64, (g, W, H) => { g.fillStyle = '#2f77b5'; g.fillRect(0, 0, W, H); g.fillStyle = '#6fb26b'; [[22, 22, 16, 10], [40, 40, 6, 8], [74, 20, 20, 9], [92, 36, 10, 10], [108, 22, 9, 6], [60, 46, 6, 5]].forEach(c => { g.beginPath(); g.ellipse(c[0], c[1], c[2], c[3], 0, 0, 6.283); g.fill(); }); g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(0, 0, W, 4); g.fillRect(0, H - 4, W, 4); }, 'nkGlobe');
+  return kTex(128, 64, (g, W, H) => { g.fillStyle = '#1f4a6a'; g.fillRect(0, 0, W, H); g.fillStyle = '#6a7a4a'; [[22, 22, 16, 10], [40, 40, 6, 8], [74, 20, 20, 9], [92, 36, 10, 10], [108, 22, 9, 6], [60, 46, 6, 5]].forEach(c => { g.beginPath(); g.ellipse(c[0], c[1], c[2], c[3], 0, 0, 6.283); g.fill(); }); g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(0, 0, W, 4); g.fillRect(0, H - 4, W, 4); }, 'nkGlobe');
 }
 function nkTexPic(n) {
   return kTex(64, 80, (g, W, H) => {
-    if (n === 0) { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#f4c27a'); gr.addColorStop(1, '#e8806a'); g.fillStyle = gr; g.fillRect(0, 0, W, H); g.fillStyle = '#fff1bb'; g.beginPath(); g.arc(40, 28, 12, 0, 6.283); g.fill(); g.fillStyle = '#5a3d6a'; g.beginPath(); g.moveTo(0, 62); g.lineTo(22, 38); g.lineTo(40, 58); g.lineTo(54, 44); g.lineTo(64, 56); g.lineTo(64, 80); g.lineTo(0, 80); g.fill(); }
-    else { g.fillStyle = '#e9e2cf'; g.fillRect(0, 0, W, H); g.fillStyle = '#3f8f7a'; g.beginPath(); g.ellipse(32, 46, 14, 20, 0, 0, 6.283); g.fill(); g.fillStyle = '#e8a43c'; g.beginPath(); g.arc(32, 22, 7, 0, 6.283); g.fill(); g.strokeStyle = '#7a4a2a'; g.lineWidth = 2; g.beginPath(); g.moveTo(32, 66); g.lineTo(32, 76); g.stroke(); }
+    if (n === 0) { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#c98a4a'); gr.addColorStop(1, '#7a2a3a'); g.fillStyle = gr; g.fillRect(0, 0, W, H); g.fillStyle = '#fff1bb'; g.beginPath(); g.arc(40, 28, 12, 0, 6.283); g.fill(); g.fillStyle = '#5a3d6a'; g.beginPath(); g.moveTo(0, 62); g.lineTo(22, 38); g.lineTo(40, 58); g.lineTo(54, 44); g.lineTo(64, 56); g.lineTo(64, 80); g.lineTo(0, 80); g.fill(); }
+    else { g.fillStyle = '#cdbf9e'; g.fillRect(0, 0, W, H); g.fillStyle = '#2f5a4a'; g.beginPath(); g.ellipse(32, 46, 14, 20, 0, 0, 6.283); g.fill(); g.fillStyle = '#e8a43c'; g.beginPath(); g.arc(32, 22, 7, 0, 6.283); g.fill(); g.strokeStyle = '#7a4a2a'; g.lineWidth = 2; g.beginPath(); g.moveTo(32, 66); g.lineTo(32, 76); g.stroke(); }
   }, 'nkPic' + n);
 }
 function nkTexClock() { return kTex(64, 64, (g, W, H) => { g.fillStyle = '#f6ecd2'; g.beginPath(); g.arc(32, 32, 30, 0, 6.283); g.fill(); g.strokeStyle = '#6a3f25'; g.lineWidth = 3; g.stroke(); g.fillStyle = '#3a2418'; for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; g.fillRect(32 + Math.cos(a) * 24 - 1, 32 + Math.sin(a) * 24 - 1, 2.4, 2.4); } g.strokeStyle = '#3a2418'; g.lineWidth = 2.4; g.lineCap = 'round'; g.beginPath(); g.moveTo(32, 32); g.lineTo(32, 14); g.moveTo(32, 32); g.lineTo(44, 38); g.stroke(); }, 'nkClock'); }
@@ -6525,15 +6728,15 @@ function nkRoom(mode, it) {
   const PT = (o, part) => { o.traverse(m => { if (m.isMesh) { if (part) m.userData.part = part; parts.push(m); m.castShadow = !m.userData.noShadow && !m.userData.shell; m.receiveShadow = true; } }); return o; };
   const mk = o => l3Mat(Object.assign({ roughness: 0.8 }, o));
   M.floor = mk({ color: '#ffffff', map: nkTexPlanks(), roughness: 0.62 }); M.paper = mk({ color: '#ffffff', map: nkTexPaper(), roughness: 0.92 });
-  M.ceil = mk({ color: '#eadfca', roughness: 0.95 }); M.beam = mk({ color: '#7a4a28', roughness: 0.7, map: l3Wood(), bumpMap: l3Wood(), bumpScale: 0.8 });
-  M.wood = mk({ color: '#a8743f', map: l3Wood(), bumpMap: l3Wood(), bumpScale: 1.0, roughness: 0.55 }); M.paint = mk({ color: '#f1e6d2', roughness: 0.6 }); M.case = mk({ color: '#e8d9bd', roughness: 0.55 });
+  M.ceil = mk({ color: '#2e1c18', roughness: 0.95 }); M.beam = mk({ color: '#3a2014', roughness: 0.7, map: l3Wood(), bumpMap: l3Wood(), bumpScale: 0.8 });
+  M.wood = mk({ color: '#4c2d1b', map: l3Wood(), bumpMap: l3Wood(), bumpScale: 1.0, roughness: 0.55 }); M.paint = mk({ color: '#34231e', roughness: 0.6 }); M.case = mk({ color: '#3d2619', roughness: 0.55 });
   M.dark = mk({ color: '#2a1a12', roughness: 0.8 }); M.stone = mk({ color: '#a8957c', roughness: 0.95 }); M.stoneD = mk({ color: '#7a6856', roughness: 0.95 });
-  M.brass = mk({ color: '#e0b04a', roughness: 0.3, metalness: 1 }); M.fabric = l3Skin({ color: '#d9a441', kind: 'grain', cell: 3, amt: 0.4, rough: 0.9, env: 0.3 }); M.fabric2 = mk({ color: '#e9e2d0', roughness: 0.95 });
-  M.curtain = mk({ color: '#c4604a', roughness: 0.9, side: T.DoubleSide }); M.rugM = mk({ color: '#ffffff', map: nkTexRug(), roughness: 0.98 });
-  M.books = mk({ color: '#ffffff', vertexColors: true, roughness: 0.72 }); M.terra = mk({ color: '#c46a44', roughness: 0.8 }); M.leaf = mk({ color: '#3f8a52', roughness: 0.6, side: T.DoubleSide }); M.leaf2 = mk({ color: '#5fa860', roughness: 0.6, side: T.DoubleSide });
+  M.brass = mk({ color: '#e0b04a', roughness: 0.3, metalness: 1 }); M.fabric = l3Skin({ color: '#6a1827', kind: 'grain', cell: 3, amt: 0.4, rough: 0.9, env: 0.3 }); M.fabric2 = mk({ color: '#bfa06a', roughness: 0.95 });
+  M.curtain = mk({ color: '#4a0f1d', roughness: 0.9, side: T.DoubleSide }); M.rugM = mk({ color: '#ffffff', map: nkTexRug(), roughness: 0.98 });
+  M.books = mk({ color: '#ffffff', vertexColors: true, roughness: 0.72 }); M.terra = mk({ color: '#5a3022', roughness: 0.8 }); M.leaf = mk({ color: '#3f8a52', roughness: 0.6, side: T.DoubleSide }); M.leaf2 = mk({ color: '#5fa860', roughness: 0.6, side: T.DoubleSide });
   M.shade = mk({ color: '#e0a04c', roughness: 0.7, emissive: '#ff9a3a', side: T.DoubleSide }); M.bulb2 = new T.MeshBasicMaterial({ color: 0xffd27a, toneMapped: false });
   M.win = new T.MeshBasicMaterial({ map: nkTexWin(), toneMapped: false }); M.fireIn = new T.MeshBasicMaterial({ color: l3Col('#1a0c08') }); M.ember = new T.MeshBasicMaterial({ color: 0xff7a22, toneMapped: false });
-  M.glass = mk({ color: '#2f77b5', map: nkTexGlobe(), roughness: 0.35 }); M.cat = l3Skin({ color: '#ffffff', kind: 'fur', cell: 3.2, amt: 0.5, rough: 0.85, vcol: true, env: 0.3 }); M.catP = l3Skin({ color: '#d9782e', kind: 'fur', cell: 3.2, amt: 0.5, rough: 0.85, env: 0.3 });
+  M.glass = mk({ color: '#1f4a6a', map: nkTexGlobe(), roughness: 0.35 }); M.cat = l3Skin({ color: '#ffffff', kind: 'fur', cell: 3.2, amt: 0.5, rough: 0.85, vcol: true, env: 0.3 }); M.catP = l3Skin({ color: '#d9782e', kind: 'fur', cell: 3.2, amt: 0.5, rough: 0.85, env: 0.3 });
   const add = (o, part, parent) => { (parent || g).add(o); PT(o, part || 'room'); return o; };
   const box = (w, h, d, mat, x, y, z, part, parent) => { const m = new T.Mesh(new T.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); return add(m, part, parent); };
 
@@ -6968,7 +7171,7 @@ function p2Star() {
 
 /* ---------- alvó macska ---------- */
 const ctCol = {};
-function ctColInit() { if (!ctCol.g) Object.assign(ctCol, { g: lc('#6d6d80'), gl: lc('#8d8da0'), gd: lc('#2c2c40'), cream: lc('#f6eedf'), pink: lc('#ee93a8') }); }
+function ctColInit() { if (!ctCol.g) Object.assign(ctCol, { g: lc('#6d6d80'), gl: lc('#8d8da0'), gd: lc('#2c2c40'), cream: lc('#f6eedf'), pink: lc('#b0707a') }); }
 function ctBodyGeo() {
   ctColInit();
   return drGeoOnce('ctBody', () => sdfGeo((x, y, z) => {
@@ -7008,7 +7211,7 @@ function ctBuild(it) {
     fur: l3Skin({ color: '#ffffff', kind: 'fur', vcol: true, cell: 2.4, amt: 0.55, rough: 0.88, env: 0.5 }),
     furP: l3Skin({ color: '#6d6d80', kind: 'fur', cell: 2.4, amt: 0.55, rough: 0.88, env: 0.5 }),
     cream: kVinyl('#f6eedf', { roughness: 0.8, clearcoat: 0 }),
-    pink: new T.MeshStandardMaterial({ color: l3Col('#f0a3b4'), roughness: 0.7 }),
+    pink: new T.MeshStandardMaterial({ color: l3Col('#b0707a'), roughness: 0.7 }),
     nose: kVinyl('#ee8fa4', { roughness: 0.35 }),
     iris: new T.MeshStandardMaterial({ color: l3Col('#c0ee6f'), roughness: 0.3, emissive: l3Col('#9bd04a'), emissiveIntensity: 0.25 }),
     pupil: new T.MeshBasicMaterial({ color: 0x15180e }),
@@ -7243,11 +7446,11 @@ registerDecor3({
 /* ---------- cserepes pozsgás ---------- */
 function plPotTex() {
   return kTex(512, 128, (g, W, H) => {
-    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#dd855a'); gr.addColorStop(1, '#b4562f'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#74403a'); gr.addColorStop(1, '#42221c'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
     const rng = dcRng(4); for (let i = 0; i < 700; i++) { g.fillStyle = 'rgba(' + (rng() < 0.5 ? '255,220,190' : '90,40,20') + ',' + (0.03 + rng() * 0.06).toFixed(3) + ')'; g.fillRect(rng() * W, rng() * H, 1 + rng() * 3, 1 + rng() * 3); }
-    const y0 = H * 0.3, y1 = H * 0.54; g.fillStyle = '#f7e8cf'; g.fillRect(0, y0, W, y1 - y0);
+    const y0 = H * 0.3, y1 = H * 0.54; g.fillStyle = '#cdb98f'; g.fillRect(0, y0, W, y1 - y0);
     g.strokeStyle = 'rgba(110,50,20,.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(0, y0); g.lineTo(W, y0); g.moveTo(0, y1); g.lineTo(W, y1); g.stroke();
-    g.strokeStyle = '#b8582f'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.beginPath(); const n = 24, s = W / n, ym = (y0 + y1) / 2; for (let i = 0; i <= n; i++) { const x = i * s, y = ym + (i % 2 ? -1 : 1) * (y1 - y0) * 0.27; i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
+    g.strokeStyle = '#6a2a24'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.beginPath(); const n = 24, s = W / n, ym = (y0 + y1) / 2; for (let i = 0; i <= n; i++) { const x = i * s, y = ym + (i % 2 ? -1 : 1) * (y1 - y0) * 0.27; i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
   }, 'plPot');
 }
 function plLeafGeo() {
@@ -7262,11 +7465,11 @@ function plBuild(it) {
   const shade = ['#4cb572', '#5cc47f', '#69cf8b', '#7bd99a', '#8fe3a9'];
   const M = {
     pot: new T.MeshStandardMaterial({ map: plPotTex(), roughness: 0.8, metalness: 0 }),
-    rim: kVinyl('#e08a5c', { roughness: 0.7, clearcoat: 0.05 }),
+    rim: kVinyl('#7e463a', { roughness: 0.7, clearcoat: 0.05 }),
     soil: new T.MeshStandardMaterial({ color: l3Col('#4a2f20'), roughness: 1 }),
     stone: kVinyl('#9a8f86', { roughness: 0.8, clearcoat: 0 }),
     stem: kVinyl('#2f8a4e', { roughness: 0.6 }),
-    petal: l3Phys({ color: l3Col('#ff6f9f'), roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, emissive: l3Col('#ff3d85'), emissiveIntensity: 0.1 }),
+    petal: l3Phys({ color: l3Col('#a3223f'), roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.4, emissive: l3Col('#7a1428'), emissiveIntensity: 0.1 }),
     center: kVinyl('#ffd34a', { roughness: 0.4 }), glint: new T.MeshBasicMaterial({ color: 0xfff6c8 }),
     bug: kVinyl('#e8322b', { roughness: 0.25, clearcoat: 0.9 }), bugD: new T.MeshStandardMaterial({ color: 0x2a1010, roughness: 0.5 }),
     spark: new T.SpriteMaterial({ map: p2Star(), color: 0xfff4b0, transparent: true, depthWrite: false, opacity: 0, blending: T.AdditiveBlending, toneMapped: false })
@@ -7350,7 +7553,7 @@ registerDecor3({
 const dgC = {};
 function dgColInit() {
   if (dgC.back) return;
-  Object.assign(dgC, { back: lc('#0d0607'), body: lc('#8c1016'), belly: lc('#d03e2e'), bellyD: lc('#e5683f'), mem0: lc('#1d0409'), mem1: lc('#a5161f'), jawIn: lc('#6a1424'),
+  Object.assign(dgC, { back: lc('#0d0607'), body: lc('#5c0910'), belly: lc('#8e2326'), bellyD: lc('#b4502e'), mem0: lc('#1d0409'), mem1: lc('#6f0e18'), jawIn: lc('#6a1424'),
     });
 }
 const dgMix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
@@ -7474,11 +7677,11 @@ function dgMats() {
   const T = THREE;
   const M = {
     body: l3Skin({ color: '#ffffff', kind: 'scale', cell: 4.6, amt: 0.34, rough: 0.5, env: 0.6, vcol: true, clear: 0.4, clearR: 0.42 }),
-    skin: l3Skin({ color: '#8c1016', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.42 }),
+    skin: l3Skin({ color: '#5c0910', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.42 }),
     horn: kVinyl('#2a1a1d', { roughness: 0.3, clearcoat: 0.6 }), spike: kVinyl('#17090b', { roughness: 0.32, clearcoat: 0.5 }), claw: kVinyl('#efe3cc', { roughness: 0.35 }), tooth: kVinyl('#fff4dc', { roughness: 0.3 }),
     iris: new T.MeshStandardMaterial({ color: l3Col('#ffb722'), roughness: 0.22, emissive: l3Col('#ff9a10'), emissiveIntensity: 0.32 }), rim: new T.MeshStandardMaterial({ color: l3Col('#7b3a10'), roughness: 0.5 }),
     pupil: new T.MeshBasicMaterial({ color: 0x120a06 }), glint: new T.MeshBasicMaterial({ color: 0xffffff }), line: new T.MeshBasicMaterial({ color: 0x1a0507 }),
-    lid: l3Skin({ color: '#5e0d12', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6 }),
+    lid: l3Skin({ color: '#3e070b', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6 }),
     mem: new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.55, side: T.DoubleSide, envMapIntensity: 0.6 }),
     bone: kVinyl('#1a0c0e', { roughness: 0.4 }),
     nos: new T.MeshBasicMaterial({ color: 0x0c1a17 }), mouth: new T.MeshStandardMaterial({ color: l3Col('#8f2b3a'), roughness: 0.6 }), tongue: new T.MeshStandardMaterial({ color: l3Col('#ef7f95'), roughness: 0.5 }),
@@ -7806,7 +8009,7 @@ function renderHelp() {
           h('li', null, h('b', null, 'Könyvtár fül'), ': valódi polcokon álló gerincek. Ha az egeret ráviszed egy könyvre, kissé megbillen; kattintásra megnyílik: itt állíthatod a státuszát, színét, stílusát, magasságát és vastagságát. A dobásból kiválasztott könyv kiemelve áll a polcon.'),
           h('li', null, h('b', null, 'Átrendezés'), ': húzd a könyveket másik helyre vagy másik polcra (telefonon is). Billentyűvel ', kbd('Shift'), ' + nyilak. A polcok átnevezhetők, hozzáadhatók, törölhetők, a ', h('b', null, 'Rendezés…'), ' gomb cím, szerző, szín, vastagság, műfaj vagy státusz szerint sorba rakja őket.'),
           h('li', null, h('b', null, 'Díszek'), ': a polcon kis kiegészítők élnek (kezdetnek egy fekvő sárkány a könyvhalmon). Kattints rájuk: a vörös-fekete fekvő sárkány orrát megbökheted (háromszor már tüzet okád), ha máshova kattintasz, dorombol; az olvasó fehér szellem megijed, kezével eltakarja a szemét, vagy a könyvét olvasva fürkészi a sorokat; a gyertyás lámpást elfújhatod és újra meggyújthatod; az üvegablak-lámpák alján kapcsolod a fényt, az üvegre kattintva pedig életre kel a jelenet; a kis fekete repülő sárkány (képként rajzolva) füstcsíkot fúj, ami krémszínű, kunkorodó felhőoszloppá válik és tartja a dőlő könyveket: kattintásra nagyot fúj, aztán csapkod, a füstre kattintva megpuffan, a könyvekre kattintva megrezegnek; az alvó macskát felébresztheted, megsimogathatod – háromszor már morcos; a bagoly körülnéz, huhog, megrémül; a pozsgás kinyílik, és katicabogár mászik rajta; a book-nook egy berendezett mini szoba: a lámpáját kapcsolhatod, a szobára kattintva (3D nézetben) felnagyul a kis világ, és bele lehet nézni – a kandalló, az ablak, a cica, a földgömb, a növény, a fotel és az óra is megkattintható (Esc: vissza a polcra); 2D nézetben éjszakai sikátor, kinyíló ajtóval. A ', h('b', null, 'Díszek'), ' gombbal újabbakat tehetsz a polcra; átrendezés módban a helyükre húzhatod, rákattintva eltávolíthatod őket. Billentyűvel is játszhatók (', kbd('Enter'), '). Kímélő módban a szem nem követi az egeret.'),
-          h('li', null, h('b', null, '3D könyvtár'), ': a polcok, a könyvek és a díszek valódi 3D-ben látszanak fénnyel és árnyékkal; a könyvekre vigyed az egeret (kihúzódnak), kattints (megnyílik), átrendezés módban húzd őket. Egyszerre legfeljebb 8 dísz lehet kint (ennél több lassúvá tenné az oldalt). Ha a gép lassú, az oldal először csendben visszavesz a részletességből, aztán a díszeket lapos képre cseréli, végül felajánlja a 2D nézetet; a díszek 3D-jét a Beállításokban ki is kapcsolhatod. A Könyvtár fejlécében a ', h('b', null, '2D nézet'), ' / ', h('b', null, '3D nézet'), ' gombbal és a Beállításokban is válthatsz.'),
+          h('li', null, h('b', null, '3D könyvtár'), ': a polcok, a könyvek és a díszek valódi 3D-ben látszanak fénnyel és árnyékkal; a könyvekre vigyed az egeret (kihajolnak a polcból), kattints (megnyílik), átrendezés módban húzd őket. A könyvek mintája, színe, díszítése és gerince a könyv szerkesztésénél (Szerkesztés / Kinézet) tetszés szerint állítható. Egyszerre csak egy dísz állhat a polcon (új kirakásakor a régi lecserélődik) – így szép és gyors marad. Ha a gép lassú, az oldal először csendben visszavesz a részletességből, aztán a díszeket lapos képre cseréli, végül felajánlja a 2D nézetet; a díszek 3D-jét a Beállításokban ki is kapcsolhatod. A Könyvtár fejlécében a ', h('b', null, '2D nézet'), ' / ', h('b', null, '3D nézet'), ' gombbal és a Beállításokban is válthatsz.'),
           h('li', null, h('b', null, 'Szerkesztés fül'), ': a teljes lista keresővel, szűrőkkel, tömeges kezeléssel.'),
           h('li', null, 'Könyvet felvehetsz kézzel, vagy ', h('b', null, 'importálhatsz'), ': Goodreads CSV-t, saját CSV-t (fejléc: cím, szerző, műfaj, hangulat, oldal, státusz), JSON listát vagy egyszerű sorokat („Cím – Szerző”).'),
           h('li', null, 'Az importálás előnézetet mutat, a duplikátumokat kihagyja, és hozzáadás vagy csere közül választhatsz.'),
@@ -7886,7 +8089,7 @@ function settingsModal() {
         h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: st.view3d !== false, disabled: !l3GL(), onchange: e => { st.view3d = e.target.checked; if (e.target.checked) { delete st.perf3dAsked; if (typeof L3 !== 'undefined') { L3.deg = L3.weak ? 1 : 0; L3.slow = 0; if (L3.r) l3Quality(); } } persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, '3D könyvtár')),
           h('span', { class: 'hint' }, l3GL() ? 'Valódi 3D polcok, könyvek és díszek fénnyel-árnyékkal. Gyengébb gépen kikapcsolva a gyorsabb 2D nézet látszik. Kímélő módban mindig 2D.' : 'Ez a böngésző nem támogatja a 3D-t (WebGL), ezért a 2D nézet látszik.')),
         h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !st.flatDecor, disabled: !l3GL(), onchange: e => { st.flatDecor = !e.target.checked; if (!st.flatDecor) delete st.flatDecor; persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, 'Díszek 3D modellként')),
-          h('span', { class: 'hint' }, 'Kikapcsolva a díszek lapos képként állnak a 3D polcon: sokkal gyorsabb, ha akadozik az oldal. A könyvek és a polc ettől még 3D. Legfeljebb ' + MAX_DECOR + ' dísz lehet kint.'))),
+          h('span', { class: 'hint' }, 'Kikapcsolva a díszek lapos képként állnak a 3D polcon: sokkal gyorsabb, ha akadozik az oldal. A könyvek és a polc ettől még 3D. Egyszerre ' + MAX_DECOR + ' dísz állhat kint.'))),
       h('div', { class: 'set-sec' }, h('h3', null, 'Szürreális mód'),
         sw('Szürreális mód bekapcsolva', 'surreal', 'Váratlan, vicces opciók és szabályszegő párosítások is kijöhetnek.'),
         h('div', { class: 'field' }, h('label', null, 'Káosz mértéke'), chaos)),
@@ -7925,7 +8128,7 @@ function restoreBackup(o) {
   S.history = Array.isArray(o.history) ? o.history : [];
   S.settings = Object.assign({}, DEFAULTS, o.settings || {}, { seen: true });
   Object.keys(RT).forEach(k => delete RT[k]); S.rolls = {};
-  S.migrated = Seed.migrate(S);
+  S.migrated = Seed.migrate(S); Seed.recolor(S);
   S.ui.themeId = S.themes[0].id;
   persistNow(); applyAppearance(); applyMotionClasses();
 }

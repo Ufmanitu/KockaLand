@@ -1,5 +1,5 @@
 /* ===== Meghitt idő (v2). Helyszín-címkék: hálószoba, nappali, fürdő, erkély, hotel; időtartam-címkék: fél-óra, este, reggel, nap. */
-SeedParts.meghitt = T => T.theme('meghitt', 'Meghitt idő', '🕯️', '#c2335f', 'Romantikus, tapintatos esték kettesben. Írd át a saját ízlésed szerint.', [
+SeedParts.meghitt = T => T.theme('meghitt', 'Meghitt idő', '🕯️', '#7d1d3a', 'Romantikus, tapintatos esték kettesben. Írd át a saját ízlésed szerint.', [
   T.die('meg-hangulat', 'Hangulat', '🌹', `
 Lassú és romantikus #lassú
 Játékos és nevetős #játékos

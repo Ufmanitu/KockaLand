@@ -1,5 +1,5 @@
 /* ===== Könyv (v2): a műfaj/hangulat/hossz kockák a polcról szűrnek; a „Hogyan"/„Hol" kockák illeszkedő párokat adnak. ===== */
-SeedParts.konyv = T => T.theme('konyv', 'Könyv', '📚', '#c9923a', 'A polcodról sorsol: műfaj, hangulat és hossz alapján választ könyvet.', [
+SeedParts.konyv = T => T.theme('konyv', 'Könyv', '📚', '#a67a32', 'A polcodról sorsol: műfaj, hangulat és hossz alapján választ könyvet.', [
   T.die('konyv-mufaj', 'Műfaj', '🏷️', Seed.BOOK_GENRES.map(g => g + ' #' + Engine.slug(g)).join('\n') + '\nBármi, lepj meg #barmi', { role: 'genre' }),
   T.die('konyv-hangulat', 'Hangulat', '🌗', `
 Megnyugtató #megnyugtató !sötét

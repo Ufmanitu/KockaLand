@@ -3,7 +3,7 @@ SeedParts.mozi = T => {
   const lenTag = m => m < 105 ? 'rövid' : m <= 135 ? 'átlagos' : 'hosszú';
   const eraTag = y => y < 1980 ? 'klasszikus' : y < 2000 ? 'retro' : y < 2011 ? 'e2000' : 'új';
   const filmLines = FILMS.map(f => f[0] + ' (' + f[3] + ') ?' + f[1] + ' ?' + lenTag(f[2]) + ' ?' + eraTag(f[3])).join('\n');
-  return T.theme('mozi', 'Mozi', '🎬', '#9b6bdb', 'Hangulat, műfaj, hossz, korszak és konkrét film: az estére való film kisorsolása.', [
+  return T.theme('mozi', 'Mozi', '🎬', '#6b4a9c', 'Hangulat, műfaj, hossz, korszak és konkrét film: az estére való film kisorsolása.', [
     T.die('mozi-hol', 'Hogyan nézzük', '📺', `
 A moziban, hátsó sorban #mozi !klasszikus !retro
 Otthon, takaró alatt #otthon

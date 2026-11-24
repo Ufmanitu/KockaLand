@@ -4,7 +4,7 @@
 'use strict';
 
 registerDecor({
-  id: 'macska', name: 'Alvó macska', hint: 'Ébreszd fel! Simogasd meg (még egyszer kattintva dorombol). Háromszor már morcos.', ar: 1.56, k: 0.5, look: true,
+  id: 'macska', name: 'Alvó macska', hint: 'Ébreszd fel! Simogasd meg (még egyszer kattintva dorombol). Háromszor már morcos.', ar: 1.56, k: 0.62, look: true,
   svg: u => {
     const O = 'stroke="rgba(40,40,56,.7)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"';
     const open = x => '<g class="d-look' + (x < 30 ? ' d-eye' : '') + '"><ellipse cx="' + x + '" cy="58" rx="5.3" ry="5.8" fill="#c0ee6f" stroke="#2c3a16" stroke-width="1.2"/><ellipse cx="' + x + '" cy="58" rx="1.7" ry="4.6" fill="#15180e"/><circle cx="' + (x - 1.8) + '" cy="55.6" r="1.3" fill="#fff" opacity=".85"/></g>';

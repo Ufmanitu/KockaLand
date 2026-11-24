@@ -1,4 +1,4 @@
-// node test/decor-limit.test.js — a díszek száma korlátos (MAX_DECOR = 8): betöltéskor a felesleg lekerül, a modal számlál és letilt, a gyenge-GPU mód alacsonyabb fokozaton indul
+// node test/decor-limit.test.js — v12: egyszerre EGY dísz (MAX_DECOR = 1): induláskor díszmentes polc, a régi mentés díszei egyszer lekerülnek (decor12), a felesleg betöltéskor levágódik, az új dísz a régit cseréli, a modal ezt mondja; gyenge GPU-n alacsonyabb fokozat
 const { chromium } = require('playwright'); const path = require('path'); const fs = require('fs');
 (async () => {
   const b = await chromium.launch({ args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'] });
@@ -12,43 +12,64 @@ const { chromium } = require('playwright'); const path = require('path'); const 
     return { page, errs };
   };
   const url = 'file://' + path.resolve('dist/index.html') + '#polc';
+  const ready = 'typeof S !== "undefined" && S && Array.isArray(S.decor) && S.shelves && S.shelves.length';
 
-  /* --- 2D nézet: limit, trim, modal --- */
+  /* --- 2D nézet --- */
   let { page, errs } = await mk(1280, 1000, { v3: false });
-  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(700);
-  ok(await page.evaluate(() => S.decor.length === 6 && decorLeft() === 2), 'kezdetben 6 dísz, még 2 fér ki');
-  // 12 díszt erőltetünk be a mentésbe (mintha egy régi mentés lenne: a persist() már levágná, ezért közvetlenül írjuk a tárolót, és az S-t nullázzuk, hogy a kilépéskori mentés ne írja felül)
+  await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction(ready); await page.waitForTimeout(700);
+  ok(await page.evaluate(() => MAX_DECOR === 1 && S.decor.length === 0 && decorLeft() === 1), 'induláskor nincs dísz, egy fér ki (MAX_DECOR = 1)');
+
+  // régi mentés (decor12 jelző nélkül) 3 díszszel: egyszer mindet levesszük, a jelző beáll
   await page.evaluate(() => {
-    const raw = JSON.parse(localStorage.getItem(STORE_KEY)); ['macska', 'bagoly', 'noveny', 'kis-sarkany', 'macska', 'bagoly'].forEach((t, i) => { const d = newDecor(t); raw.decor.push(d); raw.shelves[i % raw.shelves.length].ids.push(d.id); });
+    const raw = JSON.parse(localStorage.getItem(STORE_KEY)); raw.decor = raw.decor || []; delete raw.settings.decor12;
+    ['macska', 'bagoly', 'noveny'].forEach((t, i) => { const d = newDecor(t); raw.decor.push(d); raw.shelves[i % raw.shelves.length].ids.push(d.id); });
     localStorage.setItem(STORE_KEY, JSON.stringify(raw)); S = null;
   });
-  ok(await page.evaluate(() => JSON.parse(localStorage.getItem(STORE_KEY)).decor.length === 12), '12 dísz a mentésben');
-  await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && S && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(1200);
-  const tr = await page.evaluate(() => ({ n: S.decor.length, onShelves: S.shelves.reduce((a, s) => a + s.ids.filter(isDecorId).length, 0), orphan: S.shelves.some(s => s.ids.some(id => isDecorId(id) && !decorById(id))), toast: Array.from(document.querySelectorAll('.toast')).map(t => t.textContent).join('|') }));
-  ok(tr.n === 8 && tr.onShelves === 8 && !tr.orphan, 'betöltéskor a limit felettiek lekerülnek: ' + tr.n + ' dísz, ' + tr.onShelves + ' a polcon, árva id nincs');
-  ok(await page.waitForFunction(() => Array.from(document.querySelectorAll('.toast')).some(t => /lekerült/.test(t.textContent)), null, { timeout: 6000 }).then(() => true, () => false), 'üzenet a levett díszekről');
-  ok(await page.evaluate(() => JSON.parse(localStorage.getItem('kockazzunk.v1')).decor.length === 8), 'a levágás el is mentődik');
-  // a limitnél az új dísz nem kerül fel, a modal számol és figyelmeztet
-  ok(await page.evaluate(() => { const before = S.decor.length; const r = addDecorSet(DECOR_SETS[0], 0); return r === false && S.decor.length === before; }), 'a limitnél az addDecorSet false, nem ad hozzá');
+  await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForFunction(ready); await page.waitForTimeout(1200);
+  const w1 = await page.evaluate(() => ({ n: S.decor.length, onShelves: S.shelves.reduce((a, s) => a + s.ids.filter(isDecorId).length, 0), flag: !!S.settings.decor12, saved: JSON.parse(localStorage.getItem(STORE_KEY)).decor.length }));
+  ok(w1.n === 0 && w1.onShelves === 0 && w1.flag && w1.saved === 0, 'v12 egyszeri törlés: ' + JSON.stringify(w1));
+  ok(await page.waitForFunction(() => Array.from(document.querySelectorAll('.toast')).some(t => /lekerültek/.test(t.textContent)), null, { timeout: 6000 }).then(() => true, () => false), 'üzenet a levett díszekről');
+
+  // a jelző után 3 dísz a mentésben → betöltéskor 1 marad (a polcok sorrendjében az első), árva id nincs
+  await page.evaluate(() => {
+    const raw = JSON.parse(localStorage.getItem(STORE_KEY)); raw.settings.decor12 = true; raw.decor = [];
+    ['macska', 'bagoly', 'noveny'].forEach((t, i) => { const d = newDecor(t); raw.decor.push(d); raw.shelves[i % raw.shelves.length].ids.push(d.id); });
+    localStorage.setItem(STORE_KEY, JSON.stringify(raw)); S = null;
+  });
+  await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForFunction(ready); await page.waitForTimeout(1200);
+  const tr = await page.evaluate(() => ({ n: S.decor.length, onShelves: S.shelves.reduce((a, s) => a + s.ids.filter(isDecorId).length, 0), orphan: S.shelves.some(s => s.ids.some(id => isDecorId(id) && !decorById(id))) }));
+  ok(tr.n === 1 && tr.onShelves === 1 && !tr.orphan, 'betöltéskor a limit felettiek lekerülnek: ' + JSON.stringify(tr));
+  ok(await page.waitForFunction(() => Array.from(document.querySelectorAll('.toast')).some(t => /Egyszerre csak 1/.test(t.textContent)), null, { timeout: 6000 }).then(() => true, () => false), 'üzenet a levágásról');
+  ok(await page.evaluate(() => JSON.parse(localStorage.getItem(STORE_KEY)).decor.length === 1), 'a levágás el is mentődik');
+
+  // csere: az új dísz a régi helyére, nem mellé
+  const rep = await page.evaluate(() => {
+    const sets = DECOR_SETS.filter(s => s.parts.length === 1), a = sets[0], c = sets[1];
+    addDecorSet(a, 0); const t1 = S.decor.map(d => d.type).join(); addDecorSet(c, 1); const t2 = S.decor.map(d => d.type).join();
+    return { t1, t2, n: S.decor.length, onShelves: S.shelves.reduce((x, s) => x + s.ids.filter(isDecorId).length, 0), want: c.parts[0].type, sets: sets.length };
+  });
+  ok(rep.sets >= 2 && rep.n === 1 && rep.onShelves === 1 && rep.t2 === rep.want && rep.t1 !== rep.t2, 'új dísz cseréli a régit: ' + JSON.stringify(rep));
+  ok(await page.evaluate(() => { const big = DECOR_SETS.find(s => s.parts.length > 1); return !big || addDecorSet(big, 0) === false; }), 'a több darabos készlet (ha van) nem fér ki, false');
+
+  // modal: a számláló szövege + a gomb "Csere erre"
   await page.evaluate(() => decorModal()); await page.waitForSelector('.dc-count');
-  const cnt = await page.$eval('.dc-count', e => ({ t: e.textContent, full: e.classList.contains('full') }));
-  ok(/8 \/ 8/.test(cnt.t) && cnt.full, 'a modal számláló: ' + cnt.t.slice(0, 40) + ' (piros)');
-  await page.click('.dc-card .btn-primary, .dc-card button.primary, .dc-card button'); await page.waitForTimeout(300);
-  ok(await page.evaluate(() => S.decor.length === 8 && /limit/.test(Array.from(document.querySelectorAll('.toast')).map(t => t.textContent).join('|'))), 'a Hozzáadás a limitnél üzenetet ad, nem tesz fel semmit');
-  // levesszük az egyiket → már fér új (1 darabos készlet)
+  const cnt = await page.$eval('.dc-count', e => e.textContent);
+  ok(/lecser/.test(cnt), 'a modal jelzi a cserét: ' + cnt.slice(0, 60));
+  ok(await page.$$eval('.dc-card button', bs => bs.length > 0 && bs.every(x => /Csere erre/.test(x.textContent))), 'a gombok felirata „Csere erre”');
   await page.evaluate(() => { document.querySelectorAll('.modal-back').forEach(m => m.remove()); removeDecor(S.decor[0].id); });
-  ok(await page.evaluate(() => { const set = DECOR_SETS.find(s => s.parts.length === 1); return decorLeft() === 1 && addDecorSet(set, 0) === true && S.decor.length === 8; }), 'levétel után újra fér egy dísz');
+  ok(await page.evaluate(() => S.decor.length === 0 && decorLeft() === 1), 'levétel után újra fér egy dísz');
   ok(errs.length === 0, '2D: nincs konzolhiba' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await page.context().close();
 
-  /* --- gyenge GPU: alacsonyabb fokozat, MSAA nélkül --- */
+  /* --- gyenge GPU: alacsonyabb fokozat, MSAA nélkül; egy dísz 3D-ben és laposan --- */
   ({ page, errs } = await mk(1100, 760, { v3: true, weak: true }));
+  await page.addInitScript(() => { window.__STARTER = true; });
   await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof L3 !== "undefined" && L3.on && L3.items.size > 0', null, { timeout: 90000 });
-  const w = await page.evaluate(() => ({ weak: L3.weak, deg: L3.deg, aa: L3.r.getContextAttributes().antialias, pr: L3.r.getPixelRatio(), sm: L3.key.shadow.mapSize.x }));
+  const w = await page.evaluate(() => ({ weak: L3.weak, deg: L3.deg, aa: L3.r.getContextAttributes().antialias, pr: L3.r.getPixelRatio(), sm: L3.key.shadow.mapSize.x, nd: Array.from(L3.items.values()).filter(i => i.kind === 'decor').length }));
   ok(w.weak === true && w.deg >= 1 && w.aa === false && w.pr <= 1 && w.sm <= 1024, 'gyenge GPU: fokozat ' + w.deg + ', MSAA nélkül, felbontás ' + w.pr + '×, árnyék ' + w.sm);
-  // lapos díszek kapcsolója: a 3D díszek helyett képek
-  const f = await page.evaluate(async () => { const n3 = Array.from(L3.items.values()).filter(i => i.kind === 'decor').length; S.settings.flatDecor = true; drawLibrary(); await new Promise(r => setTimeout(r, 2500)); return { n3, nFlat: Array.from(L3.items.values()).filter(i => i.kind === 'decor').length, bill: Array.from(L3.items.values()).filter(i => i.kind === 'decor' && i.grp && i.grp.userData && i.grp.userData.flat).length }; });
-  ok(f.n3 > 0 && f.nFlat === f.n3, 'lapos díszek: ugyanannyi dísz marad (' + f.nFlat + ')');
+  ok(w.nd <= 1, 'a 3D polcon legfeljebb egy dísz áll: ' + w.nd);
+  const f = await page.evaluate(async () => { const n3 = Array.from(L3.items.values()).filter(i => i.kind === 'decor').length; S.settings.flatDecor = true; drawLibrary(); await new Promise(r => setTimeout(r, 2500)); return { n3, nFlat: Array.from(L3.items.values()).filter(i => i.kind === 'decor').length }; });
+  ok(f.nFlat === f.n3, 'lapos díszek: ugyanannyi dísz marad (' + f.nFlat + ')');
   ok(errs.length === 0, '3D: nincs konzolhiba' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await b.close(); console.log(fails ? fails + ' HIBA' : 'minden rendben'); process.exit(fails ? 1 : 0);
 })();

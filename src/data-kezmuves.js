@@ -1,6 +1,6 @@
 /* ===== Kézműves (v2). Technika-címkék: akvarell, akril, gyurma, origami, horgolás, kötés, makramé, hímzés, gyertya, szappan, gyöngy, kollázs, nyomat,
    textilfesték, fafaragás, mozaik, gipsz, papírmasé, üvegfestés. Minden tárgy csak az észszerű technikákhoz kapcsolódik. */
-SeedParts.kezmuves = T => T.theme('kezmuves', 'Kézműves', '🎨', '#3fae7b', 'Ötletadó alkotáshoz: technika, tárgy, kinek, stílus, idő és közös szabály.', [
+SeedParts.kezmuves = T => T.theme('kezmuves', 'Kézműves', '🎨', '#3a8060', 'Ötletadó alkotáshoz: technika, tárgy, kinek, stílus, idő és közös szabály.', [
   T.die('kez-technika', 'Technika', '🧵', `
 Akvarellfestés #akvarell
 Akrilfestés vászonra #akril

@@ -1,5 +1,15 @@
 # Változásnapló
 
+## v12 — Szebb, mintás könyvek, dark romance színvilág, egyetlen dísz (2026-11-24)
+- **Könyvek nagyobbak** (magasabb/szélesebb gerinc, `SPINE_H`, `TH_W`), és **jobban kihajolnak** hoverre (0,3 rad billenés, kiemelkedés előre és fel).
+- **Új gerinc-motor `src/spine.js`**: a gerincet egy kettős vászon (`Dual`) rajzolja – szín + „maszk” (R=dombormű, G=érdesség, B=fémesség) – ugyanaz a kép adja a 2D hátteret, a 3D textúrát (map + roughness/metalness/bump) és a szerkesztő előnézetét.
+- **8 stílus** (Sima, Csíkos, Díszes, Modern, Kopott, Bőrkötés, Keretes, Kéttónusú) × **9 minta** (Nincs, Damaszt, Rács, Inda és tüske, Csillagos ég, Pikkely, Marmor, Hullám, Gótikus ív) × **6 fólia** (arany/ezüst/réz fém; vérvörös/éjfekete/krém tinta) – fejléc-szalagok, dombornyomott cím, kopásnyomok, lapszélek, vászon-/papír-textúra a 3D-ben. Az alapértelmezett megjelenés a könyv azonosítójából adódik (kb. 80%-uk mintás).
+- **Könyv-szerkesztő újraírva** (`bookPopup`): élő előnézet, stílus/minta/szín/fólia/magasság/vastagság választó, 24 színű dark romance paletta, „Véletlen” gomb, gyors gombok.
+- **Dark romance színek** az egész oldalon: bordó, vérvörös, éjkék, mélyzöld, arany; nincs rózsaszín/barbie. A témák régi színei egyszeri átszínezéssel (`palV`, `Seed.recolor`) a az új palettára kerülnek; sötétebb dió szekrény, szűkebb expozíció.
+- **Díszek: egyszerre egy** (`MAX_DECOR = 1`). Az új dísz kirakása a régit lecseréli („Csere erre”). A régi mentések díszei egyszer lekerülnek (`settings.decor12`), az oldal díszek nélkül indul.
+- **Díszek szebben**: nagyobb méret, meleg háttér-fényfolt (additív „spotlámpa” a hátlapon), mélyvörös sárkány és fekete-bordó szárny, a book nook, a növény, a macska füle, az üvegablak-lámpa és a bunting színei átszínezve; a 2D alternatívák is.
+- Súgó és Beállítások frissítve; `test/decor-limit.test.js` újraírva (egy dísz, csere, egyszeri törlés, levágás, gyenge GPU). A régi tesztek `window.__STARTER = true`-val kérnek kezdő díszeket.
+
 ## v11 — Díszlimit, gyenge-GPU mód, szebb árnyék (2026-11-23)
 - **Díszlimit**: egyszerre legfeljebb 8 dísz lehet kint (`MAX_DECOR`). A Díszek ablak számol („Kint van: n / 8”), a limitnél a Hozzáadás üzenetet ad; régi mentésből a felesleg betöltéskor lekerül (a polcok sorrendjében az első 8 marad) és egy üzenet szól róla.
 - **Gyenge GPU felismerése** (érintőképernyő, Mali/Adreno/Intel/szoftveres renderer): eleve a 2. minőségi fokozaton indul, MSAA és egér-parallax nélkül.

@@ -1,6 +1,6 @@
 /* ===== Kajasorsoló (v2). Fő fogás: konyha-whitelist + alkalom-tiltás; #kézben (utcai), #hordozható (piknik), #házi (csak otthon).
    Desszert: nemzeti desszert csak a megfelelő konyhához; Kihívás csak olyan módhoz, amihez értelme van. */
-SeedParts.kaja = T => T.theme('kaja', 'Kajasorsoló', '🍝', '#e8832a', 'Mit együnk ma? Alkalom, konyha, fő fogás, ital és desszert.', [
+SeedParts.kaja = T => T.theme('kaja', 'Kajasorsoló', '🍝', '#b5632a', 'Mit együnk ma? Alkalom, konyha, fő fogás, ital és desszert.', [
   T.die('kaja-alkalom', 'Alkalom', '🕑', `
 Reggeli #reggeli
 Brunch #brunch

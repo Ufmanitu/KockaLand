@@ -6,7 +6,7 @@
 const dgC = {};
 function dgColInit() {
   if (dgC.back) return;
-  Object.assign(dgC, { back: lc('#0d0607'), body: lc('#8c1016'), belly: lc('#d03e2e'), bellyD: lc('#e5683f'), mem0: lc('#1d0409'), mem1: lc('#a5161f'), jawIn: lc('#6a1424'),
+  Object.assign(dgC, { back: lc('#0d0607'), body: lc('#5c0910'), belly: lc('#8e2326'), bellyD: lc('#b4502e'), mem0: lc('#1d0409'), mem1: lc('#6f0e18'), jawIn: lc('#6a1424'),
     });
 }
 const dgMix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
@@ -130,11 +130,11 @@ function dgMats() {
   const T = THREE;
   const M = {
     body: l3Skin({ color: '#ffffff', kind: 'scale', cell: 4.6, amt: 0.34, rough: 0.5, env: 0.6, vcol: true, clear: 0.4, clearR: 0.42 }),
-    skin: l3Skin({ color: '#8c1016', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.42 }),
+    skin: l3Skin({ color: '#5c0910', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.42 }),
     horn: kVinyl('#2a1a1d', { roughness: 0.3, clearcoat: 0.6 }), spike: kVinyl('#17090b', { roughness: 0.32, clearcoat: 0.5 }), claw: kVinyl('#efe3cc', { roughness: 0.35 }), tooth: kVinyl('#fff4dc', { roughness: 0.3 }),
     iris: new T.MeshStandardMaterial({ color: l3Col('#ffb722'), roughness: 0.22, emissive: l3Col('#ff9a10'), emissiveIntensity: 0.32 }), rim: new T.MeshStandardMaterial({ color: l3Col('#7b3a10'), roughness: 0.5 }),
     pupil: new T.MeshBasicMaterial({ color: 0x120a06 }), glint: new T.MeshBasicMaterial({ color: 0xffffff }), line: new T.MeshBasicMaterial({ color: 0x1a0507 }),
-    lid: l3Skin({ color: '#5e0d12', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6 }),
+    lid: l3Skin({ color: '#3e070b', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6 }),
     mem: new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.55, side: T.DoubleSide, envMapIntensity: 0.6 }),
     bone: kVinyl('#1a0c0e', { roughness: 0.4 }),
     nos: new T.MeshBasicMaterial({ color: 0x0c1a17 }), mouth: new T.MeshStandardMaterial({ color: l3Col('#8f2b3a'), roughness: 0.6 }), tongue: new T.MeshStandardMaterial({ color: l3Col('#ef7f95'), roughness: 0.5 }),

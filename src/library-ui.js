@@ -4,25 +4,50 @@
 /* ---------- gerinc-részletek + megjelenés ---------- */
 function bookPopup(b) {
   const prev = h('div', { class: 'lb-prev', 'aria-hidden': 'true' });
-  const syncs = [];
-  const paint = () => { clear(prev); const sl = slotEl(b, false); sl.classList.add('static'); prev.appendChild(sl); };
+  const syncs = [], lhP = libLH();
+  const paint = () => {   // nagy, pontos előnézet: ugyanaz a rajzoló, mint a 3D polcon (cím, minta, fólia)
+    clear(prev);
+    const L = spineLook(b), F = titleFit(b, L, lhP), hh = Math.round(L.k * (lhP - 40)), sc = Math.min(1.7, 300 / hh);
+    let cv = null; try { cv = spineDraw(b, L, F, L.w, hh, 3, true).cv; } catch (e) { cv = null; }
+    if (cv) { cv.className = 'lb-bigspine'; cv.style.width = Math.round(L.w * sc) + 'px'; cv.style.height = Math.round(hh * sc) + 'px'; prev.appendChild(cv); }
+    else { const sl = slotEl(b, false); sl.classList.add('static'); prev.appendChild(sl); }
+  };
   const changed = () => { delete b.example; persist(); paint(); syncs.forEach(f => f()); };
   function chipRow(label, items, cur, set) {
     const chips = items.map(x => h('button', { type: 'button', class: 'chip sm', onclick: () => { set(x[1]); changed(); } }, x[0]));
     syncs.push(() => chips.forEach((c, i) => { const on = cur() === items[i][1]; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on); }));
     return h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, label), h('div', { class: 'row wrap' }, chips));
   }
+  /* miniatűr-választó: minden lehetőség a könyv SAJÁT színeivel, kicsiben megrajzolva */
+  function thumbRow(label, items, cur, setv, field) {
+    const btns = items.map(it => h('button', { type: 'button', class: 'lb-th', title: it[0], 'aria-label': label + ': ' + it[0], onclick: () => { setv(it[1]); changed(); } }, h('span', { class: 'lb-th-n' }, it[0])));
+    syncs.push(() => btns.forEach((bt, k) => {
+      const on = cur() === items[k][1]; bt.classList.toggle('on', on); bt.setAttribute('aria-pressed', on);
+      const old = bt.querySelector('canvas'); if (old) old.remove();
+      const vb = Object.assign({}, b); if (items[k][1] == null) delete vb[field]; else vb[field] = items[k][1];
+      try { const c = spineDraw(vb, spineLook(vb), null, 30, 84, 2, false).cv; c.style.width = '30px'; c.style.height = '84px'; bt.insertBefore(c, bt.firstChild); } catch (e) { }
+    }));
+    return h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, label), h('div', { class: 'lb-ths' }, btns));
+  }
   const look = () => spineLook(b);
   const swatches = PALETTE.map(c => h('button', { type: 'button', class: 'lb-sw', style: { background: c }, title: c, 'aria-label': 'Szín: ' + c, onclick: () => { b.color = c; changed(); } }));
   const custom = h('input', { type: 'color', class: 'lb-color', 'aria-label': 'Saját szín', value: look().color, oninput: e => { b.color = e.target.value; changed(); } });
   syncs.push(() => { const cur = look().color.toLowerCase(); swatches.forEach((s, i) => s.classList.toggle('on', PALETTE[i] === cur)); custom.value = cur; });
-  const colorRow = h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, 'Szín'), h('div', { class: 'lb-sws' }, swatches, h('label', { class: 'lb-sw custom', title: 'Saját szín választása' }, custom, ic('plus', 14))));
+  const colorRow = h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, 'Borító színe'), h('div', { class: 'lb-sws' }, swatches, h('label', { class: 'lb-sw custom', title: 'Saját szín választása' }, custom, ic('plus', 14))));
+  const foils = FOILS.map(f => h('button', { type: 'button', class: 'lb-sw foil' + (f[2] ? ' metal' : ''), style: { background: f[1] }, title: f[0], 'aria-label': 'Díszítés: ' + f[0], onclick: () => { b.acc = f[1]; changed(); } }));
+  syncs.push(() => { const cur = look().acc.toLowerCase(); foils.forEach((s, i) => s.classList.toggle('on', FOILS[i][1] === cur)); });
+  const foilRow = h('div', { class: 'lb-opt' }, h('span', { class: 'lbl' }, 'Díszítés (fólia / festék)'), h('div', { class: 'lb-sws' }, foils, btn('Auto', { kind: 'ghost sm', onclick: () => { delete b.acc; changed(); } })));
+
+  const rnd = () => { const r = Math.random; b.color = PALETTE[Math.floor(r() * PALETTE.length)]; b.style = Math.floor(r() * SPINE_STYLES.length); b.pat = Math.floor(r() * SPINE_PATS.length); b.acc = FOILS[Math.floor(r() * FOILS.length)][1]; changed(); };
+  const shelfOf = () => S.shelves.find(s => s.ids.indexOf(b.id) >= 0);
+  const applyShelf = () => { const sh = shelfOf(); if (!sh) return; let n = 0; sh.ids.forEach(id => { const o = bookById(id); if (o && o !== b) { ['style', 'pat', 'acc'].forEach(k => { if (b[k] == null) delete o[k]; else o[k] = b[k]; }); n++; } }); persist(); toast(n ? 'A stílus átvéve a polc többi könyvén (' + n + ' db)' : 'Nincs másik könyv ezen a polcon'); };
 
   const sel = h('select', { id: 'lb-shelf', 'aria-label': 'Polc', onchange: e => moveToShelf(b.id, e.target.value) }, S.shelves.map(s => h('option', { value: s.id, selected: s.ids.indexOf(b.id) >= 0 }, s.name)));
   const info = h('div', { class: 'lb-info' },
     h('h3', null, b.title), b.author ? h('div', { class: 'bk-author' }, b.author) : null,
     h('div', { class: 'bk-tags' }, Engine.splitList(b.genre).map(g => h('span', { class: 'pill' }, g)), Engine.splitList(b.mood).map(g => h('span', { class: 'pill mood' }, g)), +b.pages ? h('span', { class: 'bk-pages' }, b.pages + ' oldal') : null),
-    b.note ? h('div', { class: 'bk-note' }, b.note) : null);
+    b.note ? h('div', { class: 'bk-note' }, b.note) : null,
+    h('div', { class: 'row wrap lb-quick' }, btn('Véletlen kinézet', { kind: 'sm', icon: 'shuffle', onclick: rnd }), btn('Stílus a polc többi könyvére', { kind: 'ghost sm', onclick: applyShelf }), btn('Alaphelyzet', { kind: 'ghost sm', onclick: () => { ['color', 'style', 'h', 'th', 'pat', 'acc'].forEach(k => delete b[k]); changed(); } })));
 
   paint();
   const m = openModal({
@@ -32,10 +57,11 @@ function bookPopup(b) {
       chipRow('Státusz', STATUSES.map(s => [s[1], s[0]]), () => b.status, v => { b.status = v; }),
       h('div', { class: 'lb-sec' }, h('h4', null, 'Megjelenés a polcon'),
         colorRow,
-        chipRow('Stílus', SPINE_STYLES.map((n, i) => [n, i]).concat([['Auto', null]]), () => (b.style == null ? null : b.style), v => { if (v == null) delete b.style; else b.style = v; }),
+        thumbRow('Kötés', SPINE_STYLES.map((n, i) => [n, i]).concat([['Auto', null]]), () => (b.style == null ? null : b.style), v => { if (v == null) delete b.style; else b.style = v; }, 'style'),
+        thumbRow('Minta', SPINE_PATS.map((n, i) => [n, i]).concat([['Auto', null]]), () => (b.pat == null ? null : b.pat), v => { if (v == null) delete b.pat; else b.pat = v; }, 'pat'),
+        foilRow,
         chipRow('Magasság', SPINE_H.map(x => [x[0], x[1]]).concat([['Auto', null]]), () => (b.h == null ? null : b.h), v => { if (v == null) delete b.h; else b.h = v; }),
-        chipRow('Vastagság', SPINE_TH.map(x => [x[0], x[1]]), () => b.th || 0, v => { if (v) b.th = v; else delete b.th; }),
-        h('div', { class: 'row wrap' }, btn('Megjelenés alaphelyzetbe', { kind: 'ghost sm', onclick: () => { ['color', 'style', 'h', 'th'].forEach(k => delete b[k]); changed(); } }))),
+        chipRow('Vastagság', SPINE_TH.map(x => [x[0], x[1]]), () => b.th || 0, v => { if (v) b.th = v; else delete b.th; })),
       h('div', { class: 'field lb-shelfsel' }, h('label', { for: 'lb-shelf' }, 'Melyik polcon áll'), sel)
     ],
     actions: [

@@ -71,5 +71,13 @@ const Seed = (() => {
     return { replaced, kept };
   }
 
-  return { VERSION, themes, books, BOOK_GENRES, BOOK_MOODS, T, migrate, sig };
+  /* v12: a rózsaszínes/barbie alap-témaszínek helyett sötét, „dark romance” tónusok — csak az érintetlen (nem átszínezett) alap témákon */
+  const RECOLOR = { randi: ['#e04a5f', '#a8233a'], utazas: ['#2c9bb8', '#2f7d86'], kaja: ['#e8832a', '#b5632a'], fozes: ['#d9622b', '#a6482a'], mozi: ['#9b6bdb', '#6b4a9c'], kezmuves: ['#3fae7b', '#3a8060'], konyv: ['#c9923a', '#a67a32'], meghitt: ['#c2335f', '#7d1d3a'] };
+  function recolor(S) {
+    if (!S.settings) S.settings = {}; if ((S.settings.palV || 0) >= 12) return 0;
+    let n = 0; S.themes.forEach(t => { const r = t.builtin && RECOLOR[t.id]; if (r && String(t.color).toLowerCase() === r[0]) { t.color = r[1]; n++; } });
+    S.settings.palV = 12; return n;
+  }
+
+  return { VERSION, themes, books, BOOK_GENRES, BOOK_MOODS, T, migrate, recolor, sig };
 })();

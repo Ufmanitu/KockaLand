@@ -1,7 +1,7 @@
 /* ===== Randi téma (v2: minden Mit/Étel opciónak kötelező helyszín-whitelistje van → nincs értelmetlen párosítás) =====
    Helyszín-címkék (Hol): nappali, konyha, terasz, utca, természet, víz, kávézó, étterem, kilátó, mozi, múzeum, új
    Osztály-címkék (Hol): otthon, kint, város, bent. Napszak-címkék (Mikor): reggel, délelőtt, délután, naplemente, este, éjjel, egésznap */
-SeedParts.randi = T => T.theme('randi', 'Randi', '💞', '#e04a5f', 'Randitervező: mikor, hol, mit csinálunk, és milyen hangulatban.', [
+SeedParts.randi = T => T.theme('randi', 'Randi', '💞', '#a8233a', 'Randitervező: mikor, hol, mit csinálunk, és milyen hangulatban.', [
   T.die('randi-mikor', 'Mikor', '⏰', `
 Reggeli randi, korán kelve #reggel #nappal
 Hétvégi délelőtt #délelőtt #nappal

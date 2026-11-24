@@ -12,7 +12,7 @@ const NK_LABEL = { sw: 'Lámpa', fire: 'Kandalló', window: 'Ablak', cat: 'Cica'
 const nkRep = (t, x, y) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(x, y); return t; };
 function nkTexPlanks() {
   return nkRep(kTex(256, 256, (g, W, H) => {
-    const rng = dcRng(5), cols = ['#b5834f', '#a8763f', '#be8d58', '#ac7c47'], ph = H / 6;
+    const rng = dcRng(5), cols = ['#4c2e1e', '#40261a', '#55331f', '#46291b'], ph = H / 6;
     for (let i = 0; i < 6; i++) {
       g.fillStyle = cols[i % 4]; g.fillRect(0, i * ph, W, ph);
       for (let k = 0; k < 14; k++) { g.strokeStyle = 'rgba(70,38,14,' + (0.06 + rng() * 0.14).toFixed(2) + ')'; g.lineWidth = 0.6 + rng(); const y = i * ph + rng() * ph; g.beginPath(); g.moveTo(0, y); g.bezierCurveTo(W * .3, y + (rng() - .5) * 6, W * .6, y + (rng() - .5) * 6, W, y + (rng() - .5) * 4); g.stroke(); }
@@ -22,27 +22,27 @@ function nkTexPlanks() {
 }
 function nkTexPaper() {
   return nkRep(kTex(128, 128, (g, W, H) => {
-    g.fillStyle = '#4a8a82'; g.fillRect(0, 0, W, H);
-    for (let x = 0; x < W; x += 32) { g.fillStyle = 'rgba(255,245,215,.10)'; g.fillRect(x, 0, 16, H); }
+    g.fillStyle = '#3d1019'; g.fillRect(0, 0, W, H);
+    for (let x = 0; x < W; x += 32) { g.fillStyle = 'rgba(214,170,90,.09)'; g.fillRect(x, 0, 16, H); }
     [[16, 20], [48, 52], [80, 20], [112, 52], [16, 84], [48, 116], [80, 84], [112, 116]].forEach(p => {
-      g.fillStyle = 'rgba(240,222,170,.5)'; for (let a = 0; a < 5; a++) { g.beginPath(); g.arc(p[0] + Math.cos(a * 1.2566) * 4.4, p[1] + Math.sin(a * 1.2566) * 4.4, 1.7, 0, 6.283); g.fill(); }
-      g.fillStyle = 'rgba(244,214,130,.9)'; g.beginPath(); g.arc(p[0], p[1], 2.3, 0, 6.283); g.fill();
+      g.fillStyle = 'rgba(200,160,86,.45)'; for (let a = 0; a < 5; a++) { g.beginPath(); g.arc(p[0] + Math.cos(a * 1.2566) * 4.4, p[1] + Math.sin(a * 1.2566) * 4.4, 1.7, 0, 6.283); g.fill(); }
+      g.fillStyle = 'rgba(214,174,92,.85)'; g.beginPath(); g.arc(p[0], p[1], 2.3, 0, 6.283); g.fill();
     });
   }, 'nkPaper'), 1 / 32, 1 / 32);
 }
 function nkTexRug() {
   return kTex(256, 256, (g, W, H) => {
-    const c = W / 2; g.fillStyle = '#a83e36'; g.beginPath(); g.arc(c, c, c, 0, 6.283); g.fill();
-    [[118, '#f0d9a0'], [108, '#2f6577'], [92, '#e8b04a'], [80, '#a83e36'], [66, '#f0d9a0']].forEach(r => { g.fillStyle = r[1]; g.beginPath(); g.arc(c, c, r[0], 0, 6.283); g.fill(); });
-    g.fillStyle = '#2f6577'; g.beginPath(); g.arc(c, c, 52, 0, 6.283); g.fill();
-    g.fillStyle = '#f0d9a0'; for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; g.save(); g.translate(c + Math.cos(a) * 72, c + Math.sin(a) * 72); g.rotate(a + 1.5708); g.beginPath(); g.moveTo(0, -8); g.lineTo(6, 0); g.lineTo(0, 8); g.lineTo(-6, 0); g.closePath(); g.fill(); g.restore(); }
-    g.fillStyle = '#e8b04a'; g.beginPath(); for (let i = 0; i < 16; i++) { const a = i / 16 * 6.283, r = i % 2 ? 20 : 44; g.lineTo(c + Math.cos(a) * r, c + Math.sin(a) * r); } g.closePath(); g.fill();
+    const c = W / 2; g.fillStyle = '#4e0f1c'; g.beginPath(); g.arc(c, c, c, 0, 6.283); g.fill();
+    [[118, '#b99a52'], [108, '#1c2a3a'], [92, '#a8802f'], [80, '#4e0f1c'], [66, '#b99a52']].forEach(r => { g.fillStyle = r[1]; g.beginPath(); g.arc(c, c, r[0], 0, 6.283); g.fill(); });
+    g.fillStyle = '#1c2a3a'; g.beginPath(); g.arc(c, c, 52, 0, 6.283); g.fill();
+    g.fillStyle = '#b99a52'; for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; g.save(); g.translate(c + Math.cos(a) * 72, c + Math.sin(a) * 72); g.rotate(a + 1.5708); g.beginPath(); g.moveTo(0, -8); g.lineTo(6, 0); g.lineTo(0, 8); g.lineTo(-6, 0); g.closePath(); g.fill(); g.restore(); }
+    g.fillStyle = '#a8802f'; g.beginPath(); for (let i = 0; i < 16; i++) { const a = i / 16 * 6.283, r = i % 2 ? 20 : 44; g.lineTo(c + Math.cos(a) * r, c + Math.sin(a) * r); } g.closePath(); g.fill();
     g.strokeStyle = 'rgba(60,20,16,.35)'; g.lineWidth = 2; g.beginPath(); g.arc(c, c, c - 2, 0, 6.283); g.stroke();
   }, 'nkRug');
 }
 function nkTexWin() {   // az ablak mögötti éjszakai táj: hold, csillagok, háztetők
   return kTex(250, 400, (g, W, H) => {
-    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#0f1646'); gr.addColorStop(0.55, '#38358a'); gr.addColorStop(0.85, '#c8719c'); gr.addColorStop(1, '#f0a07a'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#0f1646'); gr.addColorStop(0.55, '#2a2860'); gr.addColorStop(0.85, '#5a2038'); gr.addColorStop(1, '#b8643a'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
     const rng = dcRng(9); g.fillStyle = '#fff6c8'; for (let i = 0; i < 34; i++) { g.globalAlpha = 0.35 + rng() * 0.65; g.beginPath(); g.arc(rng() * W, rng() * H * 0.62, 0.8 + rng() * 1.6, 0, 6.283); g.fill(); } g.globalAlpha = 1;
     const mg = g.createRadialGradient(168, 112, 14, 168, 112, 110); mg.addColorStop(0, 'rgba(255,240,190,.55)'); mg.addColorStop(1, 'rgba(255,240,190,0)'); g.fillStyle = mg; g.fillRect(0, 0, W, H);
     g.fillStyle = '#fff1bb'; g.beginPath(); g.arc(168, 112, 36, 0, 6.283); g.fill(); g.fillStyle = '#ecd88a'; [[-10, -12, 8], [12, 10, 6], [-4, 16, 4.5]].forEach(c => { g.beginPath(); g.arc(168 + c[0], 112 + c[1], c[2], 0, 6.283); g.fill(); });
@@ -51,12 +51,12 @@ function nkTexWin() {   // az ablak mögötti éjszakai táj: hold, csillagok, h
   }, 'nkWin');
 }
 function nkTexGlobe() {
-  return kTex(128, 64, (g, W, H) => { g.fillStyle = '#2f77b5'; g.fillRect(0, 0, W, H); g.fillStyle = '#6fb26b'; [[22, 22, 16, 10], [40, 40, 6, 8], [74, 20, 20, 9], [92, 36, 10, 10], [108, 22, 9, 6], [60, 46, 6, 5]].forEach(c => { g.beginPath(); g.ellipse(c[0], c[1], c[2], c[3], 0, 0, 6.283); g.fill(); }); g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(0, 0, W, 4); g.fillRect(0, H - 4, W, 4); }, 'nkGlobe');
+  return kTex(128, 64, (g, W, H) => { g.fillStyle = '#1f4a6a'; g.fillRect(0, 0, W, H); g.fillStyle = '#6a7a4a'; [[22, 22, 16, 10], [40, 40, 6, 8], [74, 20, 20, 9], [92, 36, 10, 10], [108, 22, 9, 6], [60, 46, 6, 5]].forEach(c => { g.beginPath(); g.ellipse(c[0], c[1], c[2], c[3], 0, 0, 6.283); g.fill(); }); g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(0, 0, W, 4); g.fillRect(0, H - 4, W, 4); }, 'nkGlobe');
 }
 function nkTexPic(n) {
   return kTex(64, 80, (g, W, H) => {
-    if (n === 0) { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#f4c27a'); gr.addColorStop(1, '#e8806a'); g.fillStyle = gr; g.fillRect(0, 0, W, H); g.fillStyle = '#fff1bb'; g.beginPath(); g.arc(40, 28, 12, 0, 6.283); g.fill(); g.fillStyle = '#5a3d6a'; g.beginPath(); g.moveTo(0, 62); g.lineTo(22, 38); g.lineTo(40, 58); g.lineTo(54, 44); g.lineTo(64, 56); g.lineTo(64, 80); g.lineTo(0, 80); g.fill(); }
-    else { g.fillStyle = '#e9e2cf'; g.fillRect(0, 0, W, H); g.fillStyle = '#3f8f7a'; g.beginPath(); g.ellipse(32, 46, 14, 20, 0, 0, 6.283); g.fill(); g.fillStyle = '#e8a43c'; g.beginPath(); g.arc(32, 22, 7, 0, 6.283); g.fill(); g.strokeStyle = '#7a4a2a'; g.lineWidth = 2; g.beginPath(); g.moveTo(32, 66); g.lineTo(32, 76); g.stroke(); }
+    if (n === 0) { const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#c98a4a'); gr.addColorStop(1, '#7a2a3a'); g.fillStyle = gr; g.fillRect(0, 0, W, H); g.fillStyle = '#fff1bb'; g.beginPath(); g.arc(40, 28, 12, 0, 6.283); g.fill(); g.fillStyle = '#5a3d6a'; g.beginPath(); g.moveTo(0, 62); g.lineTo(22, 38); g.lineTo(40, 58); g.lineTo(54, 44); g.lineTo(64, 56); g.lineTo(64, 80); g.lineTo(0, 80); g.fill(); }
+    else { g.fillStyle = '#cdbf9e'; g.fillRect(0, 0, W, H); g.fillStyle = '#2f5a4a'; g.beginPath(); g.ellipse(32, 46, 14, 20, 0, 0, 6.283); g.fill(); g.fillStyle = '#e8a43c'; g.beginPath(); g.arc(32, 22, 7, 0, 6.283); g.fill(); g.strokeStyle = '#7a4a2a'; g.lineWidth = 2; g.beginPath(); g.moveTo(32, 66); g.lineTo(32, 76); g.stroke(); }
   }, 'nkPic' + n);
 }
 function nkTexClock() { return kTex(64, 64, (g, W, H) => { g.fillStyle = '#f6ecd2'; g.beginPath(); g.arc(32, 32, 30, 0, 6.283); g.fill(); g.strokeStyle = '#6a3f25'; g.lineWidth = 3; g.stroke(); g.fillStyle = '#3a2418'; for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283; g.fillRect(32 + Math.cos(a) * 24 - 1, 32 + Math.sin(a) * 24 - 1, 2.4, 2.4); } g.strokeStyle = '#3a2418'; g.lineWidth = 2.4; g.lineCap = 'round'; g.beginPath(); g.moveTo(32, 32); g.lineTo(32, 14); g.moveTo(32, 32); g.lineTo(44, 38); g.stroke(); }, 'nkClock'); }
@@ -103,15 +103,15 @@ function nkRoom(mode, it) {
   const PT = (o, part) => { o.traverse(m => { if (m.isMesh) { if (part) m.userData.part = part; parts.push(m); m.castShadow = !m.userData.noShadow && !m.userData.shell; m.receiveShadow = true; } }); return o; };
   const mk = o => l3Mat(Object.assign({ roughness: 0.8 }, o));
   M.floor = mk({ color: '#ffffff', map: nkTexPlanks(), roughness: 0.62 }); M.paper = mk({ color: '#ffffff', map: nkTexPaper(), roughness: 0.92 });
-  M.ceil = mk({ color: '#eadfca', roughness: 0.95 }); M.beam = mk({ color: '#7a4a28', roughness: 0.7, map: l3Wood(), bumpMap: l3Wood(), bumpScale: 0.8 });
-  M.wood = mk({ color: '#a8743f', map: l3Wood(), bumpMap: l3Wood(), bumpScale: 1.0, roughness: 0.55 }); M.paint = mk({ color: '#f1e6d2', roughness: 0.6 }); M.case = mk({ color: '#e8d9bd', roughness: 0.55 });
+  M.ceil = mk({ color: '#2e1c18', roughness: 0.95 }); M.beam = mk({ color: '#3a2014', roughness: 0.7, map: l3Wood(), bumpMap: l3Wood(), bumpScale: 0.8 });
+  M.wood = mk({ color: '#4c2d1b', map: l3Wood(), bumpMap: l3Wood(), bumpScale: 1.0, roughness: 0.55 }); M.paint = mk({ color: '#34231e', roughness: 0.6 }); M.case = mk({ color: '#3d2619', roughness: 0.55 });
   M.dark = mk({ color: '#2a1a12', roughness: 0.8 }); M.stone = mk({ color: '#a8957c', roughness: 0.95 }); M.stoneD = mk({ color: '#7a6856', roughness: 0.95 });
-  M.brass = mk({ color: '#e0b04a', roughness: 0.3, metalness: 1 }); M.fabric = l3Skin({ color: '#d9a441', kind: 'grain', cell: 3, amt: 0.4, rough: 0.9, env: 0.3 }); M.fabric2 = mk({ color: '#e9e2d0', roughness: 0.95 });
-  M.curtain = mk({ color: '#c4604a', roughness: 0.9, side: T.DoubleSide }); M.rugM = mk({ color: '#ffffff', map: nkTexRug(), roughness: 0.98 });
-  M.books = mk({ color: '#ffffff', vertexColors: true, roughness: 0.72 }); M.terra = mk({ color: '#c46a44', roughness: 0.8 }); M.leaf = mk({ color: '#3f8a52', roughness: 0.6, side: T.DoubleSide }); M.leaf2 = mk({ color: '#5fa860', roughness: 0.6, side: T.DoubleSide });
+  M.brass = mk({ color: '#e0b04a', roughness: 0.3, metalness: 1 }); M.fabric = l3Skin({ color: '#6a1827', kind: 'grain', cell: 3, amt: 0.4, rough: 0.9, env: 0.3 }); M.fabric2 = mk({ color: '#bfa06a', roughness: 0.95 });
+  M.curtain = mk({ color: '#4a0f1d', roughness: 0.9, side: T.DoubleSide }); M.rugM = mk({ color: '#ffffff', map: nkTexRug(), roughness: 0.98 });
+  M.books = mk({ color: '#ffffff', vertexColors: true, roughness: 0.72 }); M.terra = mk({ color: '#5a3022', roughness: 0.8 }); M.leaf = mk({ color: '#3f8a52', roughness: 0.6, side: T.DoubleSide }); M.leaf2 = mk({ color: '#5fa860', roughness: 0.6, side: T.DoubleSide });
   M.shade = mk({ color: '#e0a04c', roughness: 0.7, emissive: '#ff9a3a', side: T.DoubleSide }); M.bulb2 = new T.MeshBasicMaterial({ color: 0xffd27a, toneMapped: false });
   M.win = new T.MeshBasicMaterial({ map: nkTexWin(), toneMapped: false }); M.fireIn = new T.MeshBasicMaterial({ color: l3Col('#1a0c08') }); M.ember = new T.MeshBasicMaterial({ color: 0xff7a22, toneMapped: false });
-  M.glass = mk({ color: '#2f77b5', map: nkTexGlobe(), roughness: 0.35 }); M.cat = l3Skin({ color: '#ffffff', kind: 'fur', cell: 3.2, amt: 0.5, rough: 0.85, vcol: true, env: 0.3 }); M.catP = l3Skin({ color: '#d9782e', kind: 'fur', cell: 3.2, amt: 0.5, rough: 0.85, env: 0.3 });
+  M.glass = mk({ color: '#1f4a6a', map: nkTexGlobe(), roughness: 0.35 }); M.cat = l3Skin({ color: '#ffffff', kind: 'fur', cell: 3.2, amt: 0.5, rough: 0.85, vcol: true, env: 0.3 }); M.catP = l3Skin({ color: '#d9782e', kind: 'fur', cell: 3.2, amt: 0.5, rough: 0.85, env: 0.3 });
   const add = (o, part, parent) => { (parent || g).add(o); PT(o, part || 'room'); return o; };
   const box = (w, h, d, mat, x, y, z, part, parent) => { const m = new T.Mesh(new T.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); return add(m, part, parent); };
 

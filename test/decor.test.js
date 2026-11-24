@@ -9,7 +9,7 @@ const { chromium } = require('playwright'); const path = require('path');
     page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED|ERR_BLOCKED/.test(m.text())) errs.push(m.text()); });
     page.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
     await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
-    await page.addInitScript(s => { window.__MAX_DECOR = 99; try { if (window.name !== 'dc-seeded') { window.name = 'dc-seeded'; localStorage.setItem('kockazzunk.v1', JSON.stringify(s || { v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } }, seed || null);
+    await page.addInitScript(s => { window.__MAX_DECOR = 99; window.__STARTER = true; try { if (window.name !== 'dc-seeded') { window.name = 'dc-seeded'; localStorage.setItem('kockazzunk.v1', JSON.stringify(s || { v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } }, seed || null);
     return { page, errs, ctx };
   };
   let fails = 0; const ok = (c, m) => { console.log((c ? 'OK   ' : 'HIBA ') + m); if (!c) fails++; };
@@ -110,7 +110,7 @@ const { chromium } = require('playwright'); const path = require('path');
   /* --- régi mentés: sárkány-pár → egy fekvő sárkány (migráció) --- */
   ({ page, errs } = await mk(1280, 900, 'light'));
   await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(800);
-  await page.evaluate(() => { S.decor = [{ id: 'd_fej', type: 'sarkany-fej', link: 'L1' }, { id: 'd_farok', type: 'sarkany-farok', link: 'L1' }, { id: 'd_cat', type: 'macska' }]; S.shelves = [{ id: 's1', name: 'Polc', ids: ['d_fej', 'd_cat', 'd_farok'].concat(S.books.map(b => b.id)) }]; persistNow(); });
+  await page.evaluate(() => { S.decor = [{ id: 'd_fej', type: 'sarkany-fej', link: 'L1' }, { id: 'd_farok', type: 'sarkany-farok', link: 'L1' }, { id: 'd_cat', type: 'macska' }]; S.shelves = [{ id: 's1', name: 'Polc', ids: ['d_fej', 'd_cat', 'd_farok'].concat(S.books.map(b => b.id)) }]; S.settings.decor12 = true; persistNow(); });
   await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForFunction('typeof S !== "undefined" && Array.isArray(S.decor) && S.shelves && S.shelves.length'); await page.waitForTimeout(900);
   const mig = await page.evaluate(() => ({ types: S.decor.map(d => d.type), link: S.decor.some(d => d.link), ids: S.shelves[0].ids.slice() }));
   ok(mig.types.join() === 'sarkany-fekvo,macska' && !mig.link, 'régi sárkány-pár → egy fekvő sárkány, a farok kiesett: ' + mig.types.join());

@@ -17,7 +17,7 @@ function dragonMigrate(list) {   // régi sárkány-pár → egy fekvő sárkán
 }
 
 registerDecor({
-  id: 'sarkany-fekvo', name: 'Fekvő sárkány', hint: 'Bökd meg az orrát! Háromszor: tüzet okád. Ha csak megsimogatod, dorombol.', ar: 2.1, k: 0.58, look: true,
+  id: 'sarkany-fekvo', name: 'Fekvő sárkány', hint: 'Bökd meg az orrát! Háromszor: tüzet okád. Ha csak megsimogatod, dorombol.', ar: 2.1, k: 0.72, look: true,
   svg: u => {
     const O = 'stroke="rgba(10,3,4,.75)" stroke-width="1.3" stroke-linejoin="round"';
     const book = (x, y, w, h, c1, c2) => '<g><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="2" fill="' + c1 + '" ' + O + '/><rect x="' + (x + 3) + '" y="' + (y + 2.2) + '" width="' + (w - 5) + '" height="' + (h - 4.4) + '" rx="1" fill="#f6ecd2"/><path d="M' + (x + 5) + ' ' + (y + 4.6) + 'h' + (w - 9) + 'M' + (x + 5) + ' ' + (y + 7.4) + 'h' + (w - 9) + '" stroke="rgba(150,118,70,.45)" stroke-width=".8"/><rect x="' + x + '" y="' + y + '" width="4" height="' + h + '" rx="2" fill="' + c2 + '"/></g>';

@@ -5,7 +5,7 @@
 'use strict';
 
 registerDecor({
-  id: 'szellem', name: 'Olvasó szellem', hint: 'Bökd meg: megijed! A könyvére kattintva lapoz. Többször egymás után is próbáld.', ar: 1, k: 0.74, look: true,
+  id: 'szellem', name: 'Olvasó szellem', hint: 'Bökd meg: megijed! A könyvére kattintva lapoz. Többször egymás után is próbáld.', ar: 1, k: 0.9, look: true,
   svg: u => {
     let rays = '';
     for (let i = 0; i < 7; i++) { const a = (-160 + i * 23.3) * Math.PI / 180, c = 60, cy = 52, r1 = 58, r2 = 69; rays += 'M' + dcN(c + Math.cos(a) * r1) + ' ' + dcN(cy + Math.sin(a) * r1 * 0.95) + 'L' + dcN(c + Math.cos(a) * r2) + ' ' + dcN(cy + Math.sin(a) * r2 * 0.95); }

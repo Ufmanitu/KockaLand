@@ -30,9 +30,9 @@ function nkScene(u) {
   s += '<g class="d-lit"><path d="' + nkQ('L', .12, .32, .52, .84) + '" fill="url(#ng' + u + ')"/><path d="' + nkQ('L', .58, .72, .46, .74) + '" fill="url(#ng' + u + ')"/></g>';
   s += '<g fill="none" stroke="' + LEAD + '" stroke-width="1.200" stroke-linejoin="round"><path d="' + nkQ('L', .12, .32, .52, .84) + '"/><path d="' + nkQ('L', .58, .72, .46, .74) + '"/>' + nkL('L', .22, .52, .22, .84) + nkL('L', .12, .68, .32, .68) + nkL('L', .65, .46, .65, .74) + '</g>';
   s += '<g class="d-shadow" fill="#1a0f1c"><circle cx="18.400" cy="58.200" r="2.500"/><path d="M13.800 70C13.800 62.500 23 62.500 23 70Z"/></g>';
-  s += '<path d="' + nkQ('L', .04, .12, .5, .88) + '" fill="#2f6b5a" stroke="' + LEAD + '" stroke-width="1"/><path d="' + nkQ('L', .32, .4, .5, .88) + '" fill="#2f6b5a" stroke="' + LEAD + '" stroke-width="1"/>';
+  s += '<path d="' + nkQ('L', .04, .12, .5, .88) + '" fill="#2a4f43" stroke="' + LEAD + '" stroke-width="1"/><path d="' + nkQ('L', .32, .4, .5, .88) + '" fill="#2a4f43" stroke="' + LEAD + '" stroke-width="1"/>';
   s += '<path d="' + nkQ('L', .1, .34, .42, .52) + '" fill="#6a3f25" stroke="' + LEAD + '" stroke-width="1"/>';
-  for (let i = 0; i < 6; i++) { const p = nkW('L', .13 + i * .035, .56); s += '<circle cx="' + dcN(p[0]) + '" cy="' + dcN(p[1]) + '" r="1.900" fill="' + ['#ff7aa8', '#ffd24a', '#ff9a6a'][i % 3] + '"/>'; }
+  for (let i = 0; i < 6; i++) { const p = nkW('L', .13 + i * .035, .56); s += '<circle cx="' + dcN(p[0]) + '" cy="' + dcN(p[1]) + '" r="1.900" fill="' + ['#b8324f', '#d9a84a', '#8a2a3a'][i % 3] + '"/>'; }
   /* jobb fal */
   s += '<path d="M120 10L82 70.800V116.500L120 158Z" fill="url(#nr' + u + ')" stroke="' + LEAD + '" stroke-width="1.200" stroke-linejoin="round"/>';
   s += '<g stroke="#241526" stroke-width="2" stroke-linecap="round" fill="none">' + nkL('R', 0, .3, 1, .3) + nkL('R', 0, .92, 1, .92) + nkL('R', .5, 0, .5, 1) + nkL('R', 1, 0, 1, 1) + '</g>';
@@ -47,7 +47,7 @@ function nkScene(u) {
   s += '<g class="d-lit"><path class="d-spill" d="M59 116.500H71L92 158H44Z" fill="url(#nspill' + u + ')"/><ellipse cx="100" cy="151" rx="30" ry="8" fill="url(#nhh' + u + ')"/></g>';
   /* zászlófüzér */
   let flags = '';
-  const cols = ['#ff7aa8', '#ffd24a', '#6ad0c0', '#ff9a6a', '#9a8cff'];
+  const cols = ['#9a2a44', '#c9973f', '#3f6f66', '#7a2a3a', '#5a4a8a'];
   for (let i = 0; i < 9; i++) { const t = (i + 0.7) / 9.4, x = (1 - t) * (1 - t) * 18 + 2 * t * (1 - t) * 65 + t * t * 112, y = (1 - t) * (1 - t) * 36 + 2 * t * (1 - t) * 60 + t * t * 38; flags += '<path class="d-flag f' + (i + 1) + '" d="M' + dcN(x - 3.700) + ' ' + dcN(y) + 'H' + dcN(x + 3.700) + 'L' + dcN(x) + ' ' + dcN(y + 8.500) + 'Z" fill="' + cols[i % 5] + '" stroke="' + LEAD + '" stroke-width=".8" stroke-linejoin="round"/>'; }
   s += '<path d="M18 36Q65 60 112 38" fill="none" stroke="#1d121f" stroke-width="1.200"/>' + flags;
   /* utcai lámpa */
@@ -60,12 +60,12 @@ function nkScene(u) {
 }
 
 registerDecor({
-  id: 'book-nook', name: 'Book nook: mini világ', hint: 'A lámpára kattintva fel/le kapcsolod a fényt. A szobára kattintva felnagyul a kis világ (3D nézetben), és bele lehet nézni. 2D-ben kinyílik az ajtó.', ar: 1.04, k: 0.94,
+  id: 'book-nook', name: 'Book nook: mini világ', hint: 'A lámpára kattintva fel/le kapcsolod a fényt. A szobára kattintva felnagyul a kis világ (3D nézetben), és bele lehet nézni. 2D-ben kinyílik az ajtó.', ar: 1.04, k: 1.04,
   svg: u => {
     return '<svg class="dc-svg nk-svg" viewBox="-24 0 178 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>' +
       '<clipPath id="nc' + u + '"><path d="M10 10H120V158H10Z"/></clipPath>' +
       '<linearGradient id="nw' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8c6338"/><stop offset=".5" stop-color="#5c3a1e"/><stop offset="1" stop-color="#2f1c0e"/></linearGradient>' +
-      '<linearGradient id="ns' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121a52"/><stop offset=".55" stop-color="#3d3a8e"/><stop offset="1" stop-color="#cf78a0"/></linearGradient>' +
+      '<linearGradient id="ns' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121a52"/><stop offset=".55" stop-color="#3d3a8e"/><stop offset="1" stop-color="#8a3a52"/></linearGradient>' +
       '<linearGradient id="nb' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e5a86"/><stop offset="1" stop-color="#47385c"/></linearGradient>' +
       '<linearGradient id="nl' + u + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f2340"/><stop offset="1" stop-color="#6a5584"/></linearGradient>' +
       '<linearGradient id="nr' + u + '" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#34273f"/><stop offset="1" stop-color="#6f5a82"/></linearGradient>' +

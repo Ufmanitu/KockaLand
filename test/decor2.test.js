@@ -9,13 +9,13 @@ const { chromium } = require('playwright'); const path = require('path');
     page.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED|ERR_BLOCKED/.test(m.text())) errs.push(m.text()); });
     page.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
     await page.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
-    await page.addInitScript(() => { window.__MAX_DECOR = 99; try { if (window.name !== 'dc-seeded') { window.name = 'dc-seeded'; localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } });
+    await page.addInitScript(() => { window.__MAX_DECOR = 99; window.__STARTER = true; try { if (window.name !== 'dc-seeded') { window.name = 'dc-seeded'; localStorage.setItem('kockazzunk.v1', JSON.stringify({ v: 1, themes: [], settings: { seen: true, view3d: false } })); } } catch (e) { } });
     return { page, errs, ctx };
   };
   let fails = 0; const ok = (c, m) => { console.log((c ? 'OK   ' : 'HIBA ') + m); if (!c) fails++; };
   const url = 'file://' + path.resolve('dist/index.html') + '#polc';
   const has = (page, sel, cls) => page.$eval(sel, (e, c) => e.classList.contains(c), cls);
-  const at = async (page, sel, fx, fy) => { const bb = await (await page.$(sel)).boundingBox(); return { x: bb.x + bb.width * fx, y: bb.y + bb.height * fy }; };
+  const at = async (page, sel, fx, fy) => { const el = await page.$(sel); await el.scrollIntoViewIfNeeded(); await page.waitForTimeout(60); const bb = await el.boundingBox(); return { x: bb.x + bb.width * fx, y: bb.y + bb.height * fy }; };
   const clickAt = async (page, sel, fx, fy) => { const c = await at(page, sel, fx, fy); await page.mouse.move(c.x, c.y); await page.mouse.click(c.x, c.y); };
 
   let { page, errs } = await mk(1280, 1000);
