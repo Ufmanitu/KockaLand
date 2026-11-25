@@ -1,5 +1,13 @@
 # Változásnapló
 
+## v13 — A valódi könyvespolc, újraépített sárkányok és díszek (2026-11-25)
+- **A barátnő valódi könyvei az alapértelmezett könyvtár** (`Seed.library()` az `src/data-base.js`-ben): 5 polc a fotók szerint – „Tahereh Mafi – Ne érints! sorozat” (10), „Kennedy és Garber” (7), „Sötét romantika” (9), „Romantikus kedvencek” (5), „Egyéb” (2) = 33 könyv; a gerinc színe/stílusa/mintája/fóliája/vastagsága a fotókról közelítve, oldalszám ismeretlen (0), mind „olvasatlan”. Bizonytalan címek (a Riley Baker „…szerencse”, Hideghábori) a könyv-szerkesztőben javíthatók.
+- **Egyszeri áttérés** (`Seed.adoptReal`, `settings.libV = 13`): ha a mentésben még csak a régi példakönyvek (`example:true`) vannak, lecserélődnek a valódiakra (üzenet: „Felkerült a valódi könyvespolc…”); a saját könyvekhez nem nyúl. Üres polcon „A valódi polc betöltése” gomb. Friss telepítés eleve a valódi polccal indul.
+- **Fekvő sárkány teljes újraépítés** (`src/lib3d-dragons2.js`): felemelt nyak, ék alakú fej szunyókáló réspupillás szemmel, szarvak, fogak, sütött (AO) pikkelyek, hasi lemezek, összehajtott, ívelt szélű szárnyak (4 ujj, hártya-függöny), három sötét bőrkötéses könyv címmel (A SÁRKÁNY KÖNYVE, ÉJFÉLI MESÉK, SÖTÉT LÁNGOK). A 2D tartalék rajza (`decor-dragon.js`) ehhez igazítva újrarajzolva (ar 1,71, viewBox `0 -23 210 123`).
+- **A repülő/fújó sárkány valódi 3D modell** (`src/lib3d-fly.js`, a régi `lib3d-flyimg.js` rétegelt 2D képe helyett): fényes fekete SDF-sárkány a fekvő sárkány részletes fejével (közös `dgHeadRig`), kunkori farok, összehajtott szárnyak; a füst spirálokkal bevésett krémszínű gyantafelhő-oszlop (a bevésés a háló része), amely a 4 ferdén dőlő, aranypántos, címes sötét könyvet tartja. Animációk: fújás (visszarúgás, száj, füstpamacsok), szárnycsapás, oszlop-puff, könyv-ringás, pislogás, idle.
+- **Szellem**: hosszabb, három csúcsú szegély függőleges redő-bumppal (nem lapos doboz); `dgMats(bk)`, `dgWing(M, far, cs)`, `dgHeadGeo/JawGeo(cs, key)` paraméterezhető (fekete sárkány palettája).
+- Tesztek: `decor3d` (nincs többé „2D kép” dísz), `shelf`/`library` a valódi polchoz igazítva.
+
 ## v12 — Szebb, mintás könyvek, dark romance színvilág, egyetlen dísz (2026-11-24)
 - **Könyvek nagyobbak** (magasabb/szélesebb gerinc, `SPINE_H`, `TH_W`), és **jobban kihajolnak** hoverre (0,3 rad billenés, kiemelkedés előre és fel).
 - **Új gerinc-motor `src/spine.js`**: a gerincet egy kettős vászon (`Dual`) rajzolja – szín + „maszk” (R=dombormű, G=érdesség, B=fémesség) – ugyanaz a kép adja a 2D hátteret, a 3D textúrát (map + roughness/metalness/bump) és a szerkesztő előnézetét.

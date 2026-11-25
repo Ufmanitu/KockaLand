@@ -11,12 +11,12 @@
 
 
 /* --- fekvő sárkány (2D tartalék): nyugalmi állapot + játékok (pislogás, bökés, düh, simogatás) --- */
-.dl-svg .d-head { transform-origin: 70px 56px; }
-.dl-svg .d-jaw { transform-origin: 64px 58px; }
-.dl-svg .d-brow { transform-origin: 53px 31px; }
+.dl-svg .d-head { transform-origin: 72px 14px; }
+.dl-svg .d-jaw { transform-origin: 63px 12px; }
+.dl-svg .d-brow { transform-origin: 57px -1px; }
 .dl-svg .d-lid { transform: translateY(-20px); }
 .dl-svg .d-look { transform: translate(var(--ex, 0px), var(--ey, 0px)); transition: transform .16s ease-out; }
-.dl-svg .d-wing { transform-origin: 104px 40px; }
+.dl-svg .d-wing { transform-origin: 98px 31px; }
 .dl-svg .d-smoke circle { fill: rgba(222, 226, 236, .85); opacity: 0; }
 .dl-svg .d-sparks circle { fill: #ffb347; opacity: 0; }
 .dl-svg .d-hearts path { fill: #ff7d96; opacity: 0; }

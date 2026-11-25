@@ -28,6 +28,7 @@ const { chromium } = require('playwright'); const path = require('path');
   await page.screenshot({ path: out + '-2.png' });
   await page.click('.modal-foot .btn.primary'); await page.waitForTimeout(500);
   console.log('könyvek:', await page.evaluate(() => S.books.length), '| példa törlés...');
+  await page.evaluate(() => { S.books.forEach(b => { b.example = true; }); drawShelf(); }); await page.waitForTimeout(300);
   await page.click('button:has-text("Példák törlése")'); await page.waitForTimeout(400);
   console.log('könyvek példák nélkül:', await page.evaluate(() => S.books.length));
   await page.screenshot({ path: out + '-3.png' });

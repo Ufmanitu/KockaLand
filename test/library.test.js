@@ -102,7 +102,7 @@ const { chromium } = require('playwright'); const path = require('path');
   const names = await page.evaluate(() => S.shelves.map(s => s.name + ':' + s.ids.length).join(' | ')); console.log('műfaj-polcok:', names);
   ok((await page.evaluate(() => S.shelves.reduce((n, s) => n + s.ids.filter(i => !isDecorId(i)).length, 0))) === nBooks, 'műfaj szerint: minden könyv megvan');
   // keresés
-  await page.fill('#lb-q', 'dűne'); await page.waitForTimeout(200);
+  await page.fill('#lb-q', 'caraval'); await page.waitForTimeout(200);
   const dim = await page.$$eval('.lb-sp.dim', e => e.length); ok(dim >= nBooks - 3 && dim < nBooks, 'keresés elhalványítja a többit: ' + dim + '/' + nBooks);
   await page.fill('#lb-q', '');
   // kiválasztott könyv kiemelés a dobásból

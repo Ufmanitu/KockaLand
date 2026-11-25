@@ -39,7 +39,7 @@ function drawShelf() { if (shelfTab() === 'lib') drawLibrary(); else drawEdit();
 function emptyShelfPanel() {
   return h('div', { class: 'panel empty-shelf' }, h('div', { class: 'big' }, '📚'), h('h2', null, 'A polc még üres'), h('p', { class: 'muted' }, 'Vegyél fel könyveket kézzel, importáld a listádat (például Goodreads exportot), vagy töltsd be a példákat.'),
     h('div', { class: 'row wrap', style: { justifyContent: 'center' } }, btn('Új könyv', { icon: 'plus', kind: 'primary', onclick: () => bookModal() }), btn('Importálás', { icon: 'import', onclick: importModal }),
-      btn('Példák betöltése', { kind: 'ghost', onclick: () => { S.books = Seed.books(); S.shelves = []; persist(); drawShelf(); } })));
+      btn('A valódi polc betöltése', { kind: 'ghost', onclick: () => { const l = Seed.library(); S.books = l.books; S.shelves = l.shelves; persist(); drawShelf(); } })));
 }
 function drawEdit() {
   const body = $('.shelf-body'); if (!body) return;

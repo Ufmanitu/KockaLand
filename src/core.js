@@ -332,9 +332,10 @@ function initState() {
     S.ui = Object.assign({ themeId: S.themes[0].id, view: 'dobas' }, S.ui || {});
     S.rolls = S.rolls || {};
     S.fresh = false;
-    S.migrated = Seed.migrate(S); Seed.recolor(S);
+    S.migrated = Seed.migrate(S); Seed.recolor(S); S.adopted = Seed.adoptReal(S);
   } else {
-    S = { v: 1, themes: Seed.themes(), books: Seed.books(), shelves: [], history: [], settings: Object.assign({}, DEFAULTS, (st && st.settings) || {}), ui: { themeId: 'randi', view: 'dobas' }, rolls: {}, fresh: true, seedV: Seed.VERSION };
+    const lib0 = Seed.library();
+    S = { v: 1, themes: Seed.themes(), books: lib0.books, shelves: lib0.shelves, history: [], settings: Object.assign({}, DEFAULTS, (st && st.settings) || {}), ui: { themeId: 'randi', view: 'dobas' }, rolls: {}, fresh: true, seedV: Seed.VERSION }; S.settings.libV = 13;
   }
   if (!S.themes.some(t => t.id === S.ui.themeId)) S.ui.themeId = S.themes[0].id;
   S.themes.forEach(t => t.dice.forEach(d => { d.options = d.options || []; }));

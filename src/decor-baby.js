@@ -1,4 +1,4 @@
-/* ===== Díszek: repülő sárkány + füstoszlopa (2D kép; a 3D polcon is ugyanez a rajz kerül textúraként a síkokra, lib3d-flyimg.js) =====
+/* ===== Díszek: repülő sárkány + füstoszlopa (2D rajz; a 3D polcon valódi 3D modell: lib3d-fly.js, v13) =====
    A rajz a referenciakép (apró fekete sárkány, a szájából kiömlő füst krémszínű, tekergő felhőoszloppá dagad, ami a ferdén dőlő sötét könyveket tartja) alapján készült.
    Rétegek (a 3D-ben külön síkok, a 2D-ben <g> csoportok; az animációkhoz): shadow · cloud (oszlop+alap) · stream (a szájtól az oszlopig) · books · wisp · wingB · dragon · wingF · puffs
    Kattintás (sárkányra): nagyot fúj (a füstsugár megnő, az oszlop megduzzad, a könyvek megrezzennek). Következő kattintás: csapkod a szárnyával. A füstoszlopra kattintva megpuffan.

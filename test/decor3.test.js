@@ -15,7 +15,7 @@ const { chromium } = require('playwright'); const path = require('path');
   let fails = 0; const ok = (c, m) => { console.log((c ? 'OK   ' : 'HIBA ') + m); if (!c) fails++; };
   const url = 'file://' + path.resolve('dist/index.html') + '#polc';
   const has = (page, sel, cls) => page.$eval(sel, (e, c) => e.classList.contains(c), cls);
-  const clickAt = async (page, sel, fx, fy) => { const bb = await (await page.$(sel)).boundingBox(); const x = bb.x + bb.width * fx, y = bb.y + bb.height * fy; await page.mouse.move(x, y); await page.mouse.click(x, y); };
+  const clickAt = async (page, sel, fx, fy) => { const el = await page.$(sel); await el.scrollIntoViewIfNeeded(); const bb = await el.boundingBox(); const x = bb.x + bb.width * fx, y = bb.y + bb.height * fy; await page.mouse.move(x, y); await page.mouse.click(x, y); };
   const addAll = (page, ids) => page.evaluate(ids => { S.decor = []; S.shelves.forEach(s => { s.ids = s.ids.filter(i => !isDecorId(i)); }); ids.forEach((id, i) => addDecorSet(DECOR_SETS.find(s => s.id === id), i % 2)); persist(); drawLibrary(); }, ids);
   const triple = async (page, sel, fx, fy, states) => {
     for (let i = 0; i < states.length; i++) { await clickAt(page, sel, fx, fy); await page.waitForTimeout(110); ok(await has(page, sel, states[i]), sel.slice(4) + ': ' + (i + 1) + '. kattintás → ' + states[i]); }

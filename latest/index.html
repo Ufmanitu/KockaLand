@@ -622,12 +622,12 @@ input[type=checkbox], input[type=radio] { accent-color: var(--tc); width: 18px; 
 
 
 /* --- fekvő sárkány (2D tartalék): nyugalmi állapot + játékok (pislogás, bökés, düh, simogatás) --- */
-.dl-svg .d-head { transform-origin: 70px 56px; }
-.dl-svg .d-jaw { transform-origin: 64px 58px; }
-.dl-svg .d-brow { transform-origin: 53px 31px; }
+.dl-svg .d-head { transform-origin: 72px 14px; }
+.dl-svg .d-jaw { transform-origin: 63px 12px; }
+.dl-svg .d-brow { transform-origin: 57px -1px; }
 .dl-svg .d-lid { transform: translateY(-20px); }
 .dl-svg .d-look { transform: translate(var(--ex, 0px), var(--ey, 0px)); transition: transform .16s ease-out; }
-.dl-svg .d-wing { transform-origin: 104px 40px; }
+.dl-svg .d-wing { transform-origin: 98px 31px; }
 .dl-svg .d-smoke circle { fill: rgba(222, 226, 236, .85); opacity: 0; }
 .dl-svg .d-sparks circle { fill: #ffb347; opacity: 0; }
 .dl-svg .d-hearts path { fill: #ff7d96; opacity: 0; }
@@ -1632,36 +1632,45 @@ const Seed = (() => {
   const BOOK_GENRES = ['Krimi', 'Thriller', 'Fantasy', 'Sci-fi', 'Regény', 'Romantikus', 'Történelmi regény', 'Ifjúsági', 'Horror', 'Humor', 'Ismeretterjesztő', 'Mese', 'Disztópia'];
   const BOOK_MOODS = ['megnyugtató', 'izgalmas', 'megható', 'vicces', 'elgondolkodtató', 'sötét', 'kalandos'];
 
-  // [cím, szerző, műfaj, hangulat, oldal, állapot]
-  const BOOKS = [
-    ['A kis herceg', 'Antoine de Saint-Exupéry', 'Mese', 'megható', 96, 'olvasatlan'],
-    ['Micimackó', 'A. A. Milne', 'Mese', 'megnyugtató', 160, 'olvasatlan'],
-    ['A Pál utcai fiúk', 'Molnár Ferenc', 'Ifjúsági', 'megható', 240, 'elolvastam'],
-    ['Abigél', 'Szabó Magda', 'Ifjúsági', 'izgalmas', 380, 'olvasatlan'],
-    ['Egri csillagok', 'Gárdonyi Géza', 'Történelmi regény', 'kalandos', 620, 'olvasatlan'],
-    ['Utas és holdvilág', 'Szerb Antal', 'Regény', 'elgondolkodtató', 300, 'olvasatlan'],
-    ['Édes Anna', 'Kosztolányi Dezső', 'Regény', 'sötét', 250, 'olvasatlan'],
-    ['A szőke ciklon', 'Rejtő Jenő', 'Humor', 'vicces', 170, 'olvasatlan'],
-    ['Gyilkosság az Orient expresszen', 'Agatha Christie', 'Krimi', 'izgalmas', 260, 'olvasatlan'],
-    ['Holtodiglan', 'Gillian Flynn', 'Thriller', 'sötét', 450, 'olvasatlan'],
-    ['A hobbit', 'J. R. R. Tolkien', 'Fantasy', 'kalandos', 330, 'olvasatlan'],
-    ['Harry Potter és a bölcsek köve', 'J. K. Rowling', 'Fantasy', 'kalandos', 330, 'elolvastam'],
-    ['Sosehol', 'Neil Gaiman', 'Fantasy', 'kalandos', 380, 'olvasatlan'],
-    ['A galaxis útikalauz stopposoknak', 'Douglas Adams', 'Sci-fi', 'vicces', 220, 'olvasatlan'],
-    ['A marsi', 'Andy Weir', 'Sci-fi', 'izgalmas', 400, 'olvasatlan'],
-    ['Dűne', 'Frank Herbert', 'Sci-fi', 'elgondolkodtató', 700, 'olvasatlan'],
-    ['1984', 'George Orwell', 'Disztópia', 'sötét', 330, 'olvasatlan'],
-    ['Büszkeség és balítélet', 'Jane Austen', 'Romantikus', 'megnyugtató', 400, 'olvasatlan'],
-    ['Egy Ove nevű férfi', 'Fredrik Backman', 'Regény', 'megható', 330, 'olvasatlan'],
-    ['Az alkimista', 'Paulo Coelho', 'Regény', 'elgondolkodtató', 190, 'olvasatlan'],
-    ['Ragyogás', 'Stephen King', 'Horror', 'sötét', 520, 'olvasatlan'],
-    ['Sapiens: Az emberiség rövid története', 'Yuval Noah Harari', 'Ismeretterjesztő', 'elgondolkodtató', 520, 'olvasatlan'],
-    ['Kafka a tengerparton', 'Murakami Haruki', 'Regény', 'elgondolkodtató', 500, 'olvasatlan'],
-    ['Mágia színe', 'Terry Pratchett', 'Fantasy', 'vicces', 280, 'olvasatlan']
+  /* A barátnő valódi könyvespolcának könyvei (a fotók gerincei alapján): [cím, szerző, műfaj, hangulat, {c: szín, s: stílus, p: minta, a: díszítő szín, h: magasság, th: vastagság}, megjegyzés].
+     Az oldalszám nem ismert (a vastagság a fotóról való), az állapot mind „olvasatlan”, hogy a kockák az egész polcból válogathassanak – a polcon átállítható. */
+  const AU = '#d9b25a', AG = '#cdd2d8', CU = '#c98a55', RD = '#b3243a', BK = '#17110f', CR = '#efe2c4';
+  const K = (c, s, p, a, th, h) => ({ c, s, p, a, th, h: h || 1 });
+  const MAFI = (t, c, p, a) => [t, 'Tahereh Mafi', 'Disztópia, Romantikus', 'izgalmas', K(c, 3, p, a, 2)];
+  const KEN = (t, c) => [t, 'Raven Kennedy', 'Fantasy, Romantikus', 'sötét', K(c, 2, 6, AU, 3)];
+  const LIB = [
+    ['Tahereh Mafi – Ne érints! sorozat', [
+      MAFI('Ne érints', '#5d6b78', 6, AG), MAFI('Ne keress', '#4c5f9c', 6, AG), MAFI('Ne félts', '#3f8d8a', 6, AG), MAFI('Ne hazudj', '#e1e4e8', 6, AG), MAFI('Ne engedj', '#8b9db4', 6, AG),
+      MAFI('Ne felejts', '#566a82', 6, AU), MAFI('Ne add fel', '#7c4636', 6, AU), MAFI('Ne hagyj el', '#5f2f86', 4, AU), MAFI('Ne tágíts', '#cdd6e2', 6, AG), MAFI('Ne színlelj', '#a99bd2', 6, AG)]],
+    ['Kennedy és Garber', [
+      KEN('Gild', '#1b1c27'), KEN('Glint', '#1a1b26'), KEN('Gleam', '#191a25'), KEN('Glow', '#181a24'), KEN('Gold', '#1a1a22'),
+      ['Caraval', 'Stephanie Garber', 'Fantasy, Ifjúsági', 'kalandos', K('#18233f', 6, 4, CR, 3)], ['Finale', 'Stephanie Garber', 'Fantasy, Ifjúsági', 'kalandos', K('#2b2354', 6, 4, CU, 3)]]],
+    ['Sötét romantika', [
+      ['Ne! Veszíts el!', 'Laura Kneidl', 'Romantikus', '', K('#a6cbe0', 3, 0, BK, 2)], ['Hooked', 'Emily McIntire', 'Romantikus, Fantasy', 'sötét', K('#262a30', 2, 6, RD, 3)],
+      ['A hatalom tőre', 'Kristen Ciccarelli', 'Fantasy', 'kalandos', K('#15161a', 3, 0, CU, 3)], ['Riot House', 'Callie Hart', 'Romantikus', 'sötét', K('#121214', 3, 0, AU, 3, 0.94)],
+      ['Gothikana', 'RuNyx', 'Romantikus', 'sötét', K('#16161a', 2, 3, AU, 3)], ['Téveszmék I.', 'Végh Csenge', 'Regény', '', K('#cfd0d2', 3, 6, BK, 3)],
+      ['Satan\'s Affair', 'H. D. Carlton', 'Romantikus', 'sötét', K('#3a3c42', 2, 6, AG, 3, 0.94)],
+      ['Szavad ne feledd!', 'Riley Baker', 'Regény', '', K('#9a9a98', 3, 0, BK, 2)], ['…szerencse', 'Riley Baker', 'Regény', '', K('#b86a1e', 3, 0, BK, 2), 'A gerincen a cím nem volt jól olvasható – javítsd át a pontos címre!']]],
+    ['Romantikus kedvencek', [
+      ['Hideghábori', 'Orgován Ramóna', 'Romantikus', '', K('#e8a2b0', 3, 0, RD, 2, 0.94)], ['Ellenséges szobatárs', 'Vörös Viktória', 'Romantikus', '', K('#4a3a86', 3, 4, CR, 2, 0.94)],
+      ['Under the Magnolias', 'T. I. Lowe', 'Romantikus', 'megható', K('#9ccbb0', 3, 0, AU, 2, 0.94)], ['A lelkitárs-egyenlet', 'Christina Lauren', 'Romantikus', 'megható', K('#e6b52c', 3, 0, BK, 3)],
+      ['Az igaz szerelem-kísérlet', 'Christina Lauren', 'Romantikus', 'vicces', K('#7e2f86', 3, 7, CR, 3)]]],
+    ['Egyéb', [
+      ['Piranesi', 'Susanna Clarke', 'Fantasy', 'elgondolkodtató', K('#efe8d8', 2, 7, CU, 3, 0.94)], ['A Titok', 'Rhonda Byrne', 'Ismeretterjesztő', 'elgondolkodtató', K('#4a1a14', 5, 0, AU, 2, 0.88)]]]
   ];
-  const books = () => BOOKS.map(b => ({
-    id: Engine.uid(), title: b[0], author: b[1], genre: b[2], mood: b[3], pages: b[4], status: b[5], note: '', example: true
-  }));
+  function library() {
+    const books = [], shelves = [];
+    LIB.forEach(sh => { const ids = []; sh[1].forEach(r => { const k = r[4], b = { id: Engine.uid(), title: r[0], author: r[1], genre: r[2], mood: r[3], pages: 0, status: 'olvasatlan', note: r[5] || '', color: k.c, style: k.s, pat: k.p, acc: k.a, h: k.h, th: k.th }; books.push(b); ids.push(b.id); }); shelves.push({ id: Engine.uid(), name: sh[0], ids }); });
+    return { books, shelves };
+  }
+  const books = () => library().books;
+  /* v13: a régi (érintetlen) példakönyvek helyére egyszer a valódi polc kerül; saját könyvekhez nem nyúlunk */
+  function adoptReal(S) {
+    if (!S.settings) S.settings = {}; if ((S.settings.libV || 0) >= 13) return 0;
+    S.settings.libV = 13;
+    if (Array.isArray(S.books) && S.books.length && S.books.every(b => b && b.example)) { const l = library(); S.books = l.books; S.shelves = l.shelves; return l.books.length; }
+    return 0;
+  }
 
   function themes() { return ORDER.filter(id => SeedParts[id]).map(id => SeedParts[id](T)); }
 
@@ -1693,7 +1702,7 @@ const Seed = (() => {
     S.settings.palV = 12; return n;
   }
 
-  return { VERSION, themes, books, BOOK_GENRES, BOOK_MOODS, T, migrate, recolor, sig };
+  return { VERSION, themes, books, library, adoptReal, BOOK_GENRES, BOOK_MOODS, T, migrate, recolor, sig };
 })();
 
 
@@ -2816,9 +2825,10 @@ function initState() {
     S.ui = Object.assign({ themeId: S.themes[0].id, view: 'dobas' }, S.ui || {});
     S.rolls = S.rolls || {};
     S.fresh = false;
-    S.migrated = Seed.migrate(S); Seed.recolor(S);
+    S.migrated = Seed.migrate(S); Seed.recolor(S); S.adopted = Seed.adoptReal(S);
   } else {
-    S = { v: 1, themes: Seed.themes(), books: Seed.books(), shelves: [], history: [], settings: Object.assign({}, DEFAULTS, (st && st.settings) || {}), ui: { themeId: 'randi', view: 'dobas' }, rolls: {}, fresh: true, seedV: Seed.VERSION };
+    const lib0 = Seed.library();
+    S = { v: 1, themes: Seed.themes(), books: lib0.books, shelves: lib0.shelves, history: [], settings: Object.assign({}, DEFAULTS, (st && st.settings) || {}), ui: { themeId: 'randi', view: 'dobas' }, rolls: {}, fresh: true, seedV: Seed.VERSION }; S.settings.libV = 13;
   }
   if (!S.themes.some(t => t.id === S.ui.themeId)) S.ui.themeId = S.themes[0].id;
   S.themes.forEach(t => t.dice.forEach(d => { d.options = d.options || []; }));
@@ -3823,7 +3833,7 @@ function drawShelf() { if (shelfTab() === 'lib') drawLibrary(); else drawEdit();
 function emptyShelfPanel() {
   return h('div', { class: 'panel empty-shelf' }, h('div', { class: 'big' }, '📚'), h('h2', null, 'A polc még üres'), h('p', { class: 'muted' }, 'Vegyél fel könyveket kézzel, importáld a listádat (például Goodreads exportot), vagy töltsd be a példákat.'),
     h('div', { class: 'row wrap', style: { justifyContent: 'center' } }, btn('Új könyv', { icon: 'plus', kind: 'primary', onclick: () => bookModal() }), btn('Importálás', { icon: 'import', onclick: importModal }),
-      btn('Példák betöltése', { kind: 'ghost', onclick: () => { S.books = Seed.books(); S.shelves = []; persist(); drawShelf(); } })));
+      btn('A valódi polc betöltése', { kind: 'ghost', onclick: () => { const l = Seed.library(); S.books = l.books; S.shelves = l.shelves; persist(); drawShelf(); } })));
 }
 function drawEdit() {
   const body = $('.shelf-body'); if (!body) return;
@@ -4185,6 +4195,7 @@ function syncShelves() {
   if (!S.shelves.length) S.shelves = defaultShelves(S.books);
   else if (missing.length) { const last = S.shelves[S.shelves.length - 1]; missing.forEach(id => last.ids.push(id)); }
   if (firstTime && !S.decor.length && window.__STARTER) { const st = starterDecor(); S.decor = st.decor; placeDecor(st.place, 0); }   // (csak a tesztek kérnek kezdő díszeket; az oldal díszek nélkül indul)
+  if (S.adopted) { const n = S.adopted; S.adopted = 0; persist(); setTimeout(() => toast('Felkerült a valódi könyvespolc: ' + n + ' könyv, a fotók szerinti polcokkal. A régi példakönyvek lecserélődtek.'), 900); }
   if (wiped) { persist(); setTimeout(() => toast('A díszek lekerültek a polcról. A Díszek gombbal egyet felrakhatsz (egyszerre csak egy lehet kint).'), 700); }
   const cut = trimDecor(); if (cut > 0) { persist(); setTimeout(() => toast('Egyszerre csak ' + MAX_DECOR + ' dísz lehet kint, a többi lekerült a polcról. A Díszek gombbal bármikor cserélhetsz.'), 600); }
 }
@@ -4889,44 +4900,66 @@ function dragonMigrate(list) {   // régi sárkány-pár → egy fekvő sárkán
 }
 
 registerDecor({
-  id: 'sarkany-fekvo', name: 'Fekvő sárkány', hint: 'Bökd meg az orrát! Háromszor: tüzet okád. Ha csak megsimogatod, dorombol.', ar: 2.1, k: 0.72, look: true,
+  id: 'sarkany-fekvo', name: 'Fekvő sárkány', hint: 'Bökd meg az orrát! Háromszor: tüzet okád. Ha csak megsimogatod, dorombol.', ar: 1.71, k: 0.82, look: true,
   svg: u => {
-    const O = 'stroke="rgba(10,3,4,.75)" stroke-width="1.3" stroke-linejoin="round"';
-    const book = (x, y, w, h, c1, c2) => '<g><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="2" fill="' + c1 + '" ' + O + '/><rect x="' + (x + 3) + '" y="' + (y + 2.2) + '" width="' + (w - 5) + '" height="' + (h - 4.4) + '" rx="1" fill="#f6ecd2"/><path d="M' + (x + 5) + ' ' + (y + 4.6) + 'h' + (w - 9) + 'M' + (x + 5) + ' ' + (y + 7.4) + 'h' + (w - 9) + '" stroke="rgba(150,118,70,.45)" stroke-width=".8"/><rect x="' + x + '" y="' + y + '" width="4" height="' + h + '" rx="2" fill="' + c2 + '"/></g>';
-    return '<svg class="dc-svg dl-svg" viewBox="0 0 210 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>' +
-      '<linearGradient id="lb' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#150709"/><stop offset=".42" stop-color="#8c1016"/><stop offset="1" stop-color="#b5251f"/></linearGradient>' +
-      '<linearGradient id="ll' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e5683f"/><stop offset="1" stop-color="#c9362a"/></linearGradient>' +
-      '<linearGradient id="lw' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d12a2c"/><stop offset="1" stop-color="#4a0912"/></linearGradient>' +
-      '<radialGradient id="le' + u + '" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff3b8"/><stop offset=".5" stop-color="#ffb722"/><stop offset="1" stop-color="#c0610c"/></radialGradient>' +
-      '<clipPath id="lc' + u + '"><ellipse cx="53" cy="39" rx="6.4" ry="6.8"/></clipPath></defs>' +
-      '<ellipse cx="104" cy="98" rx="98" ry="3" fill="rgba(0,0,0,.4)"/>' +
-      book(6, 76, 198, 22, '#2e4a78', '#1d3052') + book(10, 62, 190, 16, '#2f6b52', '#1d4a38') + book(14, 50, 184, 14, '#c79d45', '#936f23') +
-      /* farok: a könyvek tetején fekszik, a vége befordul; fekete gerinc a vörös tetején */
-      '<path d="M148 46C164 42 184 40 192 44C198 48 192 53 180 51" fill="none" stroke="rgba(10,3,4,.75)" stroke-width="14" stroke-linecap="round"/><path d="M148 46C164 42 184 40 192 44C198 48 192 53 180 51" fill="none" stroke="#8c1016" stroke-width="11.500" stroke-linecap="round"/><path d="M148 43C164 39 184 37 191 41" fill="none" stroke="#1a0709" stroke-width="4" stroke-linecap="round" opacity=".9"/>' +
-      '<path d="M181 51.500l-6 -2l1.500 6z" fill="#17090b" ' + O + '/>' +
-      /* törzs + has + hátgerinc */
-      '<path d="M62 56C56 38 74 26 104 26C134 26 158 32 160 48C162 60 150 66 130 66L84 66C72 66 64 62 62 56Z" fill="url(#lb' + u + ')" ' + O + '/>' +
-      '<path d="M76 62C92 68 124 68 144 64C148 60 150 56 150 54C130 62 96 62 76 58Z" fill="url(#ll' + u + ')"/><path d="M92 63v4M104 64v4M116 64v4M128 63v4" stroke="rgba(190,140,60,.5)" stroke-width="1"/>' +
-      '<path d="M84 29l4 -8l5 7M100 26l5 -9l5 8M118 27l5 -9l5 9M136 31l5 -8l4 9" fill="#17090b" ' + O + '/>' +
-      '<path class="d-wing" d="M100 34C112 12 138 12 152 24C142 26 140 32 132 34C132 40 122 42 116 42C112 48 104 46 100 40Z" fill="url(#lw' + u + ')" ' + O + '/>' +
-      /* mellső mancs */
-      '<ellipse cx="50" cy="66" rx="13" ry="6" fill="url(#lb' + u + ')" ' + O + '/><path d="M42 67v3M49 68v3M56 67v3" stroke="#f7efd9" stroke-width="1.6" stroke-linecap="round"/>' +
+    const O = 'stroke="rgba(8,2,3,.8)" stroke-width="1" stroke-linejoin="round"', fx = 'fill="url(#lg' + u + ')"';
+    /* fekvő könyv: gerinc a néző felé (arany pántok + címtábla), a jobb végén a lapok */
+    const book = (x, y, w, h, c0, c1, t) => '<g><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="1.4" fill="' + c1 + '" ' + O + '/>' +
+      '<rect x="' + x + '" y="' + y + '" width="' + (w - 5) + '" height="' + h + '" rx="1.4" fill="' + c0 + '"/><rect x="' + x + '" y="' + y + '" width="' + (w - 5) + '" height="' + (h * 0.32) + '" rx="1.2" fill="rgba(255,235,200,.12)"/>' +
+      '<rect x="' + (x + w - 5) + '" y="' + (y + 1.2) + '" width="4.2" height="' + (h - 2.4) + '" fill="#e8dcc0"/><path d="M' + (x + w - 4) + ' ' + (y + 3) + 'h3.2M' + (x + w - 4) + ' ' + (y + h / 2) + 'h3.2M' + (x + w - 4) + ' ' + (y + h - 3) + 'h3.2" stroke="rgba(110,90,60,.5)" stroke-width=".3"/>' +
+      [0.07, 0.15, 0.78, 0.86].map(k => '<rect x="' + (x + (w - 5) * k) + '" y="' + y + '" width="1.1" height="' + h + '" fill="#d9b25a" opacity=".85"/>').join('') +
+      '<rect x="' + (x + (w - 5) * 0.28) + '" y="' + (y + h * 0.2) + '" width="' + ((w - 5) * 0.44) + '" height="' + (h * 0.6) + '" rx=".6" fill="rgba(10,4,4,.38)" stroke="#d9b25a" stroke-width=".35"/>' +
+      '<text x="' + (x + (w - 5) * 0.5) + '" y="' + (y + h * 0.63) + '" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="' + (h * 0.36) + '" fill="#e2c277" letter-spacing=".4">' + t + '</text></g>';
+    const spine = [[70, 11.5, 5], [76.5, 17, 5.4], [83.5, 23.2, 5.6], [91, 27.8, 5.6], [99, 30, 5.4], [107, 30.2, 5.2], [115, 29.6, 5], [123, 29.8, 5], [131, 30.8, 5], [139, 32, 4.8], [147, 33.8, 4.6], [155, 36.2, 4.4], [164, 39.4, 4.2], [173, 42, 3.8], [182, 44, 3.4], [190, 46, 3], [197, 48.6, 2.6]]
+      .map(q => 'M' + (q[0] - 2.3) + ' ' + (q[1] + 1.2) + 'L' + (q[0] + 1.3) + ' ' + (q[1] - q[2]) + 'L' + (q[0] + 2.6) + ' ' + (q[1] + 1.2) + 'Z').join('');
+    const bone = '#241512', tip = '#cdbb92', claw = (x, y) => '<path d="M' + x + ' ' + (y - 1.4) + 'l-2.2 1.6l.4 1.2l2.4 -.8z" fill="#eadcc0" stroke="rgba(30,15,10,.7)" stroke-width=".35"/>';
+    return '<svg class="dc-svg dl-svg" viewBox="0 -23 210 123" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><defs>' +
+      '<linearGradient id="lg' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#150709"/><stop offset=".3" stop-color="#4a0a12"/><stop offset=".62" stop-color="#7c1119"/><stop offset=".88" stop-color="#8e3a1b"/><stop offset="1" stop-color="#6e3c1d"/></linearGradient>' +
+      '<linearGradient id="lm' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a0710"/><stop offset=".55" stop-color="#6a0f1d"/><stop offset="1" stop-color="#9a1a28"/></linearGradient>' +
+      '<linearGradient id="lh' + u + '" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="' + bone + '"/><stop offset=".55" stop-color="#4a3a2c"/><stop offset="1" stop-color="' + tip + '"/></linearGradient>' +
+      '<linearGradient id="lv' + u + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a4a26"/><stop offset="1" stop-color="#5a331a"/></linearGradient>' +
+      '<radialGradient id="le' + u + '" cx=".4" cy=".4" r=".75"><stop offset="0" stop-color="#ffe9a0"/><stop offset=".5" stop-color="#e79a1c"/><stop offset="1" stop-color="#8a3d0a"/></radialGradient>' +
+      '<pattern id="lp' + u + '" width="3.4" height="2.9" patternUnits="userSpaceOnUse"><path d="M0 2.9Q1.7 .4 3.4 2.9M-1.7 1.45Q0 -1 1.7 1.45M1.7 1.45Q3.4 -1 5.1 1.45" fill="none" stroke="rgba(0,0,0,.3)" stroke-width=".45"/></pattern>' +
+      '<clipPath id="lk' + u + '"><circle cx="57" cy="3" r="3.800"/></clipPath><clipPath id="lc' + u + '"><circle cx="57" cy="3" r="3.3"/></clipPath><clipPath id="lb' + u + '"><path id="lbp' + u + '" d="M70 12C78 22 86 30 100 32C118 31 140 32 158 37C175 41 195 43 205 50C210 54 209 59 203 60C190 61 170 60 158 58C150 62 135 63.500 118 63.500L66 63.500C60 63 57 58 56 50C54 38 50 26 49 15C52 12 62 10 70 12Z"/></clipPath></defs>' +
+      '<ellipse cx="104" cy="99" rx="104" ry="3.2" fill="rgba(0,0,0,.45)"/>' +
+      book(0, 86, 207, 14, '#7a1e2a', '#5e1520', 'A SÁRKÁNY KÖNYVE') + book(3.500, 75.500, 199, 10.500, '#2a2d4d', '#1d2038', 'ÉJFÉLI MESÉK') + book(12, 64, 196, 11.500, '#5a4028', '#40301c', 'SÖTÉT LÁNGOK') +
+      /* túlsó szárny (a test mögött, sötétebb) */
+      '<path d="M104 32L112 -2Q128 0 144 8Q152 14 150 24Q140 20 134 26Q126 22 118 30Z" fill="#2c0810" ' + O + '/>' +
+      /* test + nyak + farok */
+      '<path d="M70 12C78 22 86 30 100 32C118 31 140 32 158 37C175 41 195 43 205 50C210 54 209 59 203 60C190 61 170 60 158 58C150 62 135 63.500 118 63.500L66 63.500C60 63 57 58 56 50C54 38 50 26 49 15C52 12 62 10 70 12Z" ' + fx + ' ' + O + '/>' +
+      '<g clip-path="url(#lb' + u + ')"><rect x="40" y="0" width="175" height="70" fill="url(#lp' + u + ')"/>' +
+      /* has-lemezek: a nyak elején és a has alatt */
+      '<path d="M48 14C49 28 53 40 58 50C60 56 62 60 67 64L84 64C74 58 66 52 61 44C56 36 54 26 53 15Z" fill="url(#lv' + u + ')"/><path d="M66 64C90 65 130 65 152 61L152 56C130 60 92 61 66 58Z" fill="url(#lv' + u + ')"/><path d="M158 58C176 60 192 61 205 58L205 55C192 57 176 56 160 53Z" fill="#6e3c1d" opacity=".85"/>' +
+      '<path d="M49.500 20h4M50.500 26h4.400M52 32h4.600M54 38h4.600M56 44h4.800M58 50h5M60.500 56h5.500M70 59.500h2M80 61h2M90 61.500h2M100 61.500h2M110 61.500h2M120 61h2M130 60.500h2M140 60h2" stroke="rgba(30,14,6,.55)" stroke-width=".7"/>' +
+      '<ellipse cx="127" cy="49" rx="21" ry="12.500" fill="rgba(255,120,90,.07)"/><path d="M104 38Q130 33 154 41" fill="none" stroke="rgba(255,200,170,.1)" stroke-width="2.500"/></g>' +
+      '<path d="' + spine + '" fill="#17090b" ' + O + '/>' +
+      /* lábak: elöl, középen, hátul (tompa ujjak, krémszínű karmok) */
+      '<path d="M58 46C56 55 59 60 61 63.500L82 63.500C79 59 80 52 82 47C75 43 64 42 58 46Z" ' + fx + ' ' + O + '/><path d="M60 63.500v-3M65 63.500v-3.500M70 63.500v-3.500M75 63.500v-3.500M80 63.500v-3" stroke="rgba(8,2,3,.6)" stroke-width=".5"/>' +
+      '<path d="M83 52C90 50 97 54 98 63.500L82 63.500C81 59 81 55 83 52Z" ' + fx + ' ' + O + '/><path d="M110 40C128 34 150 42 150 54C150 60 144 63.500 138 63.500L118 63.500C108 62 104 48 110 40Z" ' + fx + ' ' + O + '/><path d="M110 40C128 34 150 42 150 54" fill="none" stroke="rgba(255,150,120,.18)" stroke-width="1.600"/>' +
+      [[62, 63], [67.500, 63.500], [73, 63.500], [89, 63.500], [93.500, 63.500], [98, 63], [126, 63.500], [132, 63.500], [138, 63.500]].map(q => claw(q[0] - 1.6, q[1])).join('') +
+      '<path d="M198 49C203 49 206 52 205 56" fill="none" stroke="rgba(8,2,3,.35)" stroke-width="1"/><path d="M205 51l4 5l-4 .6z" fill="#17090b" ' + O + '/>' +
+      /* közeli szárny: összehajtva a háton — felkar fel a csuklóig, onnan 4 ujj hátra, íves élű hártya */
+      '<g class="d-wing"><path d="M96 31L90 -11L137 -2Q143 6 152 8Q154 15 161 19Q160 25 160 30Q154 28 148 33Q138 28 126 34Q114 28 100 31Z" fill="url(#lm' + u + ')" ' + O + '/>' +
+      '<path d="M90 -11L137 -2M90 -11L152 8M90 -11L161 19M90 -11L160 30" stroke="' + bone + '" stroke-width="1.400" stroke-linecap="round" fill="none"/><path d="M99 31C93 22 92 8 90 -11" fill="none" stroke="' + bone + '" stroke-width="2.600" stroke-linecap="round"/><path d="M99 31C93 22 92 8 90 -11" fill="none" stroke="rgba(255,190,150,.16)" stroke-width=".7"/>' +
+      '<path d="M90 -11L86 -17L93 -12Z" fill="#eadcc0" stroke="rgba(30,15,10,.7)" stroke-width=".4"/><path d="M102 30Q122 20 150 9M104 31Q128 24 158 22" fill="none" stroke="rgba(0,0,0,.25)" stroke-width=".6"/></g>' +
       /* fej */
       '<g class="d-head">' +
-      '<path d="M44 26C40 16 44 8 52 4C52 12 54 20 56 26Z" fill="#2a1a1d" ' + O + '/><path d="M70 28C74 18 72 10 66 6C64 14 64 22 62 28Z" fill="#2a1a1d" ' + O + '/>' +
-      '<path d="M28 52C24 40 32 28 50 26C70 24 80 34 80 46C80 56 70 62 56 62C44 62 32 60 28 52Z" fill="url(#lb' + u + ')" ' + O + '/>' +
-      '<path d="M26 54C24 48 28 44 34 44C34 50 32 54 26 54Z" fill="url(#lb' + u + ')" ' + O + '/>' +
-      '<g class="d-jaw"><path d="M32 56C40 64 56 66 68 60C62 66 46 68 34 62Z" fill="#fbeec2" ' + O + '/></g>' +
-      '<ellipse class="d-glow" cx="53" cy="39" rx="12" ry="9" fill="#ffb722" opacity="0"/>' +
-      '<g class="d-eye"><ellipse cx="53" cy="39" rx="7.2" ry="7.6" fill="#7b3a10"/><g clip-path="url(#lc' + u + ')"><ellipse cx="53" cy="39" rx="6.4" ry="6.8" fill="url(#le' + u + ')"/><g class="d-look"><ellipse cx="53.500" cy="39" rx="2" ry="5" fill="#120a06"/><circle cx="56" cy="36" r="1.700" fill="#fff"/></g>' +
-      '<path class="d-lid" d="M44 30H62V40H44Z" fill="#5e0d12"/></g></g>' +
-      '<g class="d-brow"><path d="M44 31C49 27 58 27 63 31" fill="none" stroke="#5c1219" stroke-width="3" stroke-linecap="round"/></g>' +
-      '<ellipse class="d-nostril" cx="30" cy="48" rx="1.800" ry="1.200" fill="#000"/>' +
-      '<g class="d-smoke"><circle class="sm1" cx="29" cy="46" r="3"/><circle class="sm2" cx="29" cy="46" r="2.500"/><circle class="sm3" cx="29" cy="46" r="3.400"/></g>' +
-      '<g class="d-sparks"><circle class="sp1" cx="26" cy="52" r="2"/><circle class="sp2" cx="26" cy="52" r="1.700"/><circle class="sp3" cx="26" cy="52" r="2.200"/></g>' +
+      '<path d="M62 0C65 -6 71 -9 80 -10.500C74 -6 71 -3 70 3Z" fill="url(#lh' + u + ')" ' + O + '/><path d="M54 -0.500C55 -7 60 -12 69 -15C64 -11 62 -6 62 0Z" fill="url(#lh' + u + ')" ' + O + '/>' +
+      '<path d="M36 8C37 4 42 1 49 -1C56 -3 64 -1 70 5C72 8 72 11 70 13C64 15 58 16 52 16C45 15 39 13 36 11Z" ' + fx + ' ' + O + '/>' +
+      '<path d="M37 8C40 3 46 .5 52 0" fill="none" stroke="rgba(255,170,140,.18)" stroke-width="1.100"/><path d="M65 7.500l6.500 2l-6.200 1.800z" fill="#3a2a20" ' + O + '/><path d="M64.500 10.500l5 2.600l-5 -.1z" fill="#3a2a20" ' + O + '/>' +
+      '<g class="d-jaw"><path d="M38 11.500C44 14 54 15.500 64 13.500L62 17C54 19 44 17.500 39 14.500Z" fill="#3c0b13" ' + O + '/><path d="M41 11.800l1 2l1.300 -1.700zM46 13l1 2.200l1.300 -1.800zM51 13.700l1 2l1.300 -1.700z" fill="#f0e6cc"/></g>' +
+      '<path d="M39 11.500l1 -2l1.200 2zM44 12.500l1 -2l1.200 2.200z" fill="#f0e6cc"/>' +
+      '<ellipse class="d-glow" cx="57" cy="3" rx="8" ry="6.500" fill="#ffb722" opacity="0"/>' +
+      '<g class="d-eye"><circle cx="57" cy="3" r="3.700" fill="#1a0a06"/><g clip-path="url(#lc' + u + ')"><circle cx="57" cy="3" r="3.300" fill="url(#le' + u + ')"/><g class="d-look"><ellipse cx="57.300" cy="3" rx=".95" ry="2.800" fill="#0c0504"/><circle cx="58.500" cy="1.400" r=".8" fill="#fff"/></g></g>' +
+      '<path d="M52.500 3C53 -.2 61 -.8 61.800 3C60.500 1.500 54 1.300 52.500 3Z" fill="#3c0b13" ' + O + '/>' +
+      '<g clip-path="url(#lk' + u + ')"><path class="d-lid" d="M52.800 -1.200H61.400V7.200H52.800Z" fill="#3c0b13"/></g></g>' +
+      '<g class="d-brow"><path d="M51.500 .2C54 -3 60 -3 64 -.2" fill="none" stroke="#2c0810" stroke-width="1.700" stroke-linecap="round"/></g>' +
+      '<ellipse class="d-nostril" cx="38.500" cy="6.200" rx="1.100" ry=".7" fill="#000"/>' +
+      '<g class="d-smoke"><circle class="sm1" cx="37" cy="6.500" r="1.800"/><circle class="sm2" cx="37" cy="6.500" r="1.500"/><circle class="sm3" cx="37" cy="6.500" r="2.100"/></g>' +
+      '<g class="d-sparks"><circle class="sp1" cx="35" cy="11" r="1.200"/><circle class="sp2" cx="35" cy="11" r="1"/><circle class="sp3" cx="35" cy="11" r="1.300"/></g>' +
       '</g>' +
-      '<g class="d-hearts"><path class="h1" d="M44 20c-3-5-9-2-6 3 2 3 6 5 6 5s4-2 6-5c3-5-3-8-6-3z"/><path class="h2" d="M62 12c-2-4-7-2-5 2 2 2 5 4 5 4s3-2 5-4c2-4-3-6-5-2z"/></g>' +
-      '<ellipse class="d-nose" cx="28" cy="48" rx="13" ry="11" fill="transparent"/>' +
+      '<g class="d-hearts"><path class="h1" d="M44 -6c-3-5-9-2-6 3 2 3 6 5 6 5s4-2 6-5c3-5-3-8-6-3z"/><path class="h2" d="M34 -14c-2-4-7-2-5 2 2 2 5 4 5 4s3-2 5-4c2-4-3-6-5-2z"/></g>' +
+      '<ellipse class="d-nose" cx="39" cy="8" rx="9" ry="7" fill="transparent"/>' +
       '</svg>';
   },
   onClick(el, ev, A) {
@@ -5214,7 +5247,7 @@ registerSet({ id: 'uveg-rozsa', name: 'Rózsa és pillangó panel', desc: 'Íves
 registerSet({ id: 'uveg-var', name: 'Csillagos vár panel', desc: 'Éjszakai vár, hold, csillagok és egy pár a dombon: üvegablak-hatású, hátulról megvilágított panel.', tip: 'Kattints: hullócsillag, szív!', parts: [{ type: 'uveg-var', at: 'end' }] });
 
 
-/* ===== Díszek: repülő sárkány + füstoszlopa (2D kép; a 3D polcon is ugyanez a rajz kerül textúraként a síkokra, lib3d-flyimg.js) =====
+/* ===== Díszek: repülő sárkány + füstoszlopa (2D rajz; a 3D polcon valódi 3D modell: lib3d-fly.js, v13) =====
    A rajz a referenciakép (apró fekete sárkány, a szájából kiömlő füst krémszínű, tekergő felhőoszloppá dagad, ami a ferdén dőlő sötét könyveket tartja) alapján készült.
    Rétegek (a 3D-ben külön síkok, a 2D-ben <g> csoportok; az animációkhoz): shadow · cloud (oszlop+alap) · stream (a szájtól az oszlopig) · books · wisp · wingB · dragon · wingF · puffs
    Kattintás (sárkányra): nagyot fúj (a füstsugár megnő, az oszlop megduzzad, a könyvek megrezzennek). Következő kattintás: csapkod a szárnyával. A füstoszlopra kattintva megpuffan.
@@ -7055,7 +7088,7 @@ function nkZoomOpen(it, A) {
 }
 
 
-/* ===== 3D díszek: olvasó szellem – fehér, harang alakú figura a polc szélén ülve, apró fekete könyvet olvas (a sárkányok: lib3d-dragons2.js, lib3d-flyimg.js) ===== */
+/* ===== 3D díszek: olvasó szellem – fehér, harang alakú figura a polc szélén ülve, apró fekete könyvet olvas (a sárkányok: lib3d-dragons2.js, lib3d-fly.js) ===== */
 'use strict';
 
 /* közös: „soha ne fusson le üresen” tweenek, amik a ctl.seq-et cserélik */
@@ -7077,10 +7110,14 @@ function ghArmGeo() {   // a +x oldali kar a vállhoz képest: könyök kifelé-
 function ghSurfZ(x, y) { for (let z = 50; z > -40; z -= 0.4) if (ghF(x, y, z) < 0) return z; return 20; }
 function ghHemGeo() {
   return drGeoOnce('ghHem', () => {
-    const T = THREE, bot = new T.SplineCurve([[30, -8], [28, -15], [22.5, -22], [17, -15], [11, -11.5], [6, -16.5], [0, -17.5], [-5, -12.5], [-11, -10.5], [-16.5, -19], [-22, -25.5], [-27.5, -16], [-30, -9]].map(p => new T.Vector2(p[0], p[1]))).getPoints(64);
+    const T = THREE, bot = new T.SplineCurve([[30, -8], [28.5, -17], [23.5, -29], [17.5, -18], [11.5, -12], [6.5, -21], [0.5, -24], [-5, -15], [-11, -11], [-16.5, -22], [-22, -31], [-27.5, -18], [-30, -9]].map(p => new T.Vector2(p[0], p[1]))).getPoints(64);
     const sh = new T.Shape(); sh.moveTo(-31, 3); sh.lineTo(31, 3); sh.lineTo(30, -8); bot.forEach(p => sh.lineTo(p.x, p.y)); sh.lineTo(-31, 3);
     const g = new T.ExtrudeGeometry(sh, { depth: 3.2, bevelEnabled: true, bevelThickness: 1.4, bevelSize: 1.4, bevelSegments: 3, curveSegments: 4 }); g.translate(0, 0, -1.6); g.userData.shared = true; return g;
   });
+}
+function ghFoldTex() {   // függőleges redők: a szegély UV-ja modell-egység (x, y), ezért a nyújtás a repeat-ben van
+  const t = kTex(128, 8, (g, W, H) => { const gr = g.createLinearGradient(0, 0, W, 0); for (let i = 0; i <= 8; i++) gr.addColorStop(i / 8, 'rgb(' + Math.round(128 + 110 * Math.sin(i / 8 * Math.PI * 2 * 2.5 + 0.6)) + ',' + Math.round(128 + 110 * Math.sin(i / 8 * Math.PI * 2 * 2.5 + 0.6)) + ',' + Math.round(128 + 110 * Math.sin(i / 8 * Math.PI * 2 * 2.5 + 0.6)) + ')'); g.fillStyle = gr; g.fillRect(0, 0, W, H); }, 'ghFold');
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1 / 24, 1 / 40); t.needsUpdate = true; return t;
 }
 function ghCoverTex() {
   return kTex(128, 96, (g, W, H) => {
@@ -7099,13 +7136,14 @@ function ghBuild(it) {
     hole: new T.MeshBasicMaterial({ color: 0x1b1720, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }),
     mouth: new T.MeshBasicMaterial({ color: 0x24202a })
   };
-  mats.push(M.body, M.cover, M.edge, M.page, M.hole, M.mouth);
+  M.hem = M.body.clone(); M.hem.bumpMap = ghFoldTex(); M.hem.bumpScale = 2.4;   // a lelógó szegélyen függőleges redők (bump)
+  mats.push(M.body, M.cover, M.edge, M.page, M.hole, M.mouth, M.hem);
   const P = (m, part) => { m.userData.part = part || 'body'; parts.push(m); return m; };
   const halo = kGlowSprite(0xfff0d0, 170, 0.12); halo.position.set(0, 58, -40); root.add(halo); mats.push(halo.material);
   const bg = new T.Group(); root.add(bg);                       // minden, ami a testtel mozog (a hop/rejtőzés/nő)
   const body = new T.Mesh(ghBodyGeo(), M.body); body.position.z = GH.Z; body.castShadow = true; body.receiveShadow = true; bg.add(P(body));
   // szegély a polc peremén
-  const hem = new T.Mesh(ghHemGeo(), M.body); hem.position.set(0, 1.6, -0.6); hem.castShadow = true; hem.receiveShadow = true; bg.add(P(hem));
+  const hem = new T.Mesh(ghHemGeo(), M.hem); hem.position.set(0, 1.6, -0.6); hem.castShadow = true; hem.receiveShadow = true; bg.add(P(hem));
   // karok (a vállnál forognak)
   const arms = [1, -1].map(sg => { const g = new T.Group(); g.position.set(sg * 29.5, 58, GH.Z + 15); g.scale.x = sg; const m = new T.Mesh(ghArmGeo(), M.body); m.castShadow = true; g.add(P(m)); bg.add(g); g.userData.sg = sg; return g; });
   // szem-lyukak: sötét, hosszúkás matrica a mellkas felszínén (a felület normálja mentén állítva)
@@ -7545,28 +7583,38 @@ registerDecor3({
 });
 
 
-/* ===== 3D dísz: fekvő sárkány a könyvhalmon (sarkany-fekvo). A repülő sárkány (kis-sarkany) 2D kép: lib3d-flyimg.js =====
-   Stílus: puha, „gyanta-figura” hatás; fekete hát, vörös oldal és has, fekete szarvak/tüskék, sötétvörös szárnyhártya, borostyán szem.
-   Modell-egységek: a dísz alja a polcon, X jobbra, Y fel, Z a néző felé; kRoot(it, 100) skáláz. */
+/* ===== 3D dísz: fekvő sárkány a könyvhalmon (sarkany-fekvo). A fekete, fújó sárkány (kis-sarkany): lib3d-fly.js (közös fej-szerelvény: dgHeadRig) =====
+   v13: teljes átépítés – felemelt nyak és fej (olvasható sziluett), ék alakú fej szemöldök-gerinccel és résnyi pupillájú, nehéz szemhéjú szemmel,
+   izmos láb/comb, hasi lemezek (valódi dombormű), pikkely-bump + „sütött” AO (SDF-mintavétel) csúcsszínekben, nyújtott szárny csontokkal,
+   ráncolt hártyával és íves élekkel, sötét bőrkötetű könyvhalom aranyozott, címkézett gerinccel.
+   Modell-egységek: a dísz alja a polcon, X jobbra, Y fel, Z a néző felé; kRoot(it, DG_VH) skáláz. */
 'use strict';
 
+const DG_VH = 124;
 const dgC = {};
 function dgColInit() {
   if (dgC.back) return;
-  Object.assign(dgC, { back: lc('#0d0607'), body: lc('#5c0910'), belly: lc('#8e2326'), bellyD: lc('#b4502e'), mem0: lc('#1d0409'), mem1: lc('#6f0e18'), jawIn: lc('#6a1424'),
-    });
+  Object.assign(dgC, { back: lc('#150709'), body: lc('#560a15'), belly: lc('#55301f'), bellyD: lc('#744829'), mem0: lc('#1c050a'), mem1: lc('#5e0d1a'), memEdge: lc('#a3303a'), jawIn: lc('#6a1424'), hornB: lc('#241512'), hornT: lc('#c9b78e') });
 }
 const dgMix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
 const dgSm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-/* SDF-gradiens (felület-normál) → ellenfény színezéshez: hát sötétebb, has világos */
-function dgNormY(f, x, y, z) { const e = 0.9; const gx = f(x + e, y, z) - f(x - e, y, z), gy = f(x, y + e, z) - f(x, y - e, z), gz = f(x, y, z + e) - f(x, y, z - e), l = Math.hypot(gx, gy, gz) || 1; return [gx / l, gy / l, gz / l]; }
-function dgShade(f, cs) {   // cs = {back, body, belly, bellyD}; a fv. (x,y,z)→[r,g,b]
+/* SDF-gradiens (felület-normál) */
+function dgNormY(f, x, y, z) { const e = 0.8; const gx = f(x + e, y, z) - f(x - e, y, z), gy = f(x, y + e, z) - f(x, y - e, z), gz = f(x, y, z + e) - f(x, y, z - e), l = Math.hypot(gx, gy, gz) || 1; return [gx / l, gy / l, gz / l]; }
+/* sütött ambient occlusion: a normál mentén mintavételezett SDF-ből (zugokban sötétebb) */
+function dgAO(f, x, y, z, n) {
+  let occ = 0, w = 1;
+  for (let i = 1; i <= 4; i++) { const h = 0.5 + i * i * 0.55, d = f(x + n[0] * h, y + n[1] * h, z + n[2] * h); occ += Math.max(0, h - d) / h * w; w *= 0.62; }
+  return Math.max(0.3, 1 - 0.5 * occ);
+}
+/* csúcsszín: a hát sötét, az oldal vörös, a has meleg bronz; zugokban AO. dorsal(x,y,n) a „hát felé” mutató összetevőt adja (nyakon más, mint a törzsön) */
+function dgShade(f, cs, o) {
+  o = o || {};
   return (x, y, z) => {
-    const n = dgNormY(f, x, y, z), up = dgSm(-0.2, 0.5, n[1]), dn = dgSm(0.12, 0.62, -n[1]);
+    const n = dgNormY(f, x, y, z), dd = o.dorsal ? o.dorsal(x, y, z, n) : n[1], up = dgSm(-0.15, 0.6, dd), dn = dgSm(0.12, 0.62, -n[1]) * (o.noBelly ? 0 : 1);
     let c = dgMix(cs.body, cs.back, up);
-    const plate = 0.5 + 0.5 * Math.sin(x * 1.05 + z * 0.4);
-    c = dgMix(c, dgMix(cs.belly, cs.bellyD, dgSm(0.55, 0.95, plate) * 0.55), dn);
-    return c;
+    if (dn > 0) c = dgMix(c, dgMix(cs.belly, cs.bellyD, dgSm(0.4, 0.95, dn)), dn);
+    const ao = dgAO(f, x, y, z, n);
+    return [c[0] * ao, c[1] * ao, c[2] * ao];
   };
 }
 /* felület-pont fentről (tüskék, páncél-lemezek): (x,z) fölül lefelé lépkedve */
@@ -7575,7 +7623,7 @@ function dgTop(f, x, z, y0, y1) {
   return null;
 }
 function dgOrient(m, n) { const T = THREE, v = new T.Vector3(n[0], n[1], n[2]).normalize(); m.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), v); }
-/* tűzsugár: n db additív fénypamacs a from pontból a dir irányba (hossz len), sárga → narancs → vörös, nő a méret; opcionális végső füst */
+/* tűzsugár: n db additív fénypamacs a from pontból a dir irányba (hossz len), sárga → narancs → vörös, nő a méret */
 function dgJet(parent, from, dir, len, scale) {
   const T = THREE, d = dir.clone().normalize(), N = 15;
   for (let i = 0; i < N; i++) setTimeout(() => {
@@ -7588,14 +7636,19 @@ function dgJet(parent, from, dir, len, scale) {
     }, () => { parent.remove(sp); sp.material.dispose(); });
   }, i * 38);
 }
-/* hártya (legyező a gyökértől az élpontokig, 2 gyűrűvel a színátmenethez), kétoldalas */
-function dgFan(root, edge, c0, c1, mat, parent) {
-  const T = THREE, n = edge.length, pos = [], col = [], idx = [];
+/* hártya: legyező a gyökértől az élpontokig, 3 gyűrűvel (színátmenet + enyhe ráncolás), kétoldalas; rip(i,k) a z-eltolás */
+function dgFan(root, edge, c0, c1, mat, parent, rip, tipTint) {
+  const T = THREE, n = edge.length, pos = [], col = [], idx = [], RK = [0.34, 0.68, 1];
   pos.push(root[0], root[1], root[2]); col.push(c0[0], c0[1], c0[2]);
-  [0.5, 1].forEach((k, li) => {
-    for (let i = 0; i < n; i++) { const e = edge[i]; pos.push(root[0] + (e[0] - root[0]) * k, root[1] + (e[1] - root[1]) * k, root[2] + (e[2] - root[2]) * k + (li === 0 ? 0.6 : 0)); const c = dgMix(c0, c1, k * k); col.push(c[0], c[1], c[2]); }
+  RK.forEach((k, li) => {
+    for (let i = 0; i < n; i++) {
+      const e = edge[i], z = root[2] + (e[2] - root[2]) * k + (rip ? rip(i, k) : 0) + li * 0.25;
+      pos.push(root[0] + (e[0] - root[0]) * k, root[1] + (e[1] - root[1]) * k, z);
+      const c = dgMix(c0, c1, k * k), tt = 1 + ((tipTint && tipTint(i)) - 1) * k * k; col.push(c[0] * tt, c[1] * tt, c[2] * tt);
+    }
   });
-  for (let i = 0; i < n - 1; i++) { idx.push(0, 1 + i, 2 + i); idx.push(1 + i, 1 + n + i, 2 + i); idx.push(2 + i, 1 + n + i, 2 + n + i); }
+  for (let i = 0; i < n - 1; i++) idx.push(0, 1 + i, 2 + i);
+  for (let r = 0; r < 2; r++) for (let i = 0; i < n - 1; i++) { const a = 1 + r * n + i, b = a + 1, c = a + n, d = c + 1; idx.push(a, c, b, b, c, d); }
   const g = new T.BufferGeometry(); g.setAttribute('position', new T.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new T.Float32BufferAttribute(col, 3)); g.setIndex(idx); g.computeVertexNormals();
   const m = new T.Mesh(g, mat); m.castShadow = true; m.receiveShadow = true; if (parent) parent.add(m); return m;
 }
@@ -7609,165 +7662,233 @@ function dgBone(a, b, r0, r1, mat, parent, bend) {
 function dgChain(x, y, z, pts, k) {
   let d = 1e9; for (let i = 0; i < pts.length - 1; i++) { const a = pts[i], b = pts[i + 1], s = sdCone(x, y, z, a[0], a[1], a[2], b[0], b[1], b[2], a[3], b[3]); d = i ? smin(d, s, k) : s; } return d;
 }
-/* szem: borostyán szivárványhártya + fekete pupilla + két fényfolt + felső szemhéj (gömbhéj-sapka), a csoport középpontja a szemgolyó közepe */
-function dgEye(parent, x, y, z, r, M) {
-  const T = THREE, g = new T.Group(); g.position.set(x, y, z); parent.add(g);
-  const rim = new T.Mesh(new T.SphereGeometry(r * 1.03, 18, 14), M.rim); g.add(rim);
-  const ball = new T.Mesh(new T.SphereGeometry(r, 20, 16), M.iris); ball.scale.set(0.94, 0.94, 0.9); ball.position.z = 0.2; g.add(ball);
-  const pg = new T.Group(); pg.position.z = r * 0.78; g.add(pg);
-  const pu = new T.Mesh(new T.SphereGeometry(1, 14, 12), M.pupil); pu.scale.set(r * 0.36, r * 0.62, r * 0.22); pg.add(pu);
-  const h1 = new T.Mesh(new T.SphereGeometry(r * 0.2, 8, 6), M.glint); h1.position.set(r * 0.3, r * 0.34, r * 0.16); pg.add(h1);
-  const h2 = new T.Mesh(new T.SphereGeometry(r * 0.1, 8, 6), M.glint); h2.position.set(-r * 0.22, -r * 0.3, r * 0.14); pg.add(h2);
+/* csúcsszín egy csőre a hossz mentén (szarv: sötét tő → csontszínű hegy) */
+function dgTubeCol(g, fn) {
+  const n = g.userData.n, m = g.userData.m, a = new Float32Array((n + 1) * (m + 1) * 3);
+  for (let i = 0; i <= n; i++) { const c = fn(i / n); for (let j = 0; j <= m; j++) { const o = (i * (m + 1) + j) * 3; a[o] = c[0]; a[o + 1] = c[1]; a[o + 2] = c[2]; } }
+  g.setAttribute('color', new THREE.BufferAttribute(a, 3));
+}
+/* szem: sötét, fényes szemgolyó + íriszsapka (borostyán, függőleges résnyi pupilla) + két fényfolt + nehéz felső szemhéj; a csoport a szemgolyó közepe */
+function dgIrisTex() {
+  return kTex(256, 256, (g, W) => {
+    const c = W / 2, gr = g.createRadialGradient(c, c, 4, c, c, c);
+    gr.addColorStop(0, '#ffe9a0'); gr.addColorStop(0.35, '#ffc23a'); gr.addColorStop(0.72, '#d96a12'); gr.addColorStop(0.92, '#7a2208'); gr.addColorStop(1, '#1d0803');
+    g.fillStyle = gr; g.fillRect(0, 0, W, W);
+    g.strokeStyle = 'rgba(120,40,0,.35)'; g.lineWidth = 2; for (let i = 0; i < 56; i++) { const a = i / 56 * 6.283; g.beginPath(); g.moveTo(c + Math.cos(a) * 30, c + Math.sin(a) * 30); g.lineTo(c + Math.cos(a) * 112, c + Math.sin(a) * 112); g.stroke(); }
+    const sl = g.createRadialGradient(c, c, 2, c, c, 46); sl.addColorStop(0, 'rgba(0,0,0,1)'); sl.addColorStop(0.7, 'rgba(0,0,0,1)'); sl.addColorStop(1, 'rgba(0,0,0,0)');
+    g.save(); g.translate(c, c); g.scale(0.26, 1.55); g.translate(-c, -c); g.fillStyle = sl; g.beginPath(); g.arc(c, c, 46, 0, 6.283); g.fill(); g.restore();
+  }, 'dgIris');
+}
+function dgEye(parent, x, y, z, r, M, yaw) {
+  const T = THREE, g = new T.Group(); g.position.set(x, y, z); g.rotation.y = yaw || 0; parent.add(g);
+  const ball = new T.Mesh(new T.SphereGeometry(r, 22, 16), M.rim); ball.scale.set(1, 0.96, 0.96); g.add(ball);
+  const pg = new T.Group(); g.add(pg);
+  const cg = new T.SphereGeometry(r * 1.012, 30, 14, 0, Math.PI * 2, 0, 0.95); cg.rotateX(Math.PI / 2);
+  { const p = cg.attributes.position, uv = cg.attributes.uv, R = r * 1.012 * Math.sin(0.95); for (let i = 0; i < p.count; i++) uv.setXY(i, 0.5 + p.getX(i) / (2 * R), 0.5 + p.getY(i) / (2 * R)); uv.needsUpdate = true; }
+  const iris = new T.Mesh(cg, M.iris); pg.add(iris);
+  const h1 = new T.Mesh(new T.SphereGeometry(r * 0.2, 8, 6), M.glint); h1.position.set(r * 0.34, r * 0.38, r * 0.86); pg.add(h1);
+  const h2 = new T.Mesh(new T.SphereGeometry(r * 0.1, 8, 6), M.glint); h2.position.set(-r * 0.24, -r * 0.32, r * 0.9); pg.add(h2);
+  const pu = pg;
   const lid = new T.Group(); g.add(lid);
-  const lm = new T.Mesh(new T.SphereGeometry(r * 1.1, 22, 12, 0, Math.PI * 2, 0, Math.PI / 2), M.lid); lm.castShadow = true; lid.add(lm);
-  const arc = new T.Mesh(new T.TorusGeometry(r * 0.78, r * 0.09, 6, 16, Math.PI), M.line); arc.rotation.z = Math.PI; arc.position.set(0, r * 0.1, r * 0.94); arc.scale.y = 0.5; arc.visible = false; g.add(arc);
+  const lm = new T.Mesh(new T.SphereGeometry(r * 1.13, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), M.lid); lm.castShadow = true; lid.add(lm);
+  const arc = new T.Mesh(new T.TorusGeometry(r * 0.8, r * 0.09, 6, 16, Math.PI), M.line); arc.rotation.z = Math.PI; arc.position.set(0, r * 0.1, r * 0.94); arc.scale.y = 0.5; arc.visible = false; g.add(arc);
   return { g: g, pg: pg, pu: pu, lid: lid, arc: arc, r: r };
 }
 
-/* ---------- könyvhalom ---------- */
+/* ---------- könyvhalom: sötét bőrkötetek aranyozott gerinccel (a gerinc a néző felé néz) ---------- */
 function dgPagesTex() {
-  return kTex(64, 64, (g, W, H) => { g.fillStyle = '#f6ecd2'; g.fillRect(0, 0, W, H); g.strokeStyle = 'rgba(150,118,70,.55)'; g.lineWidth = 1; for (let y = 2; y < H; y += 3.2) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); } }, 'dgPages');
+  return kTex(64, 64, (g, W, H) => { g.fillStyle = '#e9dcc0'; g.fillRect(0, 0, W, H); g.strokeStyle = 'rgba(120,92,52,.55)'; g.lineWidth = 1; for (let y = 2; y < H; y += 2.6) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); } }, 'dgPages');
 }
-function dgBook(parent, M, w, h, d, ci, x, y, z, ry) {
-  const T = THREE, g = new T.Group(); g.position.set(x, y, z); g.rotation.y = ry || 0; const cov = M.cov[ci];
+const DG_BOOKS = [
+  { c: '#4a0f1d', t: 'A SÁRKÁNY KÖNYVE', w: 212, h: 14, d: 112, x: 2, z: 10, ry: 0.0 },
+  { c: '#1c1a2e', t: 'ÉJFÉLI MESÉK', w: 204, h: 12, d: 104, x: 0, z: 9, ry: 0.03 },
+  { c: '#2f1d12', t: 'SÖTÉT LÁNGOK', w: 196, h: 11, d: 98, x: 6, z: 8, ry: -0.025 }
+];
+function dgSpineTex(b, i) {
+  return kTex(1024, 128, (g, W, H) => {
+    g.fillStyle = b.c; g.fillRect(0, 0, W, H);
+    const rng = dcRng(30 + i); for (let k = 0; k < 2600; k++) { g.fillStyle = 'rgba(' + (rng() < 0.5 ? '255,235,210' : '0,0,0') + ',' + (0.025 + rng() * 0.06).toFixed(3) + ')'; g.fillRect(rng() * W, rng() * H, 1 + rng() * 5, 1 + rng() * 2); }
+    const gold = g.createLinearGradient(0, 0, 0, H); gold.addColorStop(0, '#f1d78b'); gold.addColorStop(0.5, '#c79a3a'); gold.addColorStop(1, '#8a6420');
+    g.fillStyle = gold; g.fillRect(0, 7, W, 3); g.fillRect(0, H - 10, W, 3); g.fillRect(0, 13, W, 1.4); g.fillRect(0, H - 15, W, 1.4);
+    [0.11, 0.2, 0.8, 0.89].forEach(q => { const x = q * W; g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(x - 9, 0, 18, H); g.fillStyle = b.c; g.fillRect(x - 7, 0, 14, H); g.fillStyle = gold; g.fillRect(x - 6, 0, 3, H); g.fillRect(x + 3, 0, 3, H); g.fillRect(x - 1, 0, 2, H); });
+    g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(W * 0.3, 20, W * 0.4, H - 40); g.strokeStyle = gold; g.lineWidth = 3; g.strokeRect(W * 0.3 + 2, 22, W * 0.4 - 4, H - 44);
+    g.font = '600 50px Georgia, "Times New Roman", serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = 'rgba(0,0,0,.55)'; g.fillText(b.t, W / 2 + 2, H / 2 + 4); g.fillStyle = gold; g.fillText(b.t, W / 2, H / 2 + 2);
+    [0.265, 0.735].forEach(q => { g.fillStyle = gold; g.beginPath(); g.moveTo(q * W, H / 2 - 12); g.lineTo(q * W + 9, H / 2); g.lineTo(q * W, H / 2 + 12); g.lineTo(q * W - 9, H / 2); g.fill(); });
+    const sh = g.createLinearGradient(0, 0, 0, H); sh.addColorStop(0, 'rgba(255,255,255,.1)'); sh.addColorStop(0.5, 'rgba(255,255,255,0)'); sh.addColorStop(1, 'rgba(0,0,0,.28)'); g.fillStyle = sh; g.fillRect(0, 0, W, H);
+  }, 'dgSpine' + i);
+}
+function dgBook(parent, M, i, y) {
+  const T = THREE, b = DG_BOOKS[i], g = new T.Group(); g.position.set(b.x, y + b.h / 2, b.z); g.rotation.y = b.ry; const cov = M.cov[i];
   const mk = (bw, bh, bd, mat, px, py, pz) => { const m = new T.Mesh(new T.BoxGeometry(bw, bh, bd), mat); m.position.set(px, py, pz); m.castShadow = true; m.receiveShadow = true; m.userData.part = 'book'; g.add(m); parts.push(m); return m; };
-  mk(w, 2.2, d, cov, 0, -h / 2 + 1.1, 0); mk(w, 2.2, d, cov, 0, h / 2 - 1.1, 0);
-  mk(w - 3.4, h - 4.2, d - 2.6, M.pages, 1.7, 0, -0.2);
-  mk(3.6, h, d, cov, -w / 2 + 1.8, 0, 0);
-  const band = new T.Mesh(new T.BoxGeometry(w + 0.2, 0.8, 1.2), M.gold); band.position.set(0, h / 2 - 1.5, d / 2 - 0.2); g.add(band);
+  const w = b.w, h = b.h, d = b.d, cb = 2.5;
+  mk(w, cb, d, cov, 0, -h / 2 + cb / 2, 0); mk(w, cb, d, cov, 0, h / 2 - cb / 2, 0);                  // fedlap és hátlap
+  mk(w - 3.5, h - 2 * cb + 0.4, d - 7, M.pages, 0, 0, -3.2);                                           // lapok (hátul, a gerinc ellenében)
+  const sp = new T.Mesh(new T.BoxGeometry(w, h - 2 * cb + 0.4, 3.2), [cov, cov, cov, cov, M.spine[i], cov]); sp.position.set(0, 0, d / 2 - 1.6); sp.castShadow = true; sp.receiveShadow = true; sp.userData.part = 'book'; g.add(sp); parts.push(sp);
+  mk(w - 3.5, h - 2 * cb + 0.4, 3, cov, 0, 0, -d / 2 + 1.5);                                          // hátsó borító-él
   parent.add(g); return g;
 }
 
-/* ---------- a fekvő sárkány ---------- */
+/* ---------- a fekvő sárkány: formák ---------- */
+const DG_NECK = [[-30, 60, 7, 13.2], [-39, 68, 12, 11.4], [-46, 79, 16, 9.8], [-50, 90, 19, 8.7], [-51, 98, 21, 8.2]];
+const dgE = (x, y, z, cx, cy, cz, rx, ry, rz) => sdEll(x - cx, y - cy, z - cz, rx, ry, rz);
 function dgLieBody(x, y, z) {
-  let d = sdEll(x - 20, y - 50, z + 3, 46, 17, 21);                      // törzs
-  d = smin(d, sdEll(x + 18, y - 50, z - 2, 21, 17, 19), 9);              // mellkas/váll
-  d = smin(d, sdEll(x - 55, y - 48, z + 1, 21, 16, 19), 8);              // far
-  d = smin(d, sdCone(x, y, z, -26, 54, 6, -52, 51, 22, 10.5, 9.5), 8);   // nyak
-  d = smin(d, sdEll(x - 58, y - 41, z - 12, 15, 13, 12), 7);             // comb
-  d = smin(d, sdEll(x - 62, y - 37, z - 25, 11, 5.4, 10.5), 4);          // hátsó láb talp
-  d = smin(d, sdCone(x, y, z, -30, 45, 8, -57, 39, 37, 8.6, 7), 6);      // jobb mellső láb
-  d = smin(d, sdEll(x + 59, y - 38, z - 38, 10, 5.2, 10.5), 4);          // jobb mancs
-  d = smin(d, sdCone(x, y, z, -22, 45, 2, -80, 38, 30, 8, 6.6), 6);      // bal mellső láb
-  d = smin(d, sdEll(x + 82, y - 38, z - 31, 9.5, 5.2, 10), 4);           // bal mancs
-  return d;
+  let d = dgE(x, y, z, -24, 55, 1, 24, 19.5, 21);                                                    // mellkas
+  d = smin(d, dgE(x, y, z, 4, 53, 0, 30, 17.5, 20), 12);                                             // törzs
+  d = smin(d, dgE(x, y, z, 38, 54, 1, 22, 18, 19.5), 10);                                            // csípő
+  d = smin(d, dgChain(x, y, z, DG_NECK, 8), 9);                                                      // nyak
+  d = smin(d, dgE(x, y, z, 40, 51, 15, 16.5, 16, 10.5), 8);                                          // hátsó comb
+  d = smin(d, sdCone(x, y, z, 47, 44, 19, 40, 39.5, 31, 8.4, 5.6), 6);                               // hátsó lábszár
+  d = smin(d, dgE(x, y, z, 33, 38.4, 37, 12, 4.4, 8.5), 4);                                          // hátsó talp
+  d = smin(d, dgE(x, y, z, -27, 50, 13, 11, 14, 9), 7);                                              // váll
+  d = smin(d, sdCone(x, y, z, -27, 52, 13, -35, 43, 28, 9, 6.4), 6);                                 // mellső láb felső
+  d = smin(d, sdCone(x, y, z, -35, 43, 28, -43, 39.6, 38, 6.4, 5.2), 4);                             // alsó
+  d = smin(d, dgE(x, y, z, -45, 38.5, 43.5, 8.6, 4.3, 7.8), 3);                                      // mancs
+  d = smin(d, sdCone(x, y, z, -17, 49, 8, -12, 42, 24, 8, 5.8), 6);                                  // távolabbi mellső láb
+  d = smin(d, dgE(x, y, z, -10, 38.6, 35, 7.8, 4.1, 7.2), 3);                                        // távolabbi mancs
+  const bw = Math.min(1, Math.max(0, (48 - y) / 7)), rid = bw > 0 ? 0.55 * bw * Math.pow(0.5 + 0.5 * Math.sin(x * 1.15), 0.7) : 0;   // hasi lemezek: valódi dombormű
+  return d + rid * (z > 6 ? 1 : 0.6) - 0.28 * bw;
 }
-const DG_TAIL = [[66, 49, -6, 11.5], [84, 46, -3.5, 9.4], [96, 43.5, 3, 7.6], [99, 41.2, 15, 6.1], [92, 39.8, 26, 4.9], [79, 38.8, 32, 4], [66, 38.2, 33, 3.4], [56, 38, 31, 3.1]];
-function dgLieTail(x, y, z) { return dgChain(x, y, z, DG_TAIL, 4); }
-function dgLieBodyGeo() { dgColInit(); return drGeoOnce('dgLieBody', () => sdfGeo(dgLieBody, [-94, 22, -30], [78, 72, 52], 1.7, dgShade(dgLieBody, { back: dgC.back, body: dgC.body, belly: dgC.belly, bellyD: dgC.bellyD }))); }
-function dgLieTailGeo() { dgColInit(); const P = DG_TAIL[0], f = (x, y, z) => dgLieTail(x + P[0], y + P[1], z + P[2]); return drGeoOnce('dgLieTail', () => sdfGeo(f, [-14, -50, -18], [44, 18, 46], 1.5, dgShade(f, { back: dgC.back, body: dgC.body, belly: dgC.belly, bellyD: dgC.bellyD }))); }
-function dgHeadF(x, y, z) {
-  const ax = Math.abs(x);
-  let d = sdEll(x, y - 1, z + 2, 17.5, 15, 16);
-  d = smin(d, sdEll(x, y + 3.2, z - 12, 10.8, 8, 12.5), 6);
-  d = smin(d, sdEll(ax - 14.5, y + 2.5, z - 1, 6.6, 6.6, 8.5), 5);
-  d = smin(d, sdEll(ax - 8.8, y - 9.6, z - 9, 6.6, 3, 5.6), 3);
-  d = smin(d, sdSph(ax - 3.8, y + 1.6, z - 24, 2.7), 2.6);
+const DG_TAIL = [[58, 53, 2, 12.2], [76, 50, -3, 10.4], [92, 46, -1, 8.6], [103, 43, 7, 7], [102, 41, 20, 5.6], [92, 39.6, 30, 4.5], [78, 38.8, 34, 3.6], [66, 38.4, 34, 3]];
+function dgLieTail(x, y, z) { return dgChain(x, y, z, DG_TAIL, 4.5); }
+const DG_DORSAL = (x, y, z, n) => { const w = dgSm(62, 76, y); return n[1] * (1 - w) + (0.82 * n[0] + 0.45 * n[1]) * w; };
+function dgLieBodyGeo() { dgColInit(); return drGeoOnce('dgLieBody', () => sdfGeo(dgLieBody, [-64, 33, -26], [66, 107, 52], 1.25, dgShade(dgLieBody, dgC, { dorsal: DG_DORSAL }))); }
+function dgLieTailGeo() { dgColInit(); const P = DG_TAIL[0], f = (x, y, z) => dgLieTail(x + P[0], y + P[1], z + P[2]); return drGeoOnce('dgLieTail', () => sdfGeo(f, [-16, -24, -18], [56, 14, 42], 1.2, dgShade(f, dgC, {}))); }
+function dgHeadF(x, y, z) {   // fej-lokális: az origó a koponya közepe, +z előre (pofa), +y fel
+  const ax = Math.abs(x), E = (cx, cy, cz, rx, ry, rz) => sdEll(x - cx, y - cy, z - cz, rx, ry, rz), Q = (cx, cy, cz, rx, ry, rz) => sdEll(ax - cx, y - cy, z - cz, rx, ry, rz);   // Q: tükrözött (x előjele nem számít)
+  let d = E(0, 0, -1, 10.4, 9, 11.6);                                       // koponya
+  d = smin(d, E(0, -2.6, 13.4, 6.6, 4.9, 11.4), 5.5);                       // hosszú felső pofa
+  d = smin(d, E(0, -1.8, 24.6, 4.6, 3.5, 4.6), 3);                          // orrvég
+  d = smin(d, Q(6.6, 5.4, 3.6, 4.3, 2.5, 6.6), 2.4);                        // szemöldök-gerinc
+  d = smin(d, Q(8.4, -2.8, -1.6, 3.6, 4.4, 7.2), 4);                        // arccsont
+  d = smin(d, Q(3, -0.4, 27.4, 2.3, 1.6, 2.2), 1.8);                        // orrlyuk-dudor
+  d = smin(d, E(0, 6.6, -4, 1.9, 2.2, 8), 3);                               // koponya-taréj
+  d = smax(d, -sdSph(ax - 7.9, y - 2.5, z - 5.4, 3.7), 1.4);                // szemüreg
+  d = smax(d, -sdEll(ax - 3, y + 0.4, z - 27.2, 1.3, 0.8, 1.6), 0.8);       // orrlyuk
   return d;
 }
 function dgJawF(x, y, z) {   // csukló-lokális (a csukló az origó); előre +z
-  let d = sdEll(x, y + 0.6, z - 10.5, 7.9, 3.7, 11.6);
-  d = smin(d, sdEll(Math.abs(x) - 5.6, y, z - 4, 3.8, 3.4, 6.2), 3);
+  const ax = Math.abs(x);
+  let d = sdEll(x, y + 0.6, z - 11.4, 5.0, 2.5, 12.4);
+  d = smin(d, sdEll(ax - 4.4, y - 1.0, z - 3.4, 2.4, 2.9, 6.0), 3);
+  d = smin(d, sdSph(x, y + 0.6, z - 22.8, 2.9), 2);
   return d;
 }
-function dgHeadGeo() { dgColInit(); return drGeoOnce('dgHead', () => sdfGeo(dgHeadF, [-26, -17, -20], [26, 20, 28], 1.2, dgShade(dgHeadF, { back: dgC.back, body: dgC.body, belly: dgC.belly, bellyD: dgC.bellyD }))); }
-function dgJawGeo() { dgColInit(); return drGeoOnce('dgJaw', () => sdfGeo(dgJawF, [-12, -7, -4], [12, 7, 24], 1.0, dgShade(dgJawF, { back: dgC.body, body: dgC.belly, belly: dgC.belly, bellyD: dgC.bellyD }))); }
+const dgFaceShade = (f, o) => dgShade(f, dgC, o || { dorsal: (x, y, z, n) => n[1] * 0.8 + 0.2 * n[2] });
+function dgHeadGeo(cs, key) { dgColInit(); cs = cs || dgC; return drGeoOnce(key || 'dgHead', () => sdfGeo(dgHeadF, [-14, -14, -14], [14, 13, 31], 0.75, dgShade(dgHeadF, cs, { dorsal: (x, y, z, n) => n[1] * 0.8 + 0.2 * n[2] }))); }
+function dgJawGeo(cs, key) { dgColInit(); cs = cs || dgC; return drGeoOnce((key || 'dgHead') + 'J', () => sdfGeo(dgJawF, [-9, -5, -7], [9, 6, 27], 0.7, dgShade(dgJawF, cs, { dorsal: (x, y, z, n) => n[1] * 0.5 }))); }
 
-function dgMats() {
+function dgMats(bk) {   // bk: fekete (repülő) sárkány – sötét kék-szürke fényű színek, könyvek nélkül
   const T = THREE;
   const M = {
-    body: l3Skin({ color: '#ffffff', kind: 'scale', cell: 4.6, amt: 0.34, rough: 0.5, env: 0.6, vcol: true, clear: 0.4, clearR: 0.42 }),
-    skin: l3Skin({ color: '#5c0910', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.42 }),
-    horn: kVinyl('#2a1a1d', { roughness: 0.3, clearcoat: 0.6 }), spike: kVinyl('#17090b', { roughness: 0.32, clearcoat: 0.5 }), claw: kVinyl('#efe3cc', { roughness: 0.35 }), tooth: kVinyl('#fff4dc', { roughness: 0.3 }),
-    iris: new T.MeshStandardMaterial({ color: l3Col('#ffb722'), roughness: 0.22, emissive: l3Col('#ff9a10'), emissiveIntensity: 0.32 }), rim: new T.MeshStandardMaterial({ color: l3Col('#7b3a10'), roughness: 0.5 }),
-    pupil: new T.MeshBasicMaterial({ color: 0x120a06 }), glint: new T.MeshBasicMaterial({ color: 0xffffff }), line: new T.MeshBasicMaterial({ color: 0x1a0507 }),
-    lid: l3Skin({ color: '#3e070b', kind: 'scale', cell: 4.6, amt: 0.3, rough: 0.5, env: 0.6 }),
-    mem: new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.55, side: T.DoubleSide, envMapIntensity: 0.6 }),
-    bone: kVinyl('#1a0c0e', { roughness: 0.4 }),
-    nos: new T.MeshBasicMaterial({ color: 0x0c1a17 }), mouth: new T.MeshStandardMaterial({ color: l3Col('#8f2b3a'), roughness: 0.6 }), tongue: new T.MeshStandardMaterial({ color: l3Col('#ef7f95'), roughness: 0.5 }),
-    brow: kVinyl('#17090b', { roughness: 0.35 }),
-    pages: new T.MeshStandardMaterial({ map: dgPagesTex(), roughness: 0.9 }), gold: kVinyl('#d9ae4e', { roughness: 0.3, metalness: 0.4 }),
-    cov: [l3Skin({ color: '#2e4a78', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 }), l3Skin({ color: '#2f6b52', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 }), l3Skin({ color: '#c79d45', kind: 'grain', cell: 3, amt: 0.4, rough: 0.8, env: 0.4 })]
+    body: l3Skin({ color: '#ffffff', kind: 'scale', cell: 3.3, amt: 0.55, rough: 0.58, env: 0.5, vcol: true, clear: 0.25, clearR: 0.4 }),
+    skin: l3Skin({ color: bk ? '#17181f' : '#4c0a14', kind: 'scale', cell: 3.3, amt: 0.4, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.4 }),
+    horn: kVinyl('#ffffff', { roughness: 0.34, clearcoat: 0.6, vertexColors: true }), spike: kVinyl(bk ? '#0b0b0f' : '#1b0b0d', { roughness: 0.34, clearcoat: 0.5 }), claw: kVinyl('#d9cdb0', { roughness: 0.35 }), tooth: kVinyl('#efe4c8', { roughness: 0.3 }),
+    iris: new T.MeshStandardMaterial({ map: dgIrisTex(), roughness: 0.18, metalness: 0, emissive: l3Col('#ff9a10'), emissiveMap: dgIrisTex(), emissiveIntensity: 0.28 }), rim: new T.MeshStandardMaterial({ color: l3Col('#241008'), roughness: 0.3 }),
+    glint: new T.MeshBasicMaterial({ color: 0xffffff }), line: new T.MeshBasicMaterial({ color: 0x1a0507 }),
+    lid: l3Skin({ color: bk ? '#0e0f14' : '#3a0910', kind: 'scale', cell: 2.6, amt: 0.45, rough: 0.5, env: 0.6 }),
+    mem: new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.72, side: T.DoubleSide, envMapIntensity: 0.3, emissive: l3Col(bk ? '#0a0a10' : '#2a040b'), emissiveIntensity: 0.3 }),
+    bone: kVinyl(bk ? '#0e0f13' : '#1c070b', { roughness: 0.4 }),
+    nos: new T.MeshBasicMaterial({ color: 0x0c0507 }), mouth: new T.MeshStandardMaterial({ color: l3Col('#7a1a2a'), roughness: 0.6 }), tongue: new T.MeshStandardMaterial({ color: l3Col('#c4546a'), roughness: 0.5 }),
+    brow: kVinyl(bk ? '#0b0b0f' : '#1b0a0d', { roughness: 0.35 }),
+    pages: bk ? null : new T.MeshStandardMaterial({ map: dgPagesTex(), roughness: 0.9 }),
+    cov: bk ? [] : DG_BOOKS.map(b => l3Skin({ color: b.c, kind: 'grain', cell: 3, amt: 0.45, rough: 0.62, env: 0.4 })),
+    spine: bk ? [] : DG_BOOKS.map((b, i) => new T.MeshStandardMaterial({ map: dgSpineTex(b, i), roughness: 0.5, metalness: 0.12, envMapIntensity: 0.6 }))
   };
   return M;
 }
 let parts = null;   // dgBook használja a build alatt
+/* összecsukott szárny: váll → könyök (hátra-fel) → csukló (előre-fel) → 4 ujj hátrafelé; hártya ráncolt, íves élű */
+function dgWing(M, far, cs) {
+  cs = cs || dgC;
+  const T = THREE, g = new T.Group(), w = new T.Group(); g.add(w);
+  const R = [0, 0, 0], E = [12, 30, 0], Wr = [-4, 47, 0], F = [[48, 41, 1.5], [62, 28, 2.4], [70, 14, 3.2], [68, 1, 3.6]], B = [48, -3, 2];
+  const root = [26, 10, 0], tips = [Wr, F[0], F[1], F[2], F[3], B], edge = [];
+  tips.forEach((t, i) => {   // a hártya széle: ívesen befelé hajló „függöny” két ujjcsúcs között (több mintapont → sima ív, nem V-alakú csúcs)
+    edge.push(t);
+    if (i < tips.length - 1) { const a = t, b = tips[i + 1]; [0.2, 0.4, 0.6, 0.8].forEach(u => { const mx = a[0] + (b[0] - a[0]) * u, my = a[1] + (b[1] - a[1]) * u, sag = 0.34 * 4 * u * (1 - u); edge.push([mx + (root[0] - mx) * sag, my + (root[1] - my) * sag, a[2] + (b[2] - a[2]) * u + 1]); }); }
+  });
+  edge.push(R);
+  const k = far ? 0.72 : 1, c0 = dgMix(cs.mem0, cs.back, 0.2).map(v => v * k), c1 = cs.mem1.map(v => v * k);
+  const mm = dgFan(root, edge, c0, c1, M.mem, w, (i, kk) => Math.sin(i * 1.1) * 0.5 * kk, i => (i % 4 === 0 ? 1.25 : 0.75 + 0.1 * (i % 4))); mm.userData.part = 'wing'; if (parts) parts.push(mm);
+  dgBone(R, E, 2.9, 2.2, M.bone, w, [2, -3, 0]); dgBone(E, Wr, 2.3, 1.7, M.bone, w, [-3, 1, 0]);
+  F.forEach((f, i) => dgBone(Wr, f, 2.0, 0.7, M.bone, w, [0, i ? 1.5 : 3, 0]));
+  const th = new T.Mesh(new T.ConeGeometry(1.5, 6, 6), M.claw); th.position.set(Wr[0] - 1.5, Wr[1] + 3.2, 0); th.rotation.z = 0.35; w.add(th);
+  g.userData.w = w; return g;
+}
+/* a fej szerelvénye (fej + állkapocs + fogak + orrlyuk + szem + szemöldök + szarvak); a fej-csoportot (head) a hívó helyezi el. cs: színpaletta, key: a háló gyorsítótár-kulcsa */
+function dgHeadRig(M, cs, P, key, head) {
+  const T = THREE;
+  const hm = new T.Mesh(dgHeadGeo(cs, key), M.body); hm.castShadow = true; hm.receiveShadow = true; head.add(P(hm, 'head'));
+  const jaw = new T.Group(); jaw.position.set(0, -5.4, -1.2); head.add(jaw);
+  const jm = new T.Mesh(dgJawGeo(cs, key), M.body); jm.castShadow = true; jaw.add(P(jm, 'head'));
+  const mo = new T.Mesh(new T.SphereGeometry(1, 14, 8), M.mouth); mo.scale.set(4.6, 1.2, 9.5); mo.position.set(0, 3.2, 11); mo.visible = false; jaw.add(mo);
+  const tg = new T.Mesh(new T.SphereGeometry(1, 12, 8), M.tongue); tg.scale.set(2.8, 1.2, 6.4); tg.position.set(0, 3.0, 12); tg.visible = false; jaw.add(tg);
+  [-1, 1].forEach(sx => {   // fogak: alsó agyarak + felső fogsor
+    const t = new T.Mesh(new T.ConeGeometry(0.8, 2.6, 5), M.tooth); t.position.set(sx * 3.4, 3.2, 20.6); jaw.add(t);
+    [0, 1, 2].forEach(k => { const u = new T.Mesh(new T.ConeGeometry(0.62 - k * 0.06, 2.0 - k * 0.2, 5), M.tooth); u.position.set(sx * (3.7 + k * 0.5), -8.3, 19.0 - k * 4.2); u.rotation.x = Math.PI; head.add(u); });
+  });
+  const nostrils = [-1, 1].map(sx => { const n = new T.Mesh(new T.SphereGeometry(1, 8, 6), M.nos); n.scale.set(0.9, 0.55, 0.9); n.position.set(sx * 3, -0.8, 27.4); head.add(n); return n; });
+  const eyes = [-1, 1].map(sx => dgEye(head, sx * 7.4, 2.6, 5.2, 2.75, M, sx * 0.62));
+  const brows = [-1, 1].map(sx => { const b = new T.Mesh(new T.SphereGeometry(1, 12, 8), M.brow); b.scale.set(4.6, 1.2, 6.4); b.position.set(sx * 7.0, 8.0, 3.8); b.rotation.z = sx * -0.28; b.castShadow = true; head.add(b); b.userData.sx = sx; return b; });
+  [-1, 1].forEach(sx => {   // szarvak: hátra ívelő fő szarv + rövid pofaszarv + pofa-tüskék + fül-uszony
+    const g = l3TubeGeo(20, 10), cv = l3CatmullPts([[sx * 5.6, 6.4, -5], [sx * 8.4, 12, -10], [sx * 10.4, 17, -19], [sx * 9.6, 18.2, -30]]);
+    l3TubeSet(g, cv, t => 3.5 * Math.pow(1 - t, 0.9) + 0.22, (t, a) => 1 + 0.06 * Math.sin(t * 40), [0, 0, 1]); dgTubeCol(g, t => dgMix(cs.hornB, cs.hornT, dgSm(0.55, 1, t)));
+    const m = new T.Mesh(g, M.horn); m.castShadow = true; head.add(P(m, 'head'));
+    const g2 = l3TubeGeo(10, 8); l3TubeSet(g2, l3CatmullPts([[sx * 8.6, -1.2, -6], [sx * 12.4, -3, -10], [sx * 14.6, -2.4, -15]]), t => 2 * Math.pow(1 - t, 0.9) + 0.2, null, [0, 0, 1]); dgTubeCol(g2, t => dgMix(cs.hornB, cs.hornT, dgSm(0.5, 1, t)));
+    const m2 = new T.Mesh(g2, M.horn); m2.castShadow = true; head.add(P(m2, 'head'));
+    [[8.8, 1.4, 6.4, 2.6], [8.2, -2.2, 2.2, 2.2], [7.4, -4.8, -2, 1.8]].forEach(c => { const cm = new T.Mesh(new T.ConeGeometry(c[3] * 0.55, c[3] * 1.9, 6), M.spike); cm.position.set(sx * c[0], c[1], c[2]); cm.rotation.set(0, 0, -sx * Math.PI / 2 + sx * 0.4); cm.rotation.x = 0.3; head.add(cm); });
+  });
+  return { head: head, jaw: jaw, mo: mo, tg: tg, nostrils: nostrils, eyes: eyes, brows: brows };
+}
 function dgLieBuild(it) {
-  dgColInit(); const T = THREE, K = kRoot(it, 100), root = K.r; parts = [];
+  dgColInit(); const T = THREE, K = kRoot(it, DG_VH), root = K.r; parts = [];
   const M = dgMats();
   const P = (m, part) => { m.userData.part = part; parts.push(m); return m; };
   // könyvhalom
-  dgBook(root, M, 212, 13, 112, 0, 2, 6.5, 10, 0.0); dgBook(root, M, 206, 11, 104, 1, 0, 19.5, 9, 0.03); dgBook(root, M, 204, 10, 98, 2, 6, 30, 8, -0.025);
-  const dg = new T.Group(); root.add(dg);   // a sárkány (lélegzik)
+  let by = 0; DG_BOOKS.forEach((b, i) => { dgBook(root, M, i, by); by += b.h + 0.4; });
+  const dg = new T.Group(); dg.position.y = by - 34.4; root.add(dg);   // a sárkány (lélegzik): a talpak a halom tetején (a modell-koordináták a ~34-es talp-magassághoz készültek)
   const body = new T.Mesh(dgLieBodyGeo(), M.body); body.castShadow = true; body.receiveShadow = true; dg.add(P(body, 'body'));
   // farok (a csípőnél forog)
   const TP = DG_TAIL[0], tailG = new T.Group(); tailG.position.set(TP[0], TP[1], TP[2]); dg.add(tailG);
   const tail = new T.Mesh(dgLieTailGeo(), M.body); tail.castShadow = true; tail.receiveShadow = true; tailG.add(P(tail, 'tail'));
-  const tl = []; const ts = (t, rr) => { const q = t * (DG_TAIL.length - 1), i = Math.min(DG_TAIL.length - 2, Math.floor(q)), f = q - i, a = DG_TAIL[i], b = DG_TAIL[i + 1]; return [a[0] + (b[0] - a[0]) * f - TP[0], a[1] + (b[1] - a[1]) * f - TP[1], a[2] + (b[2] - a[2]) * f - TP[2], a[3] + (b[3] - a[3]) * f]; };
+  const ts = t => { const q = t * (DG_TAIL.length - 1), i = Math.min(DG_TAIL.length - 2, Math.floor(q)), f = q - i, a = DG_TAIL[i], b = DG_TAIL[i + 1]; return [a[0] + (b[0] - a[0]) * f - TP[0], a[1] + (b[1] - a[1]) * f - TP[1], a[2] + (b[2] - a[2]) * f - TP[2], a[3] + (b[3] - a[3]) * f]; };
   // farok-hegy: levél alakú lapát
   const e = DG_TAIL[DG_TAIL.length - 1], tipG = new T.Group(); tipG.position.set(e[0] - TP[0] - 2, e[1] - TP[1] - 0.9, e[2] - TP[2] - 0.5); tailG.add(tipG);
-  const tipM = new T.Mesh(new T.SphereGeometry(1, 16, 10), M.spike); tipM.scale.set(9, 1.8, 5); tipM.rotation.y = 0.1; tipM.position.set(-6, 0, 0); tipM.castShadow = true; tipG.add(P(tipM, 'tail'));
-  // hátgerinc: narancs tüskék a hát felszínén
-  const spine = [[-50, 20], [-42, 14], [-34, 9], [-25, 5], [-14, 0], [-2, -2], [10, -3], [22, -4], [34, -4], [46, -4]];
-  spine.forEach((s, i) => { const r = dgTop(dgLieBody, s[0], s[1], 90, 30); if (!r) return; const h = 5.6 - i * 0.18, cm = new T.Mesh(new T.ConeGeometry(2.7 - i * 0.05, h, 6), M.spike); cm.position.set(r.p[0], r.p[1] + h * 0.35, r.p[2]); dgOrient(cm, [r.n[0] * 0.5, r.n[1] + 0.3, r.n[2] * 0.5]); cm.castShadow = true; dg.add(cm); });
-  for (let i = 0; i < 8; i++) { const q = 0.06 + i * 0.105, s = ts(q), r = dgTop(dgLieTail, s[0] + TP[0], s[2] + TP[2], s[1] + TP[1] + 14, s[1] + TP[1] - 12); if (!r) continue; const h = 4.8 - i * 0.4, cm = new T.Mesh(new T.ConeGeometry(2.3 - i * 0.18, Math.max(1.6, h), 6), M.spike); cm.position.set(r.p[0] - TP[0], r.p[1] - TP[1] + h * 0.3, r.p[2] - TP[2]); dgOrient(cm, [r.n[0] * 0.5, r.n[1] + 0.3, r.n[2] * 0.5]); cm.castShadow = true; tailG.add(cm); }
+  const tipM = new T.Mesh(new T.SphereGeometry(1, 16, 10), M.skin); tipM.scale.set(9, 1.9, 5.4); tipM.rotation.y = 0.1; tipM.position.set(-6, 0, 0); tipM.castShadow = true; tipG.add(P(tipM, 'tail'));
+  // hátgerinc: tüskék a nyakon, a háton és a farkon (a hátsó vonal mentén kisebbedő sor)
+  const sp = (pos, nrm, h, r, par) => { const cm = new T.Mesh(new T.ConeGeometry(r, h, 6), M.spike); cm.position.set(pos[0] + nrm[0] * h * 0.25, pos[1] + nrm[1] * h * 0.25, pos[2] + nrm[2] * h * 0.25); dgOrient(cm, nrm); cm.castShadow = true; par.add(cm); };
+  DG_NECK.forEach((nk, i) => { if (!i) return; const r = nk[3], dir = [0.84, 0.5, -0.18]; sp([nk[0] + dir[0] * r * 0.92, nk[1] + dir[1] * r * 0.92, nk[2] + dir[2] * r * 0.92], [dir[0] + 0.1, dir[1] + 0.35, dir[2]], 6.6 - i * 0.7, 2.6 - i * 0.25, dg); });
+  const spine = [[-14, 0], [-5, -1], [4, -2], [13, -3], [22, -3], [31, -3], [40, -3], [49, -2]];
+  spine.forEach((s2, i) => { const r = dgTop(dgLieBody, s2[0], s2[1], 100, 33); if (!r) return; sp(r.p, [r.n[0] * 0.5 + 0.18, r.n[1] + 0.3, r.n[2] * 0.5], 6.2 - i * 0.4, 2.8 - i * 0.1, dg); });
+  for (let i = 0; i < 8; i++) { const q = 0.06 + i * 0.105, s2 = ts(q), r = dgTop(dgLieTail, s2[0] + TP[0], s2[2] + TP[2], s2[1] + TP[1] + 14, s2[1] + TP[1] - 12); if (!r) continue; sp([r.p[0] - TP[0], r.p[1] - TP[1], r.p[2] - TP[2]], [r.n[0] * 0.5, r.n[1] + 0.3, r.n[2] * 0.5], Math.max(1.8, 5 - i * 0.4), Math.max(0.8, 2.3 - i * 0.2), tailG); }
   // karmok és lábujjak
-  const toe = (px, py, pz, sx, sz, ry) => { const g = new T.Group(); g.position.set(px, py, pz); g.rotation.y = ry; const t = new T.Mesh(new T.SphereGeometry(1, 10, 8), M.skin); t.scale.set(sx, 2.7, sz); t.castShadow = true; g.add(t); const c = new T.Mesh(new T.ConeGeometry(1.2, 3.8, 6), M.claw); c.rotation.x = Math.PI / 2 + 0.3; c.position.set(0, -0.2, sz + 1.2); g.add(c); dg.add(g); };
-  [-1, 0, 1].forEach(k => { toe(-55 + k * 5.2, 38, 48.5 - Math.abs(k) * 1.2, 2.8, 4.8, -k * 0.28); toe(-82 + k * 5, 38.5, 41.5 - Math.abs(k) * 1.2, 2.7, 4.6, -k * 0.28); toe(62 + k * 4.4, 36.5, 35.5 - Math.abs(k) * 1, 2.5, 4.4, -k * 0.26); });
-  // szárnyak (összecsukva a háton)
+  const toe = (px, py, pz, sx, sz, ry) => { const g = new T.Group(); g.position.set(px, py, pz); g.rotation.y = ry; const t = new T.Mesh(new T.SphereGeometry(1, 10, 8), M.skin); t.scale.set(sx, 2.7, sz); t.castShadow = true; g.add(t); const c = new T.Mesh(new T.ConeGeometry(1.25, 4.4, 6), M.claw); c.rotation.x = Math.PI / 2 + 0.35; c.position.set(0, -0.3, sz + 1.5); c.castShadow = true; g.add(c); dg.add(g); };
+  [-1, 0, 1].forEach(k => { toe(-45 + k * 4.6, 37.6, 49.5 - Math.abs(k) * 1.0, 2.6, 4.2, -k * 0.3); toe(-10 + k * 4.2, 37.6, 40.6 - Math.abs(k) * 1.0, 2.4, 3.9, -k * 0.3); toe(33 + k * 4.8, 37.6, 42.6 - Math.abs(k) * 1.0, 2.7, 4.2, -k * 0.28); });
+  // szárnyak: a közelebbi a háton, a távolabbi mögötte, kissé elfordítva
   const wings = [1, -1].map(side => {
-    const g = new T.Group(); g.position.set(-10, 63, side * 8); dg.add(g);
-    const w = new T.Group(); w.scale.set(1.0, 1.0, 1); g.add(w);
-    const R = [0, 0, 0], E = [4, 21, 0], Wr = [24, 30, 0], F = [[48, 30, 1], [60, 14, 2], [60, -2, 3], [48, -8, 3]];
-    const edge = [Wr, [(Wr[0] + F[0][0]) / 2 + 1, (Wr[1] + F[0][1]) / 2 - 5, 1], F[0], [(F[0][0] + F[1][0]) / 2 - 7, (F[0][1] + F[1][1]) / 2 - 3, 1.5], F[1], [(F[1][0] + F[2][0]) / 2 - 8, (F[1][1] + F[2][1]) / 2, 2], F[2], [(F[2][0] + F[3][0]) / 2 - 6, (F[2][1] + F[3][1]) / 2 + 3, 2.5], F[3], [26, -6, 3], [8, 2, 2]];
-    const mm = dgFan(R, edge, dgMix(dgC.mem0, dgC.back, 0.3), dgC.mem1, M.mem, w); mm.userData.part = 'wing'; parts.push(mm);
-    dgBone(R, E, 2.4, 1.9, M.bone, w, [0, 2, 0]); dgBone(E, Wr, 1.9, 1.5, M.bone, w, [0, 2, 0]); F.forEach((f, i) => dgBone(Wr, f, 1.4, 0.5, M.bone, w, [0, i ? -1 : 2, 0]));
-    const cl = new T.Mesh(new T.ConeGeometry(1.4, 4.4, 6), M.claw); cl.position.set(Wr[0], Wr[1] + 2.4, 0); w.add(cl);
-    if (side < 0) { g.position.x = -2; g.position.z = -6; g.rotation.y = -0.2; }
-    g.userData.side = side; g.userData.w = w; return g;
+    const g = dgWing(M, side < 0); g.position.set(-14, 68, side > 0 ? 12 : -8); if (side < 0) { g.rotation.y = -0.2; g.rotation.z = -0.42; g.scale.setScalar(0.9); g.position.set(-4, 66, -9); }
+    dg.add(g); g.userData.side = side; return g;
   });
   // fej
-  const HP = [-60, 56, 27], head = new T.Group(); head.position.set(HP[0], HP[1], HP[2]); head.rotation.y = -0.3; head.scale.setScalar(1.28); dg.add(head);
-  const hm = new T.Mesh(dgHeadGeo(), M.body); hm.castShadow = true; hm.receiveShadow = true; head.add(P(hm, 'head'));
-  const jaw = new T.Group(); jaw.position.set(0, -6.8, 2); head.add(jaw);
-  const jm = new T.Mesh(dgJawGeo(), M.body); jm.castShadow = true; jaw.add(P(jm, 'head'));
-  const mo = new T.Mesh(new T.SphereGeometry(1, 14, 8), M.mouth); mo.scale.set(6.6, 1.2, 9); mo.position.set(0, 3.4, 11); mo.visible = false; jaw.add(mo);
-  const tg = new T.Mesh(new T.SphereGeometry(1, 12, 8), M.tongue); tg.scale.set(3.6, 1.3, 6); tg.position.set(0, 3.4, 12); tg.visible = false; jaw.add(tg);
-  [-1, 1].forEach(sx => {
-    const t = new T.Mesh(new T.ConeGeometry(0.9, 2.8, 5), M.tooth); t.position.set(sx * 4.6, 2.6, 19); t.rotation.x = Math.PI; jaw.add(t);
-    const t2 = new T.Mesh(new T.ConeGeometry(0.8, 2.4, 5), M.tooth); t2.position.set(sx * 5.2, -2.4 + 6.8, 17.6 - 6.8 + 6.8); t2.visible = false;
-    const u = new T.Mesh(new T.ConeGeometry(1, 3.4, 5), M.tooth); u.position.set(sx * 4.4, -9.6, 18.5); u.rotation.x = Math.PI; head.add(u);
-  });
-  const nostrils = [-1, 1].map(sx => { const n = new T.Mesh(new T.SphereGeometry(1, 8, 6), M.nos); n.scale.set(1.2, 0.8, 0.7); n.position.set(sx * 3.9, 1.6, 26.4); head.add(n); return n; });
-  const eyes = [-1, 1].map(sx => dgEye(head, sx * 9.6, 4.2, 9.8, 6.1, M));
-  const brows = [-1, 1].map(sx => { const b = new T.Mesh(new T.SphereGeometry(1, 12, 8), M.brow); b.scale.set(6.4, 1.7, 2.4); b.position.set(sx * 9.6, 11.4, 11.2); b.castShadow = true; head.add(b); b.userData.sx = sx; return b; });
-  [-1, 1].forEach(sx => {   // szarvak
-    const g = l3TubeGeo(18, 10), cv = l3CatmullPts([[sx * 8, 11, -4], [sx * 11, 19, -9], [sx * 13.5, 25.5, -18], [sx * 12.5, 28, -29]]);
-    l3TubeSet(g, cv, t => 3.9 * Math.pow(1 - t, 0.85) + 0.25, (t, a) => 1 + 0.07 * Math.sin(t * 34), [0, 0, 1]);
-    const m = new T.Mesh(g, M.horn); m.castShadow = true; head.add(P(m, 'head'));
-    const fin = new T.Group(); head.add(fin);   // fül-uszony
-    const ed = [[sx * 15, 8, -5], [sx * 26, 13, -9], [sx * 30, 8, -11], [sx * 32, 1, -12], [sx * 28, -5, -10], [sx * 16, -4, -4]];
-    dgFan([sx * 14, 2, -4], ed, dgMix(dgC.mem0, dgC.back, 0.5), dgC.mem1, M.mem, fin);
-    [ed[1], ed[3], ed[4]].forEach(e2 => dgBone([sx * 14, 2, -4], e2, 1.1, 0.4, M.bone, fin));
-  });
-  kHit(head, 11, 0, -2, 22, 'nose');
-  const bg = { dg: dg, body: body };
+  const HP = [-52, 99, 21], head = new T.Group(); head.position.set(HP[0], HP[1], HP[2]); head.rotation.y = -0.55; dg.add(head);
+  const HR = dgHeadRig(M, dgC, P, 'dgHead', head), jaw = HR.jaw, mo = HR.mo, tg = HR.tg, nostrils = HR.nostrils, eyes = HR.eyes, brows = HR.brows;
+  kHit(head, 10, 0, -2, 19, 'nose');
   // ----- állapot + animáció -----
-  const S = kState({ hx: 0, hy: 0, hz: 0, jaw: 0, lid: 0.22, brow: 0, lx: 0, ly: 0, tail: 0, tailZ: 0, wing: 0, breath: 0, vib: 0, tipw: 0, smile: 0 }, S => {
-    head.rotation.set(0.04 + S.hx, -0.3 + S.hy + S.lx * 0.16, S.hz); head.position.set(HP[0] + S.vib * 0.2, HP[1], HP[2]);
-    jaw.rotation.x = S.jaw * 0.5; mo.visible = S.jaw > 0.12; tg.visible = S.jaw > 0.12; mo.scale.y = 1.2 + S.jaw * 2.2; tg.position.y = 3.4 - S.jaw * 1.2;
-    eyes.forEach(e => { const c = Math.min(1, Math.max(0, S.lid)); e.lid.rotation.x = -0.35 + c * (Math.PI / 2 + 0.35); e.arc.visible = c > 0.93; e.pg.position.x = S.lx * 1.9; e.pg.position.y = -S.ly * 1.3; e.g.scale.y = 1; });
-    brows.forEach(b => { b.rotation.z = b.userData.sx * -S.brow * 0.5; b.position.y = 11.4 - S.brow * 2.2; });
+  const S = kState({ hx: 0, hy: 0, hz: 0, jaw: 0, lid: 0.2, brow: 0, lx: 0, ly: 0, tail: 0, tailZ: 0, wing: 0, breath: 0, vib: 0, tipw: 0, smile: 0 }, S => {
+    head.rotation.set(0.07 + S.hx, -0.55 + S.hy + S.lx * 0.16, S.hz); head.position.set(HP[0] + S.vib * 0.2, HP[1], HP[2]);
+    jaw.rotation.x = S.jaw * 0.5; mo.visible = S.jaw > 0.12; tg.visible = S.jaw > 0.12; mo.scale.y = 1.2 + S.jaw * 2.2; tg.position.y = 3.0 - S.jaw * 1.2;
+    eyes.forEach(e => { const c = Math.min(1, Math.max(0, S.lid)); e.lid.rotation.x = -0.35 + c * (Math.PI / 2 + 0.35); e.arc.visible = c > 0.93; e.pg.position.x = S.lx * 0.5; e.pg.position.y = -S.ly * 0.4; e.g.scale.y = 1; });
+    brows.forEach(b => { b.rotation.z = b.userData.sx * (-0.28 - S.brow * 0.45); b.position.y = 8.0 - S.brow * 1.5; });
     dg.scale.set(1 + S.breath * 0.006, 1 + S.breath * 0.016, 1 + S.breath * 0.006); dg.position.x = S.vib * 0.3;
     tailG.rotation.y = S.tail; tailG.rotation.z = S.tailZ; tipG.rotation.y = S.tipw;
-    wings.forEach(g => { g.userData.w.scale.set(1 + S.wing * 0.3, 1 + S.wing * 0.3, 1); g.rotation.z = -S.wing * 0.34; g.rotation.x = S.wing * 0.5 * g.userData.side; });
+    wings.forEach(g => { g.userData.w.scale.set(1 + S.wing * 0.25, 1 + S.wing * 0.25, 1); g.rotation.z = (g.userData.side < 0 ? -0.42 : 0) - S.wing * 0.3; g.rotation.x = S.wing * 0.5 * g.userData.side; });
   });
   S.__apply();
   const smokeAt = (n, big) => { for (let i = 0; i < n; i++) setTimeout(() => { if (!L3.on) return; [0, 1].forEach(k => { const lp = root.worldToLocal(nostrils[k].getWorldPosition(new T.Vector3())); drParticle(root, 'smoke', lp, { vx: (k ? 4 : -4) + (Math.random() - 0.5) * 4, vy: 9 + Math.random() * 5, vz: 8 + Math.random() * 5, life: 1.5, big: big || 1 }); }); }, i * 170); };
-  const hearts = n => { for (let i = 0; i < n; i++) setTimeout(() => { if (!L3.on) return; drParticle(root, 'heart', new T.Vector3(-62 + (Math.random() - 0.5) * 36, 76, 34 + Math.random() * 6), { vx: (Math.random() - 0.5) * 8, vy: 15 + Math.random() * 6, life: 1.8, big: 0.95 }); }, i * 220); };
+  const hearts = n => { for (let i = 0; i < n; i++) setTimeout(() => { if (!L3.on) return; drParticle(root, 'heart', new T.Vector3(-56 + (Math.random() - 0.5) * 30, 126, 34 + Math.random() * 6), { vx: (Math.random() - 0.5) * 8, vy: 15 + Math.random() * 6, life: 1.8, big: 0.95 }); }, i * 220); };
   const flame = () => {   // tűzcsóva a szájból: additív fénypamacsok sora + füst
     const m = root.worldToLocal(jaw.getWorldPosition(new T.Vector3())), a = head.rotation.y;
-    dgJet(root, new T.Vector3(m.x - 8 + Math.sin(a) * 6, m.y + 3, m.z + 14), new T.Vector3(-0.28 + Math.sin(a) * 0.5, 0.1, 1), 46, 1);
+    dgJet(root, new T.Vector3(m.x - 4 + Math.sin(a) * 18, m.y - 1, m.z + 8 + Math.cos(a) * 12), new T.Vector3(Math.sin(a) * 0.9 - 0.1, -0.12, 1), 48, 1);
     smokeAt(3, 1.5);
   };
   const ctl = {
@@ -7775,26 +7896,26 @@ function dgLieBuild(it) {
     look(p) { if (ctl.busy) return; const v = kLookVec(head, p, 200); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     boop() {
       crStop(ctl); ctl.busy = true;
-      ctl.seq = l3Seq().to(S, { hx: -0.2, lid: 0.55, brow: 1, tail: 0.35 }, 0.14, 'out').call(() => smokeAt(2, 1)).to(S, { tail: -0.2, tailZ: 0.1 }, 0.3, 'io').wait(0.5).to(S, { hx: 0, lid: 0.22, brow: 0, tail: 0, tailZ: 0 }, 0.5, 'io').call(() => { ctl.busy = false; }).play();
+      ctl.seq = l3Seq().to(S, { hx: -0.2, lid: 0.5, brow: 1, tail: 0.35 }, 0.14, 'out').call(() => smokeAt(2, 1)).to(S, { tail: -0.2, tailZ: 0.1 }, 0.3, 'io').wait(0.5).to(S, { hx: 0, lid: 0.2, brow: 0, tail: 0, tailZ: 0 }, 0.5, 'io').call(() => { ctl.busy = false; }).play();
     },
     rage() {
       crStop(ctl); ctl.busy = true;
-      ctl.seq = l3Seq().to(S, { hx: -0.3, jaw: 1, lid: 0.7, brow: 1.4, wing: 1 }, 0.22, 'out').call(() => flame()).to(S, { tail: 0.6 }, 0.12).to(S, { tail: -0.5 }, 0.14).to(S, { tail: 0.4 }, 0.14).wait(0.7).to(S, { hx: 0, jaw: 0, lid: 0.22, brow: 0, wing: 0, tail: 0 }, 0.7, 'io').call(() => { ctl.busy = false; }).play();
+      ctl.seq = l3Seq().to(S, { hx: -0.3, jaw: 1, lid: 0.6, brow: 1.4, wing: 1 }, 0.22, 'out').call(() => flame()).to(S, { tail: 0.6 }, 0.12).to(S, { tail: -0.5 }, 0.14).to(S, { tail: 0.4 }, 0.14).wait(0.7).to(S, { hx: 0, jaw: 0, lid: 0.2, brow: 0, wing: 0, tail: 0 }, 0.7, 'io').call(() => { ctl.busy = false; }).play();
       l3Anim(1.4, u => { S.vib = Math.sin(u * 80) * (1 - u) * 2; S.__apply(); }, () => { S.vib = 0; S.__apply(); });
     },
     pet() {
       crStop(ctl); ctl.busy = true;
       ctl.seq = l3Seq().to(S, { lid: 1, hz: 0.1, hx: 0.08, brow: -0.3 }, 0.3, 'out').call(() => hearts(6)).play();
-      l3Anim(2.6, u => { S.vib = Math.sin(u * 2.6 * 38) * Math.min(1, u * 6, (1 - u) * 5) * 0.8; S.breath = Math.sin(u * 2.6 * 6) * 0.9; S.tail = Math.sin(u * 2.6 * 4) * 0.22 * Math.min(1, u * 5); S.__apply(); }, () => { S.vib = 0; S.breath = 0; S.tail = 0; l3Seq().to(S, { lid: 0.22, hz: 0, hx: 0, brow: 0 }, 0.45, 'io').call(() => { ctl.busy = false; }).play(); });
+      l3Anim(2.6, u => { S.vib = Math.sin(u * 2.6 * 38) * Math.min(1, u * 6, (1 - u) * 5) * 0.8; S.breath = Math.sin(u * 2.6 * 6) * 0.9; S.tail = Math.sin(u * 2.6 * 4) * 0.22 * Math.min(1, u * 5); S.__apply(); }, () => { S.vib = 0; S.breath = 0; S.tail = 0; l3Seq().to(S, { lid: 0.2, hz: 0, hx: 0, brow: 0 }, 0.45, 'io').call(() => { ctl.busy = false; }).play(); });
     },
     wag() { crStop(ctl); l3Anim(1.5, u => { S.tail = Math.sin(u * 1.5 * 12) * 0.34 * (1 - u); S.tipw = Math.sin(u * 1.5 * 14) * 0.3 * (1 - u); S.hy = Math.sin(u * Math.PI) * -0.22; S.__apply(); }, () => { S.tail = 0; S.tipw = 0; S.hy = 0; S.__apply(); }); },
     flap() { crStop(ctl); ctl.seq = l3Seq().to(S, { wing: 1 }, 0.25, 'out').to(S, { wing: 0.25 }, 0.18, 'io').to(S, { wing: 1 }, 0.2, 'out').to(S, { wing: 0 }, 0.55, 'io').play(); },
-    yawn() { crStop(ctl); ctl.busy = true; ctl.seq = l3Seq().to(S, { hx: -0.22, jaw: 1, lid: 0.9, wing: 0.55 }, 0.5, 'io').wait(0.9).to(S, { hx: 0, jaw: 0, lid: 0.22, wing: 0 }, 0.6, 'io').call(() => { ctl.busy = false; }).play(); },
-    blink() { l3Seq().to(S, { lid: 1 }, 0.08, 'out').to(S, { lid: 0.22 }, 0.14, 'io').play(); },
+    yawn() { crStop(ctl); ctl.busy = true; ctl.seq = l3Seq().to(S, { hx: -0.22, jaw: 1, lid: 0.95, wing: 0.55 }, 0.5, 'io').wait(0.9).to(S, { hx: 0, jaw: 0, lid: 0.2, wing: 0 }, 0.6, 'io').call(() => { ctl.busy = false; }).play(); },
+    blink() { l3Seq().to(S, { lid: 1 }, 0.08, 'out').to(S, { lid: 0.2 }, 0.14, 'io').play(); },
     idle() { if (ctl.busy) return; const r = Math.random(); if (r < 0.45) ctl.blink(); else if (r < 0.75) smokeAt(1, 0.7); else if (r < 0.9) l3Anim(1.0, u => { S.tipw = Math.sin(u * 20) * 0.35 * (1 - u); S.__apply(); }, () => { S.tipw = 0; S.__apply(); }); else l3Anim(2.4, u => { S.breath = Math.sin(u * 2.4 * 2.4); S.__apply(); }, () => { S.breath = 0; S.__apply(); }); }
   };
-  S.lid = 0.35; S.__apply();
-  const res = { grp: K.g, parts: parts, mats: kMatsAll(M).concat(M.cov), d: 60, ctl: ctl };
+  S.lid = 0.25; S.__apply();
+  const res = { grp: K.g, parts: parts, mats: kMatsAll(M).concat(M.cov, M.spine), d: 60, ctl: ctl };
   parts = null; return res;
 }
 registerDecor3({
@@ -7808,72 +7929,188 @@ registerDecor3({
 });
 
 
-/* ===== 3D polc: a repülő sárkány (kis-sarkany) 2D KÉPKÉNT – a rajz (decor-baby.js: flyDefs/FLY_LAYERS) rétegenként textúra-síkokra kerül,
-   így a sárkány, a szárnyak, a füstszalag, az oszlop és a könyvek külön tudnak mozogni. Nincs világítás-számítás: a kép olyan, amilyennek rajzoltuk.
-   Egységek: modell-x = svg-x − 120, modell-y = 200 − svg-y; kRoot(it, 200) a dísz magasságára skáláz (240×200 → ar 1.2). ===== */
+/* ===== 3D dísz: a fekete sárkány és füstoszlopa (kis-sarkany) – valódi 3D modell (v13; korábban rétegelt 2D kép volt) =====
+   A kép (referencia): apró fekete sárkány a földön, a szájából füst ömlik, ami krémszínű, spirálokkal faragott felhő-oszlopba dagad; az oszlop tartja a ferdén dőlő sötét könyveket.
+   Itt: a sárkány SDF-szobor (fényes fekete pikkelyek, a fekvő sárkány részletes feje, összehajtott szárnyak, kunkori farok), az oszlop és a füstszalag
+   gyanta-szerű krémszínű SDF-háló bevésett spirálokkal (a bevésés a háló része, nem textúra), a 4 könyv valódi doboz: gerinc arany pántokkal és címmel.
+   Modell-egységek: a dísz alja a polcon (y = 0), X jobbra, Z a néző felé; kRoot(it, FY_VH) skáláz. A rész-nevek: body (sárkány), cloud (oszlop + szalag), books. ===== */
 'use strict';
 
-const FI = { px: 0.5, mouth: [92, 182], top: [102, 97], pivB: [230, 188], pivC: [118, 188], pivD: [50, 188], sh: [62, 171], shB: [64, 169], eye: [85, 173.6] };
-const fiM = (sx, sy) => [sx - 120, 200 - sy];     // svg → modell
+const FY_VH = 150;
+const FY_TILT = 0.3, FY_BW = 16.5, FY_STEP = 17.2, FY_X0 = 15, FY_ANG = Math.atan(FY_TILT), FY_Z = 4, FY_CZ = 22;   // a könyvek: ferdén balra dőlnek, a bal alsó élükön állnak
+const FY_NECK = [[-40, 13, 0, 6.8], [-36.8, 17.2, 0, 5.2], [-34.4, 20.6, 0, 4.4]];
+const FY_TAIL = [[-64, 9.2, 0, 6.8], [-71.5, 6.4, 0, 5.2], [-77.5, 4.4, 0.5, 4.1], [-81.2, 7.2, 1, 3.3], [-80.6, 12.6, 1, 2.6], [-77, 16.2, 0.5, 2], [-73, 16.6, 0, 1.4], [-70.8, 14, 0, 0.9]];
+const FY_BOOKS = [
+  { c: '#1e1613', t: 'FEKETE LÁNG', h: 118 }, { c: '#2a121a', t: 'TŰZ ÉS FÜST', h: 116 }, { c: '#131825', t: 'SÁRKÁNYDAL', h: 113 }, { c: '#241b10', t: 'ÉJFÉLI ÉGBOLT', h: 110 }
+];
+/* az oszlop gömbjei: [x, y, r] – a bal szélük a legbaloldalibb könyv bal lapja mentén, váltakozva be/kilógva */
+const FY_LOBES = [[10.9, 11.3], [18.75, 9.9], [26.25, 9.45], [33.4, 8.7], [40.5, 8], [47.25, 7.2], [53.6, 6.45], [59.6, 5.7], [64.9, 4.8], [69.4, 3.6]].map((q, i) => [FY_X0 - FY_TILT * q[0] - q[1] * (i % 2 ? 1.3 : 0.8), q[0], q[1]]);
+const FY_MOUTH = [-20.6, 20.4], FY_DS = 1.15, FY_DX = -56.2;   // a sárkány nagyítása és a helye (a váll-pont X-e)
+const FY_C = {};
+function fyColInit() {
+  if (FY_C.back) return;
+  Object.assign(FY_C, { back: lc('#050609'), body: lc('#12141d'), belly: lc('#1f2332'), bellyD: lc('#2b3044'), mem0: lc('#06060a'), mem1: lc('#1c1e2a'), memEdge: lc('#4a5070'), jawIn: lc('#401820'), hornB: lc('#0c0c10'), hornT: lc('#70717f') });
+}
 
-function fiBuild(it) {
-  const T = THREE, K = kRoot(it, 200), root = K.r, parts = [], mats = [];
-  const layer = (name, piv, z, parent) => {
-    const P = piv || [120, 100];
-    const g = new T.Group(); const m = fiM(P[0], P[1]); g.position.set(m[0], m[1], z); (parent || root).add(g);
-    const pl = kSvgPlane(flyDefs('x') + FLY_LAYERS[name]('x'), '0 0 240 200', 240, 200, 720, 600, { key: 'fly:' + name, dx: 120 - P[0], dy: P[1] - 100 });
-    pl.renderOrder = 3 + z * 0.1; g.add(pl); mats.push(pl.material); return { g: g, pl: pl };
-  };
-  const L = {
-    shadow: layer('shadow', null, 0), stream: layer('stream', FI.mouth, 1), cloud: layer('cloud', FI.pivC, 2), books: layer('books', FI.pivB, 3), wisp: layer('wisp', null, 4)
-  };
-  const dg = new T.Group(); const dm = fiM(FI.pivD[0], FI.pivD[1]); dg.position.set(dm[0], dm[1], 5); root.add(dg);
-  // a sárkány-csoport gyerekei a saját pivotjához képest: a síkok a (pivD) körül; a szárnyak a vállukon
-  const inD = (name, piv, z) => { const P = piv || FI.pivD; const g = new T.Group(); g.position.set(P[0] - FI.pivD[0], FI.pivD[1] - P[1], z); dg.add(g); const pl = kSvgPlane(flyDefs('x') + FLY_LAYERS[name]('x'), '0 0 240 200', 240, 200, 720, 600, { key: 'fly:' + name, dx: 120 - P[0], dy: P[1] - 100 }); pl.renderOrder = 3 + (5 + z) * 0.1; g.add(pl); mats.push(pl.material); return { g: g, pl: pl }; };
-  const wB = inD('wingB', FI.shB, -0.5), body = inD('dragon', FI.pivD, 0), wF = inD('wingF', FI.sh, 1.5);
-  // szem: borostyán írisz + pupilla-rés + fényfolt + szemhéj (a szem-üregbe, a sárkány-csoportban)
-  const ex = FI.eye[0] - FI.pivD[0], ey = FI.pivD[1] - FI.eye[1];
-  const eg = new T.Group(); eg.position.set(ex, ey, 0.8); dg.add(eg);
-  const bm = c => new T.MeshBasicMaterial({ color: c, toneMapped: false, transparent: true, depthWrite: false });
-  const irisM = bm(0xffb02a), pupM = bm(0x0a0604), glM = bm(0xffffff), lidM = bm(0x17181d); mats.push(irisM, pupM, glM, lidM);
-  const iris = new T.Mesh(new T.CircleGeometry(2.55, 16), irisM); iris.scale.set(1, 1.07, 1); iris.renderOrder = 9; eg.add(iris);
-  const pg = new T.Group(); pg.position.z = 0.1; eg.add(pg);
-  const pup = new T.Mesh(new T.CircleGeometry(1, 12), pupM); pup.scale.set(0.8, 2.2, 1); pup.renderOrder = 10; pg.add(pup);
-  const glint = new T.Mesh(new T.CircleGeometry(0.7, 8), glM); glint.position.set(0.8, 1.0, 0.1); glint.renderOrder = 11; pg.add(glint);
-  const lid = new T.Mesh(new T.CircleGeometry(2.7, 16), lidM); lid.position.set(0, 0, 0.2); lid.renderOrder = 12; eg.add(lid); lid.scale.set(1.05, 0.001, 1);
-  // sugár-izzás a szájnál (additív), csak fújáskor látszik
-  const mo = fiM(FI.mouth[0], FI.mouth[1]);
-  const glow = kGlowSprite(0xffe2b0, 46, 0, true); glow.position.set(mo[0] + 8, mo[1] + 1, 6); root.add(glow);
-  // kattintási zónák (láthatatlan síkok): sárkány · füstoszlop · könyvek
-  const zone = (x0, y0, x1, y1, part, z) => { const c = fiM((x0 + x1) / 2, (y0 + y1) / 2), m = new T.Mesh(new T.PlaneGeometry(x1 - x0, y1 - y0), new T.MeshBasicMaterial({ visible: false })); m.visible = false; m.position.set(c[0], c[1], z); m.userData.part = part; root.add(m); parts.push(m); mats.push(m.material); return m; };
-  zone(4, 134, 98, 190, 'body', 9); zone(86, 94, 134, 190, 'cloud', 8); zone(92, 30, 234, 190, 'books', 4);
+/* ---------- a sárkány teste ---------- */
+const fyE = (x, y, z, cx, cy, cz, rx, ry, rz) => sdEll(x - cx, y - cy, z - cz, rx, ry, rz);
+function fyBody(x, y, z) {
+  const az = Math.abs(z);
+  let d = fyE(x, y, z, -50, 10.2, 0, 19, 8.4, 8.6);                                      // törzs
+  d = smin(d, fyE(x, y, z, -61, 8.8, 0, 11, 8.6, 8.8), 6);                              // csípő
+  d = smin(d, fyE(x, y, z, -38, 12.8, 0, 9.6, 9.6, 8), 5);                              // mellkas
+  d = smin(d, dgChain(x, y, z, FY_NECK, 5), 4);                                          // nyak
+  d = smin(d, dgChain(x, y, z, FY_TAIL, 3), 3);                                          // farok
+  d = smin(d, fyE(x, y, az, -59.5, 7.6, 6.2, 8.6, 7.2, 4.4), 3.5);                      // hátsó comb
+  d = smin(d, sdCone(x, y, az, -57, 5, 7.2, -53.5, 1.8, 8.8, 3.6, 2.6), 2);             // hátsó lábszár
+  d = smin(d, fyE(x, y, az, -52, 1.2, 8.8, 5.4, 1.35, 3), 1.5);                         // hátsó talp
+  d = smin(d, fyE(x, y, az, -38.5, 9.4, 5.8, 6.2, 7, 3.8), 3);                          // mellső váll
+  d = smin(d, sdCone(x, y, az, -37, 7, 6.8, -32.5, 2.4, 8.6, 3.2, 2.4), 2);             // mellső lábszár
+  d = smin(d, fyE(x, y, az, -30.2, 1.2, 8.8, 4.3, 1.35, 2.8), 1.5);                     // mellső talp
+  const bw = Math.min(1, Math.max(0, (6.5 - y) / 5)), rid = bw > 0 ? 0.16 * bw * Math.pow(0.5 + 0.5 * Math.sin(x * 2.1), 0.7) : 0;   // hasi lemezek dombormű
+  return d + rid * (z > 1.5 ? 1 : 0.5) - 0.07 * bw;
+}
+function fyBodyGeo() { fyColInit(); return drGeoOnce('fyBody', () => sdfGeo(fyBody, [-90, -2, -12], [-18, 32, 12], 0.68, dgShade(fyBody, FY_C, { dorsal: (x, y, z, n) => n[1] }))); }
 
-  const S = kState({ bob: 0, recoil: 0, blast: 0, flapF: 0, flapB: 0, swell: 0, squash: 0, wob: 0, drift: 0, blink: 0, lx: 0, ly: 0 }, S => {
-    dg.position.set(dm[0] - S.recoil * 2.4, dm[1] + S.bob * 3, 5); dg.rotation.z = S.recoil * 0.025 + S.bob * 0.01;
-    wF.g.rotation.z = S.flapF * 0.42; wB.g.rotation.z = S.flapB * 0.36;
-    L.stream.g.scale.set(1 + S.blast * 0.7, 1 + S.blast * 0.42, 1); L.stream.pl.material.opacity = 1; glow.material.opacity = Math.min(1, S.blast) * 0.85; glow.scale.set(46 + S.blast * 24, 46 + S.blast * 24, 1);
-    L.cloud.g.scale.set(1 + S.swell * 0.07 + S.squash * 0.1, 1 + S.swell * 0.05 - S.squash * 0.07, 1);
-    L.books.g.rotation.z = S.wob * 0.011 + S.swell * 0.004;
-    L.wisp.g.position.x = fiM(120, 100)[0] + S.drift * 6; L.wisp.pl.material.opacity = 0.75 + S.blast * 0.25;
-    lid.scale.y = Math.max(0.001, Math.min(1, S.blink)) * 1.05; pg.position.set(S.lx * 0.7, -S.ly * 0.5, 0.1);
+/* ---------- a füstoszlop és a szalag: spirálosan faragott gyantafelhő ---------- */
+/* az (px,py) pont távolsága egy archimédeszi spirál karjától (R: külső sugár, a vég a középponthoz közel); 9, ha a körön kívül */
+function fySpiralD(px, py, R, rot, dir) {
+  const r = Math.sqrt(px * px + py * py); if (r > R * 1.04) return 9;
+  const turns = 1.7, c = 0.88 * R / (6.2832 * turns), th = (Math.atan2(py, px) * dir - rot + 62.832) % 6.2832;
+  let k = Math.round((R - c * th - r) / (6.2832 * c)); k = Math.max(0, Math.min(Math.floor(turns), k));
+  const phi = th + 6.2832 * k; if (phi > 6.2832 * turns) return Math.abs(r - c * 0.3);
+  return Math.abs(r - (R - c * phi));
+}
+const fyCarve = (d0, w) => d0 >= 9 ? 0 : (1 - dgSm(0.3 * w, 1.1 * w, d0));
+function fyCloud(x, y, z) {
+  let d = 1e9, bi = -1, bd = 1e9;
+  for (let i = 0; i < FY_LOBES.length; i++) { const l = FY_LOBES[i], s = sdSph(x - l[0], y - l[1], z, l[2]); d = i ? smin(d, s, 3.2) : s; if (s < bd) { bd = s; bi = i; } }
+  d = smin(d, sdEll(x - 1, y - 1.8, z, 15, 3.2, 10.5), 5);                                // a talajon szétterülő alap
+  d = smin(d, sdCone(x, y, z, -5, 5.5, 0, 3, 10, 0, 3.4, 6), 3);                         // ide torkollik a szalag
+  if (bd < 2 && bi >= 0) { const l = FY_LOBES[bi], R = 0.7 * l[2], w = 0.55 + l[2] * 0.05; d += 0.95 * (l[2] / 11) * fyCarve(fySpiralD(x - l[0] + l[2] * 0.1, y - l[1] + l[2] * 0.06, R, -2.4 + bi * 0.7, bi % 2 ? -1 : 1), w) * (z > -2 ? 1 : 0.4); }
+  return d;
+}
+function fyCloudGeo() {
+  fyColInit();
+  return drGeoOnce('fyCloud', () => sdfGeo(fyCloud, [-20, -3, -16], [26, 82, 16], 0.9, (x, y, z) => {
+    const n = dgNormY(fyCloud, x, y, z), ao = dgAO(fyCloud, x, y, z, n), up = 0.5 + 0.5 * n[1], t = Math.max(0.35, ao);
+    const k = 0.78 + 0.22 * up, r = 0.95 * k * (0.55 + 0.45 * t), g = 0.88 * k * (0.5 + 0.5 * t), b = 0.7 * k * (0.42 + 0.58 * t);
+    return [r * 0.86, g * 0.78, b * 0.62].map(v => v * 1.18);
+  }));
+}
+/* a szalag: a szájból indul (helyi origó = a száj), vékonyan; az oszlop aljába torkollik */
+const FY_STREAM = [[0, 0, 0, 0.9], [4, -0.8, 0, 1.8], [9, -3, 0, 2.9], [14.5, -6, 0, 4.4], [20, -8.5, 0, 5.8]];
+function fyStream(x, y, z) {
+  let d = dgChain(x, y, z, FY_STREAM, 3);
+  d = smin(d, sdSph(x - 9, y + 3, z, 2.5), 2); d = smin(d, sdSph(x - 14.5, y + 6, z, 3.6), 2);
+  const bd1 = sdSph(x - 9, y + 3, z, 2.5), bd2 = sdSph(x - 14.5, y + 6, z, 3.6);
+  if (bd1 < 1.6) d += 0.4 * fyCarve(fySpiralD(x - 9, y + 3, 1.7, 0.8, 1), 0.4);
+  else if (bd2 < 1.6) d += 0.5 * fyCarve(fySpiralD(x - 14.5, y + 6, 2.5, 1.9, -1), 0.48);
+  return d;
+}
+function fyStreamGeo() {
+  fyColInit();
+  return drGeoOnce('fyStream', () => sdfGeo(fyStream, [-3, -16, -9], [26, 6, 9], 0.58, (x, y, z) => { const n = dgNormY(fyStream, x, y, z), ao = dgAO(fyStream, x, y, z, n), t = Math.max(0.4, ao); return [0.95 * t * 0.86 * 1.18, 0.88 * t * 0.8 * 1.18, 0.72 * t * 0.66 * 1.18]; }));
+}
+
+/* ---------- a könyvek ---------- */
+function fySpineTex(b, i) {   // álló gerinc (128 × 1024): arany pántok, címtábla, a cím fentről lefelé
+  return kTex(128, 1024, (g, W, H) => {
+    g.fillStyle = b.c; g.fillRect(0, 0, W, H);
+    const rng = dcRng(50 + i); for (let k = 0; k < 2400; k++) { g.fillStyle = 'rgba(' + (rng() < 0.5 ? '255,235,210' : '0,0,0') + ',' + (0.025 + rng() * 0.06).toFixed(3) + ')'; g.fillRect(rng() * W, rng() * H, 1 + rng() * 2, 1 + rng() * 5); }
+    const gold = g.createLinearGradient(0, 0, W, 0); gold.addColorStop(0, '#8a6420'); gold.addColorStop(0.5, '#f1d78b'); gold.addColorStop(1, '#a87a2a');
+    [0.045, 0.19, 0.81, 0.955].forEach(q => { const y = q * H; g.fillStyle = 'rgba(0,0,0,.45)'; g.fillRect(0, y - 14, W, 28); g.fillStyle = b.c; g.fillRect(0, y - 11, W, 22); g.fillStyle = gold; g.fillRect(0, y - 10, W, 4); g.fillRect(0, y + 6, W, 4); g.fillRect(0, y - 1.5, W, 3); });
+    [0.075, 0.915].forEach(q => { g.fillStyle = gold; g.fillRect(0, q * H, W, 2.4); });
+    g.fillStyle = 'rgba(0,0,0,.34)'; g.fillRect(W * 0.17, H * 0.27, W * 0.66, H * 0.46); g.strokeStyle = gold; g.lineWidth = 3; g.strokeRect(W * 0.17 + 3, H * 0.27 + 3, W * 0.66 - 6, H * 0.46 - 6);
+    g.save(); g.translate(W / 2, H / 2); g.rotate(Math.PI / 2); g.font = '700 46px Georgia, "Times New Roman", serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = 'rgba(0,0,0,.6)'; g.fillText(b.t, 2, 4); g.fillStyle = gold; g.fillText(b.t, 0, 2); g.restore();
+    const sh = g.createLinearGradient(0, 0, W, 0); sh.addColorStop(0, 'rgba(255,255,255,.12)'); sh.addColorStop(0.5, 'rgba(255,255,255,0)'); sh.addColorStop(1, 'rgba(0,0,0,.3)'); g.fillStyle = sh; g.fillRect(0, 0, W, H);
+  }, 'fySpine' + i);
+}
+function fyCoverTex(b, i) {   // a kötéstábla oldala: bőr + arany keret
+  return kTex(256, 512, (g, W, H) => {
+    g.fillStyle = b.c; g.fillRect(0, 0, W, H);
+    const rng = dcRng(70 + i); for (let k = 0; k < 3200; k++) { g.fillStyle = 'rgba(' + (rng() < 0.5 ? '255,235,210' : '0,0,0') + ',' + (0.02 + rng() * 0.05).toFixed(3) + ')'; g.fillRect(rng() * W, rng() * H, 1 + rng() * 4, 1 + rng() * 3); }
+    g.strokeStyle = '#c79a3a'; g.globalAlpha = 0.8; g.lineWidth = 3; g.strokeRect(16, 16, W - 32, H - 32); g.lineWidth = 1.4; g.strokeRect(26, 26, W - 52, H - 52); g.globalAlpha = 1;
+    g.fillStyle = '#c79a3a'; g.globalAlpha = 0.6; [[36, 36], [W - 36, 36], [36, H - 36], [W - 36, H - 36]].forEach(p => { g.beginPath(); g.arc(p[0], p[1], 6, 0, 6.283); g.fill(); }); g.globalAlpha = 1;
+  }, 'fyCover' + i);
+}
+function fyTopTex() { return kTex(64, 256, (g, W, H) => { g.fillStyle = '#e6d9bb'; g.fillRect(0, 0, W, H); g.strokeStyle = 'rgba(120,92,52,.5)'; g.lineWidth = 1; for (let y = 2; y < H; y += 2.6) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); } g.fillStyle = '#2a1c14'; g.fillRect(0, 0, 6, H); g.fillRect(W - 6, 0, 6, H); g.fillRect(0, H - 6, W, 6); }, 'fyTop'); }
+
+/* ---------- építés ---------- */
+function fyBuild(it) {
+  fyColInit(); const T = THREE, K = kRoot(it, FY_VH), root = K.r, parts = [], mats = []; root.position.x = 5;
+  const M = dgMats(true), P = (m) => { m.userData.part = 'body'; parts.push(m); return m; };
+  M.body.dispose();
+  M.bodyW = l3Skin({ color: '#ffffff', kind: 'scale', cell: 1.35, amt: 0.5, rough: 0.46, env: 0.95, vcol: true, clear: 0.6, clearR: 0.3 });
+  M.body = l3Skin({ color: '#ffffff', kind: 'scale', cell: 3.2, amt: 0.5, rough: 0.46, env: 0.95, vcol: true, clear: 0.6, clearR: 0.3 });
+  M.resin = l3Skin({ color: '#ffffff', kind: 'grain', cell: 3.5, amt: 0.22, rough: 0.5, env: 0.55, vcol: true, clear: 0.3, clearR: 0.4 });
+  const piece = (geo, mat, part, parent) => { const m = new T.Mesh(geo, mat); m.castShadow = true; m.receiveShadow = true; m.userData.part = part; parts.push(m); (parent || root).add(m); return m; };
+  const mk = (bw, bh, bd, mt, g, x, y, z) => { const m = new T.Mesh(new T.BoxGeometry(bw, bh, bd), mt); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; m.userData.part = 'books'; parts.push(m); g.add(m); return m; };
+  /* könyvek: a bal alsó élükön állnak, balra dőlnek (a bal szomszédnak támaszkodnak) */
+  const bk = new T.Group(); root.add(bk); const bkP = [FY_X0 + 3 * FY_STEP + FY_BW * Math.cos(FY_ANG), FY_Z]; bk.position.set(bkP[0], 0, 0);
+  const jit = [0.012, -0.018, 0.02, -0.01], bm = [];
+  FY_BOOKS.forEach((b, i) => {
+    const g = new T.Group(); g.position.set(FY_X0 + i * FY_STEP - bkP[0], 0, FY_Z + (i % 2 ? -1.2 : 0.8)); g.rotation.z = FY_ANG; g.rotation.y = jit[i]; bk.add(g);
+    const cv = new T.MeshStandardMaterial({ map: fyCoverTex(b, i), color: 0x8c8c8c, roughness: 0.6, metalness: 0.05, envMapIntensity: 0.35 }), sp = new T.MeshStandardMaterial({ map: fySpineTex(b, i), color: 0xa0a0a0, roughness: 0.5, metalness: 0.12, envMapIntensity: 0.55 }), tp = new T.MeshStandardMaterial({ map: fyTopTex(), roughness: 0.9 }), bt = new T.MeshStandardMaterial({ color: l3Col(b.c), roughness: 0.8 });
+    bm.push(cv, sp, tp, bt);
+    mk(FY_BW, b.h, 56, [cv, cv, tp, bt, sp, cv], g, FY_BW / 2, b.h / 2, 0);
+  });
+  mats.push.apply(mats, bm);
+  /* a füstoszlop (a talaj-pontján billen/nyúlik) + a szalag (a szájnál forog/nyúlik) */
+  const cloud = new T.Group(); cloud.position.set(0, 0, FY_CZ); root.add(cloud); const cm = piece(fyCloudGeo(), M.resin, 'cloud', cloud);
+  const stream = new T.Group(); stream.position.set(FY_MOUTH[0], FY_MOUTH[1], FY_CZ + 2); root.add(stream); piece(fyStreamGeo(), M.resin, 'cloud', stream);
+  /* a sárkány: a váll körül „él” (recoil, bob), a lábak a padlón */
+  const dg = new T.Group(), dgX = FY_DX; dg.position.set(dgX, 0, FY_CZ + 2); dg.scale.setScalar(FY_DS); root.add(dg); const inner = new T.Group(); inner.position.x = 50; dg.add(inner);
+  piece(fyBodyGeo(), M.bodyW, 'body', inner);
+  const sp = (pos, nrm, h, r) => { const c = new T.Mesh(new T.ConeGeometry(r, h, 6), M.spike); c.position.set(pos[0] + nrm[0] * h * 0.3, pos[1] + nrm[1] * h * 0.3, pos[2] + nrm[2] * h * 0.3); dgOrient(c, nrm); c.castShadow = true; P(c); inner.add(c); };
+  [-36, -39.5, -43.5, -47.5, -51.5, -55.5, -59.5, -63.5, -67.5, -72, -77].forEach((x, i) => { const r = dgTop(fyBody, x, 0, 30, -2); if (!r) return; sp(r.p, [r.n[0] * 0.5 - 0.18, r.n[1] + 0.25, 0], Math.max(1.4, 3.6 - i * 0.15), Math.max(0.55, 1.25 - i * 0.04)); });
+  const tipG = new T.Group(); tipG.position.set(-70.9, 14.0, 0); tipG.rotation.z = 3.67; tipG.scale.z = 0.4; inner.add(tipG); { const c = new T.Mesh(new T.ConeGeometry(1.55, 4, 6), M.spike); c.position.y = 1.6; c.castShadow = true; tipG.add(P(c)); }
+  const toe = (px, py, pz, ry) => { const g = new T.Group(); g.position.set(px, py, pz); g.rotation.y = ry; const t = new T.Mesh(new T.SphereGeometry(1, 10, 8), M.skin); t.scale.set(1.5, 0.95, 0.85); t.castShadow = true; g.add(P(t)); const c = new T.Mesh(new T.ConeGeometry(0.62, 2.1, 6), M.claw); c.rotation.z = -Math.PI / 2 - 0.5; c.position.set(1.7, -0.35, 0); c.castShadow = true; g.add(c); inner.add(g); };
+  [-1, 1].forEach(s => [-1, 0, 1].forEach(k => { toe(-49.6 + 0.4 * Math.abs(k), 1, s * (8.8 + k * 1.5), -k * 0.28); toe(-27.4 + 0.3 * Math.abs(k), 1, s * (8.8 + k * 1.4), -k * 0.26); }));
+  /* szárnyak: összehajtva a háton, a hátrafelé nyúló ujjak; a „távolabbi” kisebb */
+  const wings = [1, -1].map(side => {
+    const g = dgWing(M, side < 0, FY_C); g.scale.setScalar(side > 0 ? 0.42 : 0.35); g.position.set(side > 0 ? -45.5 : -43.5, side > 0 ? 17.2 : 17.6, side > 0 ? 4.6 : -4.8); g.rotation.y = Math.PI; g.userData.side = side;
+    g.traverse(o => { if (o.isMesh) { o.userData.part = 'body'; parts.push(o); } }); inner.add(g); return g;
+  });
+  /* fej: kicsinyített, részletes fej (a fekvő sárkányéval közös szerelvény), kissé lehajtva, a száj résnyire nyitva */
+  const hp = new T.Group(); hp.position.set(-33, 22.5, 0); hp.rotation.z = -0.28; inner.add(hp);
+  const hj = new T.Group(); hj.rotation.y = Math.PI / 2; hj.scale.setScalar(0.5); hp.add(hj);
+  const head = new T.Group(); hj.add(head);
+  const HR = dgHeadRig(M, FY_C, P, 'fyHead', head), jaw = HR.jaw, mo = HR.mo, tg = HR.tg, eyes = HR.eyes, brows = HR.brows;
+  /* kattintási zóna a teljes sárkány köré (a vékony lábak/szárnyak miatt) */
+  const zone = (cx, cy, cz, w, h, d, part) => { const m = new T.Mesh(new T.BoxGeometry(w, h, d), new T.MeshBasicMaterial({ visible: false })); m.visible = false; m.position.set(cx, cy, cz); m.userData.part = part; root.add(m); parts.push(m); mats.push(m.material); return m; };
+  zone(-58, 20, FY_CZ + 2, 70, 42, 26, 'body');
+  /* a száj izzása fújáskor (additív) */
+  const glow = kGlowSprite(0xffe2b0, 24, 0, true); glow.position.set(FY_MOUTH[0] + 4, FY_MOUTH[1] + 1, FY_CZ + 12); root.add(glow);
+
+  const S = kState({ bob: 0, recoil: 0, blast: 0, flapF: 0, flapB: 0, swell: 0, squash: 0, wob: 0, drift: 0, lid: 0.25, lx: 0, ly: 0, jaw: 0.14 }, S => {
+    dg.position.set(dgX - S.recoil * 2.4, S.bob * 3, FY_CZ + 2); dg.rotation.z = S.recoil * 0.025 + S.bob * 0.01;
+    wings[0].rotation.z = -0.3 - S.flapF * 0.5; wings[1].rotation.z = -0.5 - S.flapB * 0.45;
+    stream.scale.set(1 + S.blast * 0.7, 1 + S.blast * 0.42, 1 + S.blast * 0.4); glow.material.opacity = Math.min(1, S.blast) * 0.85; glow.scale.set(24 + S.blast * 16, 24 + S.blast * 16, 1);
+    cloud.scale.set(1 + S.swell * 0.07 + S.squash * 0.1, 1 + S.swell * 0.05 - S.squash * 0.07, 1 + S.swell * 0.05); cloud.rotation.z = S.drift * 0.012;
+    bk.rotation.z = S.wob * 0.011 + S.swell * 0.004;
+    jaw.rotation.x = S.jaw * 0.5 + S.blast * 0.3; mo.visible = tg.visible = jaw.rotation.x > 0.06; mo.scale.y = 1.2 + S.jaw * 2.2; tg.position.y = 3.0 - S.jaw * 1.2;
+    hp.rotation.z = -0.28 + S.blast * 0.14; head.rotation.y = S.lx * 0.12; head.rotation.x = -S.ly * 0.08;
+    eyes.forEach(e => { const c = Math.min(1, Math.max(0, S.lid)); e.lid.rotation.x = -0.35 + c * (Math.PI / 2 + 0.35); e.arc.visible = c > 0.93; e.pg.position.x = S.lx * 0.5; e.pg.position.y = -S.ly * 0.4; });
+    brows.forEach(b => { b.rotation.z = b.userData.sx * (-0.28 - S.blast * 0.3); });
   });
   S.__apply();
   const puff = (x, y, n, big, vx, vy) => {   // krémszínű füstpamacs, felfelé szálló, szétterülő
     for (let i = 0; i < n; i++) setTimeout(() => {
       if (!L3.on) return;
-      const sp = l3Sprite(l3Glow(), 0xfff0d4, 8, 0); sp.renderOrder = 14; sp.position.set(x + (Math.random() - 0.5) * 9, y, 8); root.add(sp);
-      const life = 1.5 + Math.random() * 0.6, ax = ((vx || 0) + (Math.random() - 0.5) * 7), ay = ((vy == null ? 11 : vy) + Math.random() * 6), x0 = sp.position.x, y0 = y;
-      l3Anim(life, u => { const t = u * life; sp.position.set(x0 + ax * t, y0 + ay * t, 8); sp.material.opacity = Math.sin(Math.min(1, u * 1.1) * Math.PI) * 0.7; const k = (7 + u * 15) * (big || 1); sp.scale.set(k, k, 1); }, () => { root.remove(sp); sp.material.dispose(); });
+      const sp2 = l3Sprite(l3Glow(), 0xfff0d4, 8, 0); sp2.renderOrder = 14; sp2.position.set(x + (Math.random() - 0.5) * 9, y, 16); root.add(sp2);
+      const life = 1.5 + Math.random() * 0.6, ax = ((vx || 0) + (Math.random() - 0.5) * 7), ay = ((vy == null ? 11 : vy) + Math.random() * 6), x0 = sp2.position.x;
+      l3Anim(life, u => { const t = u * life; sp2.position.set(x0 + ax * t, y + ay * t, 16); sp2.material.opacity = Math.sin(Math.min(1, u * 1.1) * Math.PI) * 0.7; const k = (7 + u * 15) * (big || 1); sp2.scale.set(k, k, 1); }, () => { root.remove(sp2); sp2.material.dispose(); });
     }, i * 140);
   };
-  const top = fiM(FI.top[0], FI.top[1]);
+  const top = FY_LOBES[FY_LOBES.length - 1], tx = top[0], ty = top[1] + top[2];
   const ctl = {
     S: S, root: root, busy: false,
-    look(p) { if (ctl.busy) return; const v = kLookVec(eg, p, 220); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
+    look(p) { if (ctl.busy) return; const v = kLookVec(eyes[0].g, p, 220); if (Math.abs(v.x - S.lx) + Math.abs(v.y - S.ly) > 0.06) { S.lx = v.x; S.ly = v.y; S.__apply(); l3Inv('v'); } },
     blast() {
       crStop(ctl); ctl.busy = true;
-      ctl.seq = l3Seq().to(S, { blast: 1, recoil: 1, swell: 1 }, 0.22, 'out').call(() => { puff(top[0] + 2, top[1] + 4, 8, 1.4, -2, 13); puff(mo[0] + 16, mo[1] + 6, 4, 1.1, 5, 6); })
-        .wait(0.8).to(S, { blast: 0, recoil: 0, swell: 0 }, 0.7, 'io').call(() => { ctl.busy = false; }).play();
+      ctl.seq = l3Seq().to(S, { blast: 1, recoil: 1, swell: 1, jaw: 0.6, lid: 0.5 }, 0.22, 'out').call(() => { puff(tx + 2, ty + 2, 8, 1.4, -2, 13); puff(FY_MOUTH[0] + 14, FY_MOUTH[1] + 6, 4, 1.1, 5, 6); })
+        .wait(0.8).to(S, { blast: 0, recoil: 0, swell: 0, jaw: 0.14, lid: 0.25 }, 0.7, 'io').call(() => { ctl.busy = false; }).play();
       l3Anim(1.6, u => { S.wob = Math.sin(u * 46) * (1 - u) * 1.3; S.__apply(); }, () => { S.wob = 0; S.__apply(); });
     },
     flap() {
@@ -7883,20 +8120,21 @@ function fiBuild(it) {
     puff() {
       crStop(ctl);
       l3Anim(1.3, u => { S.squash = Math.sin(u * Math.PI * 8) * 0.5 * (1 - u); S.__apply(); }, () => { S.squash = 0; S.__apply(); });
-      puff(top[0] + 1, top[1] + 3, 7, 1.3, -2, 12); puff(top[0] + 8, top[1] - 26, 3, 1.1, 3, 8);
+      puff(tx + 1, ty + 1, 7, 1.3, -2, 12); puff(tx + 8, ty - 22, 3, 1.1, 3, 8);
     },
-    books() { crStop(ctl); l3Anim(1.4, u => { S.wob = Math.sin(u * 40) * (1 - u) * 1.6; S.__apply(); }, () => { S.wob = 0; S.__apply(); }); puff(top[0] + 6, top[1] + 8, 2, 1, 2, 9); },
-    blink() { l3Seq().to(S, { blink: 1 }, 0.07, 'out').to(S, { blink: 0 }, 0.13, 'io').play(); },
+    books() { crStop(ctl); l3Anim(1.4, u => { S.wob = Math.sin(u * 40) * (1 - u) * 1.6; S.__apply(); }, () => { S.wob = 0; S.__apply(); }); puff(tx + 6, ty + 6, 2, 1, 2, 9); },
+    blink() { l3Seq().to(S, { lid: 1 }, 0.08, 'out').to(S, { lid: 0.25 }, 0.14, 'io').play(); },
     idle() {
       if (ctl.busy) return; const r = Math.random();
-      if (r < 0.4) ctl.blink(); else if (r < 0.7) puff(top[0], top[1] + 2, 2, 1, -1, 9); else if (r < 0.88) l3Anim(1.6, u => { S.drift = Math.sin(u * Math.PI); S.__apply(); }, () => { S.drift = 0; S.__apply(); });
+      if (r < 0.4) ctl.blink(); else if (r < 0.7) puff(tx, ty, 2, 1, -1, 9); else if (r < 0.88) l3Anim(1.6, u => { S.drift = Math.sin(u * Math.PI); S.__apply(); }, () => { S.drift = 0; S.__apply(); });
       else l3Anim(1.1, u => { S.flapF = Math.sin(u * Math.PI * 2) * 0.5 * (1 - u); S.flapB = S.flapF * 0.7; S.__apply(); }, () => { S.flapF = 0; S.flapB = 0; S.__apply(); });
     }
   };
-  return { grp: K.g, parts: parts, mats: mats, d: 40, ctl: ctl };
+  S.__apply();
+  return { grp: K.g, parts: parts, mats: kMatsAll(M).concat(mats), d: 50, ctl: ctl };
 }
 registerDecor3({
-  id: 'kis-sarkany', build: fiBuild,
+  id: 'kis-sarkany', build: fyBuild,
   onClick(it, A, e, part) {
     const c = it.ctl, st = A.st, now = Date.now();
     if (part === 'cloud') { c.puff(); st.n = 0; return; }

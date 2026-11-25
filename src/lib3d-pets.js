@@ -1,4 +1,4 @@
-/* ===== 3D díszek: olvasó szellem – fehér, harang alakú figura a polc szélén ülve, apró fekete könyvet olvas (a sárkányok: lib3d-dragons2.js, lib3d-flyimg.js) ===== */
+/* ===== 3D díszek: olvasó szellem – fehér, harang alakú figura a polc szélén ülve, apró fekete könyvet olvas (a sárkányok: lib3d-dragons2.js, lib3d-fly.js) ===== */
 'use strict';
 
 /* közös: „soha ne fusson le üresen” tweenek, amik a ctl.seq-et cserélik */
@@ -20,10 +20,14 @@ function ghArmGeo() {   // a +x oldali kar a vállhoz képest: könyök kifelé-
 function ghSurfZ(x, y) { for (let z = 50; z > -40; z -= 0.4) if (ghF(x, y, z) < 0) return z; return 20; }
 function ghHemGeo() {
   return drGeoOnce('ghHem', () => {
-    const T = THREE, bot = new T.SplineCurve([[30, -8], [28, -15], [22.5, -22], [17, -15], [11, -11.5], [6, -16.5], [0, -17.5], [-5, -12.5], [-11, -10.5], [-16.5, -19], [-22, -25.5], [-27.5, -16], [-30, -9]].map(p => new T.Vector2(p[0], p[1]))).getPoints(64);
+    const T = THREE, bot = new T.SplineCurve([[30, -8], [28.5, -17], [23.5, -29], [17.5, -18], [11.5, -12], [6.5, -21], [0.5, -24], [-5, -15], [-11, -11], [-16.5, -22], [-22, -31], [-27.5, -18], [-30, -9]].map(p => new T.Vector2(p[0], p[1]))).getPoints(64);
     const sh = new T.Shape(); sh.moveTo(-31, 3); sh.lineTo(31, 3); sh.lineTo(30, -8); bot.forEach(p => sh.lineTo(p.x, p.y)); sh.lineTo(-31, 3);
     const g = new T.ExtrudeGeometry(sh, { depth: 3.2, bevelEnabled: true, bevelThickness: 1.4, bevelSize: 1.4, bevelSegments: 3, curveSegments: 4 }); g.translate(0, 0, -1.6); g.userData.shared = true; return g;
   });
+}
+function ghFoldTex() {   // függőleges redők: a szegély UV-ja modell-egység (x, y), ezért a nyújtás a repeat-ben van
+  const t = kTex(128, 8, (g, W, H) => { const gr = g.createLinearGradient(0, 0, W, 0); for (let i = 0; i <= 8; i++) gr.addColorStop(i / 8, 'rgb(' + Math.round(128 + 110 * Math.sin(i / 8 * Math.PI * 2 * 2.5 + 0.6)) + ',' + Math.round(128 + 110 * Math.sin(i / 8 * Math.PI * 2 * 2.5 + 0.6)) + ',' + Math.round(128 + 110 * Math.sin(i / 8 * Math.PI * 2 * 2.5 + 0.6)) + ')'); g.fillStyle = gr; g.fillRect(0, 0, W, H); }, 'ghFold');
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1 / 24, 1 / 40); t.needsUpdate = true; return t;
 }
 function ghCoverTex() {
   return kTex(128, 96, (g, W, H) => {
@@ -42,13 +46,14 @@ function ghBuild(it) {
     hole: new T.MeshBasicMaterial({ color: 0x1b1720, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }),
     mouth: new T.MeshBasicMaterial({ color: 0x24202a })
   };
-  mats.push(M.body, M.cover, M.edge, M.page, M.hole, M.mouth);
+  M.hem = M.body.clone(); M.hem.bumpMap = ghFoldTex(); M.hem.bumpScale = 2.4;   // a lelógó szegélyen függőleges redők (bump)
+  mats.push(M.body, M.cover, M.edge, M.page, M.hole, M.mouth, M.hem);
   const P = (m, part) => { m.userData.part = part || 'body'; parts.push(m); return m; };
   const halo = kGlowSprite(0xfff0d0, 170, 0.12); halo.position.set(0, 58, -40); root.add(halo); mats.push(halo.material);
   const bg = new T.Group(); root.add(bg);                       // minden, ami a testtel mozog (a hop/rejtőzés/nő)
   const body = new T.Mesh(ghBodyGeo(), M.body); body.position.z = GH.Z; body.castShadow = true; body.receiveShadow = true; bg.add(P(body));
   // szegély a polc peremén
-  const hem = new T.Mesh(ghHemGeo(), M.body); hem.position.set(0, 1.6, -0.6); hem.castShadow = true; hem.receiveShadow = true; bg.add(P(hem));
+  const hem = new T.Mesh(ghHemGeo(), M.hem); hem.position.set(0, 1.6, -0.6); hem.castShadow = true; hem.receiveShadow = true; bg.add(P(hem));
   // karok (a vállnál forognak)
   const arms = [1, -1].map(sg => { const g = new T.Group(); g.position.set(sg * 29.5, 58, GH.Z + 15); g.scale.x = sg; const m = new T.Mesh(ghArmGeo(), M.body); m.castShadow = true; g.add(P(m)); bg.add(g); g.userData.sg = sg; return g; });
   // szem-lyukak: sötét, hosszúkás matrica a mellkas felszínén (a felület normálja mentén állítva)

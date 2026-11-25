@@ -2,7 +2,7 @@
 const fs = require('fs'), path = require('path');
 const R = p => path.join(__dirname, p);
 const readIf = p => fs.existsSync(R(p)) ? fs.readFileSync(R(p), 'utf8') : '';
-const JS = ['engine', 'data-base', 'data-randi', 'data-utazas', 'data-kaja', 'data-fozes', 'data-films', 'data-mozi', 'data-kezmuves', 'data-konyv', 'data-meghitt', 'core', 'play', 'editor', 'shelf', 'library', 'spine', 'library-ui', 'decor', 'decor-dragon', 'decor-ghost', 'decor-lantern', 'decor-glass', 'decor-baby', 'decor-cat', 'decor-owl', 'decor-plant', 'decor-nook', 'lib3d-sdf', 'lib3d-kit', 'lib3d', 'lib3d-dragon', 'lib3d-lamps', 'lib3d-nook','lib3d-nookzoom', 'lib3d-pets', 'lib3d-pets2', 'lib3d-dragons2','lib3d-flyimg', 'misc', 'app'];
+const JS = ['engine', 'data-base', 'data-randi', 'data-utazas', 'data-kaja', 'data-fozes', 'data-films', 'data-mozi', 'data-kezmuves', 'data-konyv', 'data-meghitt', 'core', 'play', 'editor', 'shelf', 'library', 'spine', 'library-ui', 'decor', 'decor-dragon', 'decor-ghost', 'decor-lantern', 'decor-glass', 'decor-baby', 'decor-cat', 'decor-owl', 'decor-plant', 'decor-nook', 'lib3d-sdf', 'lib3d-kit', 'lib3d', 'lib3d-dragon', 'lib3d-lamps', 'lib3d-nook','lib3d-nookzoom', 'lib3d-pets', 'lib3d-pets2', 'lib3d-dragons2','lib3d-fly', 'misc', 'app'];
 const CSS = ['base', 'play', 'editor', 'shelf', 'decor', 'decor2', 'lib3d', 'misc'];
 const js = JS.map(f => readIf('src/' + f + '.js')).filter(Boolean).join('\n\n');
 const css = CSS.map(f => readIf('src/css/' + f + '.css')).filter(Boolean).join('\n\n');

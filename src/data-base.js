@@ -18,36 +18,45 @@ const Seed = (() => {
   const BOOK_GENRES = ['Krimi', 'Thriller', 'Fantasy', 'Sci-fi', 'Regény', 'Romantikus', 'Történelmi regény', 'Ifjúsági', 'Horror', 'Humor', 'Ismeretterjesztő', 'Mese', 'Disztópia'];
   const BOOK_MOODS = ['megnyugtató', 'izgalmas', 'megható', 'vicces', 'elgondolkodtató', 'sötét', 'kalandos'];
 
-  // [cím, szerző, műfaj, hangulat, oldal, állapot]
-  const BOOKS = [
-    ['A kis herceg', 'Antoine de Saint-Exupéry', 'Mese', 'megható', 96, 'olvasatlan'],
-    ['Micimackó', 'A. A. Milne', 'Mese', 'megnyugtató', 160, 'olvasatlan'],
-    ['A Pál utcai fiúk', 'Molnár Ferenc', 'Ifjúsági', 'megható', 240, 'elolvastam'],
-    ['Abigél', 'Szabó Magda', 'Ifjúsági', 'izgalmas', 380, 'olvasatlan'],
-    ['Egri csillagok', 'Gárdonyi Géza', 'Történelmi regény', 'kalandos', 620, 'olvasatlan'],
-    ['Utas és holdvilág', 'Szerb Antal', 'Regény', 'elgondolkodtató', 300, 'olvasatlan'],
-    ['Édes Anna', 'Kosztolányi Dezső', 'Regény', 'sötét', 250, 'olvasatlan'],
-    ['A szőke ciklon', 'Rejtő Jenő', 'Humor', 'vicces', 170, 'olvasatlan'],
-    ['Gyilkosság az Orient expresszen', 'Agatha Christie', 'Krimi', 'izgalmas', 260, 'olvasatlan'],
-    ['Holtodiglan', 'Gillian Flynn', 'Thriller', 'sötét', 450, 'olvasatlan'],
-    ['A hobbit', 'J. R. R. Tolkien', 'Fantasy', 'kalandos', 330, 'olvasatlan'],
-    ['Harry Potter és a bölcsek köve', 'J. K. Rowling', 'Fantasy', 'kalandos', 330, 'elolvastam'],
-    ['Sosehol', 'Neil Gaiman', 'Fantasy', 'kalandos', 380, 'olvasatlan'],
-    ['A galaxis útikalauz stopposoknak', 'Douglas Adams', 'Sci-fi', 'vicces', 220, 'olvasatlan'],
-    ['A marsi', 'Andy Weir', 'Sci-fi', 'izgalmas', 400, 'olvasatlan'],
-    ['Dűne', 'Frank Herbert', 'Sci-fi', 'elgondolkodtató', 700, 'olvasatlan'],
-    ['1984', 'George Orwell', 'Disztópia', 'sötét', 330, 'olvasatlan'],
-    ['Büszkeség és balítélet', 'Jane Austen', 'Romantikus', 'megnyugtató', 400, 'olvasatlan'],
-    ['Egy Ove nevű férfi', 'Fredrik Backman', 'Regény', 'megható', 330, 'olvasatlan'],
-    ['Az alkimista', 'Paulo Coelho', 'Regény', 'elgondolkodtató', 190, 'olvasatlan'],
-    ['Ragyogás', 'Stephen King', 'Horror', 'sötét', 520, 'olvasatlan'],
-    ['Sapiens: Az emberiség rövid története', 'Yuval Noah Harari', 'Ismeretterjesztő', 'elgondolkodtató', 520, 'olvasatlan'],
-    ['Kafka a tengerparton', 'Murakami Haruki', 'Regény', 'elgondolkodtató', 500, 'olvasatlan'],
-    ['Mágia színe', 'Terry Pratchett', 'Fantasy', 'vicces', 280, 'olvasatlan']
+  /* A barátnő valódi könyvespolcának könyvei (a fotók gerincei alapján): [cím, szerző, műfaj, hangulat, {c: szín, s: stílus, p: minta, a: díszítő szín, h: magasság, th: vastagság}, megjegyzés].
+     Az oldalszám nem ismert (a vastagság a fotóról való), az állapot mind „olvasatlan”, hogy a kockák az egész polcból válogathassanak – a polcon átállítható. */
+  const AU = '#d9b25a', AG = '#cdd2d8', CU = '#c98a55', RD = '#b3243a', BK = '#17110f', CR = '#efe2c4';
+  const K = (c, s, p, a, th, h) => ({ c, s, p, a, th, h: h || 1 });
+  const MAFI = (t, c, p, a) => [t, 'Tahereh Mafi', 'Disztópia, Romantikus', 'izgalmas', K(c, 3, p, a, 2)];
+  const KEN = (t, c) => [t, 'Raven Kennedy', 'Fantasy, Romantikus', 'sötét', K(c, 2, 6, AU, 3)];
+  const LIB = [
+    ['Tahereh Mafi – Ne érints! sorozat', [
+      MAFI('Ne érints', '#5d6b78', 6, AG), MAFI('Ne keress', '#4c5f9c', 6, AG), MAFI('Ne félts', '#3f8d8a', 6, AG), MAFI('Ne hazudj', '#e1e4e8', 6, AG), MAFI('Ne engedj', '#8b9db4', 6, AG),
+      MAFI('Ne felejts', '#566a82', 6, AU), MAFI('Ne add fel', '#7c4636', 6, AU), MAFI('Ne hagyj el', '#5f2f86', 4, AU), MAFI('Ne tágíts', '#cdd6e2', 6, AG), MAFI('Ne színlelj', '#a99bd2', 6, AG)]],
+    ['Kennedy és Garber', [
+      KEN('Gild', '#1b1c27'), KEN('Glint', '#1a1b26'), KEN('Gleam', '#191a25'), KEN('Glow', '#181a24'), KEN('Gold', '#1a1a22'),
+      ['Caraval', 'Stephanie Garber', 'Fantasy, Ifjúsági', 'kalandos', K('#18233f', 6, 4, CR, 3)], ['Finale', 'Stephanie Garber', 'Fantasy, Ifjúsági', 'kalandos', K('#2b2354', 6, 4, CU, 3)]]],
+    ['Sötét romantika', [
+      ['Ne! Veszíts el!', 'Laura Kneidl', 'Romantikus', '', K('#a6cbe0', 3, 0, BK, 2)], ['Hooked', 'Emily McIntire', 'Romantikus, Fantasy', 'sötét', K('#262a30', 2, 6, RD, 3)],
+      ['A hatalom tőre', 'Kristen Ciccarelli', 'Fantasy', 'kalandos', K('#15161a', 3, 0, CU, 3)], ['Riot House', 'Callie Hart', 'Romantikus', 'sötét', K('#121214', 3, 0, AU, 3, 0.94)],
+      ['Gothikana', 'RuNyx', 'Romantikus', 'sötét', K('#16161a', 2, 3, AU, 3)], ['Téveszmék I.', 'Végh Csenge', 'Regény', '', K('#cfd0d2', 3, 6, BK, 3)],
+      ['Satan\'s Affair', 'H. D. Carlton', 'Romantikus', 'sötét', K('#3a3c42', 2, 6, AG, 3, 0.94)],
+      ['Szavad ne feledd!', 'Riley Baker', 'Regény', '', K('#9a9a98', 3, 0, BK, 2)], ['…szerencse', 'Riley Baker', 'Regény', '', K('#b86a1e', 3, 0, BK, 2), 'A gerincen a cím nem volt jól olvasható – javítsd át a pontos címre!']]],
+    ['Romantikus kedvencek', [
+      ['Hideghábori', 'Orgován Ramóna', 'Romantikus', '', K('#e8a2b0', 3, 0, RD, 2, 0.94)], ['Ellenséges szobatárs', 'Vörös Viktória', 'Romantikus', '', K('#4a3a86', 3, 4, CR, 2, 0.94)],
+      ['Under the Magnolias', 'T. I. Lowe', 'Romantikus', 'megható', K('#9ccbb0', 3, 0, AU, 2, 0.94)], ['A lelkitárs-egyenlet', 'Christina Lauren', 'Romantikus', 'megható', K('#e6b52c', 3, 0, BK, 3)],
+      ['Az igaz szerelem-kísérlet', 'Christina Lauren', 'Romantikus', 'vicces', K('#7e2f86', 3, 7, CR, 3)]]],
+    ['Egyéb', [
+      ['Piranesi', 'Susanna Clarke', 'Fantasy', 'elgondolkodtató', K('#efe8d8', 2, 7, CU, 3, 0.94)], ['A Titok', 'Rhonda Byrne', 'Ismeretterjesztő', 'elgondolkodtató', K('#4a1a14', 5, 0, AU, 2, 0.88)]]]
   ];
-  const books = () => BOOKS.map(b => ({
-    id: Engine.uid(), title: b[0], author: b[1], genre: b[2], mood: b[3], pages: b[4], status: b[5], note: '', example: true
-  }));
+  function library() {
+    const books = [], shelves = [];
+    LIB.forEach(sh => { const ids = []; sh[1].forEach(r => { const k = r[4], b = { id: Engine.uid(), title: r[0], author: r[1], genre: r[2], mood: r[3], pages: 0, status: 'olvasatlan', note: r[5] || '', color: k.c, style: k.s, pat: k.p, acc: k.a, h: k.h, th: k.th }; books.push(b); ids.push(b.id); }); shelves.push({ id: Engine.uid(), name: sh[0], ids }); });
+    return { books, shelves };
+  }
+  const books = () => library().books;
+  /* v13: a régi (érintetlen) példakönyvek helyére egyszer a valódi polc kerül; saját könyvekhez nem nyúlunk */
+  function adoptReal(S) {
+    if (!S.settings) S.settings = {}; if ((S.settings.libV || 0) >= 13) return 0;
+    S.settings.libV = 13;
+    if (Array.isArray(S.books) && S.books.length && S.books.every(b => b && b.example)) { const l = library(); S.books = l.books; S.shelves = l.shelves; return l.books.length; }
+    return 0;
+  }
 
   function themes() { return ORDER.filter(id => SeedParts[id]).map(id => SeedParts[id](T)); }
 
@@ -79,5 +88,5 @@ const Seed = (() => {
     S.settings.palV = 12; return n;
   }
 
-  return { VERSION, themes, books, BOOK_GENRES, BOOK_MOODS, T, migrate, recolor, sig };
+  return { VERSION, themes, books, library, adoptReal, BOOK_GENRES, BOOK_MOODS, T, migrate, recolor, sig };
 })();
