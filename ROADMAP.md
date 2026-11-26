@@ -11,6 +11,7 @@
 - v11 (2026-11-23): díszlimit (8), gyenge-GPU felismerés + lapos díszek mód, lágy VSM árnyék, árnyalt hátlap
 - v12 (2026-11-24): `spine.js` gerinc-motor (8 stílus × 9 minta × 6 fólia, domborműves/fémes 3D), nagyobb, jobban kihajló könyvek, új könyv-szerkesztő, dark romance színvilág, egyetlen dísz (csere), meleg fényfolt a dísz mögött. Ha a díszek így sem elég szépek/valósághűek, a user döntése: végleg kivenni őket (a 3D polc és a könyvek ettől függetlenül működnek).
 - v13 (2026-11-25): a valódi könyvespolc (33 könyv, 5 polc, `Seed.library`/`adoptReal`), a fekvő és a fekete sárkány újraépítve (SDF, `lib3d-dragons2.js`/`lib3d-fly.js`), 2D tartalék-rajz újra, szellem-szegély redők
+- v14 (2026-11-26): üvegablak-lámpák a termékfotókból (csillagos vár, rózsák, lángoló kard; 3D + 2D), éles könyvek telefonon (mobil-GPU osztály, 2× felbontás, MSAA)
 
 ## Következő (javaslatok, a user döntése szerint)
 1. Book nook bővítés: több tárgy a szobában (teáscsésze, madaras ablak), szobák cseréje (pl. tetőtér, konyha), hang

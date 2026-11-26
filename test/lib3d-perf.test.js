@@ -38,6 +38,13 @@ const { chromium } = require('playwright'); const path = require('path'); const 
   // 4) minőségi fokozatok
   const lv = await page.evaluate(() => { const r = [], pr = () => L3.r.getPixelRatio(); L3.deg = 0; l3Quality(); r.push(pr()); L3.deg = 1; l3Quality(); r.push(pr(), L3.key.shadow.mapSize.x); L3.deg = 2; l3Quality(); r.push(pr(), L3.key.shadow.mapSize.x); L3.deg = 0; l3Quality(); r.push(pr()); return r; });
   ok(lv[0] <= 1.25 && lv[1] === 1 && lv[2] === 1024 && lv[3] === 0.75 && lv[4] === 512 && lv[5] <= 1.25, 'minőségi fokozatok: 0 → ≤1,25× · 1 → 1×/1024 · 2 → 0,75×/512, visszaállítható (' + lv.join(', ') + ')');
+  // telefon/tábla (érintőkijelző / mobil-GPU): a kijelző szerinti éles felbontás (keskeny nézetben legfeljebb 2×, széles nézetben 1,5×); a lassúság-őr visszaveszi
+  const mv = await page.evaluate(() => {
+    const r = [], iw = Object.getOwnPropertyDescriptor(window, 'innerWidth'), at = w => { Object.defineProperty(window, 'innerWidth', { value: w, configurable: true }); };
+    L3.mobile = true; at(400); [0, 1, 2].forEach(d => { L3.deg = d; r.push(l3PixelRatio()); }); at(900); L3.deg = 0; r.push(l3PixelRatio());
+    L3.mobile = false; L3.deg = 0; if (iw) Object.defineProperty(window, 'innerWidth', iw); else delete window.innerWidth; l3Quality(); return r;
+  });
+  ok(mv[0] === 2 && mv[1] === 1.5 && mv[2] === 0.75 && mv[3] === 1.5, 'telefon: 0. fokozat 2× · 1. fokozat 1,5× · 2. fokozat 0,75× · széles táblán 1,5× (' + mv.join(', ') + ')');
   ok(errs.length === 0, 'nincs konzolhiba' + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   await b.close(); console.log(fails ? fails + ' HIBA' : 'minden rendben'); process.exit(fails ? 1 : 0);
 })();

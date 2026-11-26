@@ -27,9 +27,9 @@ const { chromium } = require('playwright'); const path = require('path');
   await page.screenshot({ path: out + '-modal.png' });
   await page.click('.dc-modal .btn.primary:has-text("Kész")'); await page.waitForTimeout(300);
   // minden új dísz a 0. polcra
-  await page.evaluate(() => { ['szellem', 'lampas', 'uveg-rozsa', 'uveg-var'].forEach(id => addDecorSet(DECOR_SETS.find(s => s.id === id), 0)); persist(); drawLibrary(); });
+  await page.evaluate(() => { ['szellem', 'lampas', 'uveg-rozsa', 'uveg-var', 'uveg-kard'].forEach(id => addDecorSet(DECOR_SETS.find(s => s.id === id), 0)); persist(); drawLibrary(); });
   await page.waitForTimeout(300);
-  ok((await page.$$('.lb-deco')).length === 10, '10 dísz a polcon (6 kezdő + 4)');
+  ok((await page.$$('.lb-deco')).length === 11, '11 dísz a polcon (6 kezdő + 5)');
   await page.screenshot({ path: out + '-shelf.png', fullPage: true });
 
   // szellem
@@ -62,7 +62,7 @@ const { chromium } = require('playwright'); const path = require('path');
   await page.waitForTimeout(1900);
 
   // üvegablak: kapcsoló + jelenet
-  for (const [type, scene] of [['uveg-rozsa', 'is-bloom'], ['uveg-var', 'is-wish']]) {
+  for (const [type, scene] of [['uveg-rozsa', 'is-glint'], ['uveg-var', 'is-wish'], ['uveg-kard', 'is-blaze']]) {
     const sel = '.dc-' + type;
     await clickAt(page, sel + ' .d-sw', .5, .5); await page.waitForTimeout(150);
     ok(await has(page, sel, 'is-off'), type + ': a kapcsoló lekapcsolja');
@@ -83,7 +83,7 @@ const { chromium } = require('playwright'); const path = require('path');
   for (const [w, hh] of [[390, 800], [360, 740]]) {
     ({ page, errs } = await mk(w, hh));
     await page.goto(url, { waitUntil: 'domcontentloaded' }); await page.waitForTimeout(800);
-    await page.evaluate(() => { ['szellem', 'lampas', 'uveg-rozsa', 'uveg-var'].forEach(id => addDecorSet(DECOR_SETS.find(s => s.id === id), 0)); persist(); drawLibrary(); });
+    await page.evaluate(() => { ['szellem', 'lampas', 'uveg-rozsa', 'uveg-var', 'uveg-kard'].forEach(id => addDecorSet(DECOR_SETS.find(s => s.id === id), 0)); persist(); drawLibrary(); });
     await page.waitForTimeout(400);
     const sw = await page.evaluate(() => document.documentElement.scrollWidth), cw = await page.evaluate(() => document.documentElement.clientWidth);
     ok(sw <= cw, w + 'px: sok dísszel sincs vízszintes görgetés (' + sw + '/' + cw + ')');

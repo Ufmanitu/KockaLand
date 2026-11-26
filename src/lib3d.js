@@ -128,16 +128,19 @@ function l3Fit(root) {   // a keretek magasságát a 3D szekrény méretére ál
   });
 }
 
-/* gyenge GPU (integrált Intel, mobil-GPU, szoftveres) vagy érintőkijelző: alacsonyabb alapminőség (1. fokozat), MSAA nélkül, parallax nélkül */
-function l3WeakGPU() {
-  if (window.__L3_WEAK != null) return !!window.__L3_WEAK;
-  if (navigator.webdriver) return false;
+/* a GPU osztálya: 'mobile' = telefon/tábla (érintőkijelző vagy mobil-GPU): éles felbontás (a lassúság-őr szükség esetén visszaveszi); 'weak' = integrált Intel / szoftveres:
+   alacsonyabb alapminőség (1. fokozat), MSAA nélkül, parallax nélkül; 'ok' = a többi. (A tesztek: window.__L3_WEAK / __L3_MOBILE felülírja.) */
+function l3GpuClass() {
+  if (window.__L3_MOBILE != null && window.__L3_MOBILE) return 'mobile';
+  if (window.__L3_WEAK != null) return window.__L3_WEAK ? 'weak' : 'ok';
+  if (navigator.webdriver) return 'ok';
   try {
-    const c = document.createElement('canvas'), gl = c.getContext('webgl') || c.getContext('experimental-webgl'); if (!gl) return false;
+    const c = document.createElement('canvas'), gl = c.getContext('webgl') || c.getContext('experimental-webgl'); if (!gl) return 'ok';
     const x = gl.getExtension('WEBGL_debug_renderer_info'), n = x ? String(gl.getParameter(x.UNMASKED_RENDERER_WEBGL) || '') : '', lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
     const touch = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
-    return touch || /Mali|Adreno|PowerVR|Immortalis|VideoCore|SwiftShader|llvmpipe|Software|Basic Render|Intel(?!.*\bArc\b)/i.test(n);
-  } catch (e) { return false; }
+    if (touch || /Mali|Adreno|PowerVR|Immortalis|VideoCore/i.test(n)) return 'mobile';
+    return /SwiftShader|llvmpipe|Software|Basic Render|Intel(?!.*\bArc\b)/i.test(n) ? 'weak' : 'ok';
+  } catch (e) { return 'ok'; }
 }
 /* ---------- színtér ---------- */
 function l3Init() {
@@ -145,8 +148,8 @@ function l3Init() {
   const T = THREE;
   try {
     const cv = document.createElement('canvas'); cv.id = 'l3'; cv.setAttribute('aria-hidden', 'true'); document.body.insertBefore(cv, $('#app'));
-    const lowq = !!window.__L3_LOWQ, weak = !lowq && l3WeakGPU(), r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq && !weak, alpha: true, powerPreference: 'high-performance' });
-    L3.lowq = lowq; L3.weak = weak; if (weak) L3.deg = Math.max(L3.deg || 0, 1);
+    const lowq = !!window.__L3_LOWQ, cls = lowq ? 'ok' : l3GpuClass(), weak = cls === 'weak', r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq && !weak, alpha: true, powerPreference: 'high-performance' });
+    L3.lowq = lowq; L3.weak = weak; L3.mobile = cls === 'mobile'; if (weak) L3.deg = Math.max(L3.deg || 0, 1);
     r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.0;
     r.shadowMap.enabled = true; r.shadowMap.type = T.VSMShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
     L3.cv = cv; L3.r = r; L3.scene = new T.Scene(); L3.cam = new T.PerspectiveCamera(L3K.FOV, 1, 10, 6000); L3.ray = new T.Raycaster();
@@ -167,10 +170,14 @@ function l3Init() {
     return true;
   } catch (e) { console.error(e); L3.st = 'failed'; return false; }
 }
-/* minőségi fokozat: 0 = alap (felbontás ≤ 1,25×, 2048-as árnyék), 1 = 1× és 1024-es árnyék (gyenge GPU-n ez az induló), 2 = vészfék: 0,75×, 512-es árnyék és lapos képként rajzolt díszek */
+/* minőségi fokozat: 0 = alap (asztali gépen felbontás ≤ 1,25×, 2048-as árnyék; telefonon/táblán a kijelző élessége, legfeljebb 2×), 1 = 1× (telefonon 1,5×) és 1024-es árnyék (gyenge GPU-n ez az induló), 2 = vészfék: 0,75×, 512-es árnyék és lapos képként rajzolt díszek */
+function l3PixelRatio() {
+  const vw = innerWidth, d = L3.deg || 0, dpr = devicePixelRatio || 1;
+  return L3.lowq ? 1 : d >= 2 ? 0.75 : d === 1 ? (L3.mobile ? Math.min(dpr, 1.5) : 1) : Math.min(dpr, L3.mobile ? (vw < 700 ? 2 : 1.5) : vw < 700 ? 1.5 : 1.25);
+}
 function l3Quality() {
   const r = L3.r; if (!r) return;
-  const vw = innerWidth, vh = innerHeight, d = L3.deg || 0, pr = L3.lowq ? 1 : d >= 2 ? 0.75 : d === 1 ? 1 : Math.min(devicePixelRatio || 1, vw < 700 ? 1.5 : 1.25);
+  const vw = innerWidth, vh = innerHeight, d = L3.deg || 0, pr = l3PixelRatio();
   r.setPixelRatio(pr); r.setSize(vw, vh, false);
   const sh = L3.key && L3.key.shadow, sm = L3.lowq || d >= 2 ? 512 : d === 1 || Math.min(vw, vh) < 700 ? 1024 : 2048;
   if (sh && sh.mapSize.x !== sm) { sh.mapSize.set(sm, sm); if (sh.map) { sh.map.dispose(); sh.map = null; } }

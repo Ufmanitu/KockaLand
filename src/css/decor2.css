@@ -109,49 +109,38 @@
 @keyframes lnFlicker { 0%, 100% { transform: none; } 12% { transform: skewX(5deg) scaleY(1.08); } 26% { transform: skewX(-4deg) scale(.94, .9); } 40% { transform: skewX(3deg) scaleY(1.06); } 54% { transform: skewX(-5deg) scale(.96, .94); } 70% { transform: skewX(2deg) scaleY(1.04); } 84% { transform: skewX(-1.5deg); } }
 @keyframes lnFlickG { 0%, 100% { opacity: 1; } 26% { opacity: .78; } 54% { opacity: .85; } 70% { opacity: 1; } }
 
-/* --- üvegablak-panelek --- */
-.gl-svg .d-halo { opacity: 1; transform-origin: 50px 84px; transition: opacity .8s; }
+/* --- üvegablak-lámpák (a nyomat a fotókból; a jelenetek: csillagos vár / rózsák / lángoló kard) --- */
+.gl-svg .d-halo { opacity: 1; transform-box: fill-box; transform-origin: center; transition: opacity .8s; }
 .gl-svg .d-dim { opacity: 0; transition: opacity .7s; }
-.gl-svg .d-back { transition: opacity .7s; }
-.gl-svg .d-led { transition: opacity .4s; }
-.is-off .gl-svg .d-halo { opacity: 0; } .is-off .gl-svg .d-back { opacity: 0; } .is-off .gl-svg .d-dim { opacity: .8; } .is-off .gl-svg .d-led { opacity: .12; }
+.gl-svg .d-ledge { transition: opacity .5s; }
+.is-off .gl-svg .d-halo { opacity: 0; } .is-off .gl-svg .d-dim { opacity: .84; } .is-off .gl-svg .d-ledge { opacity: .1; }
 .gl-svg .d-sw { cursor: pointer; }
-.gl-svg .d-bfly { transform-origin: 60px 35px; }
-.gl-svg .d-wl, .gl-svg .d-wr { transform-origin: 0 0; }
-.gl-svg .d-rose { transform-origin: 50px 90px; }
-.gl-svg .d-petal { opacity: 0; transform-origin: 59px 74px; }
-.gl-svg .d-star, .gl-svg .d-heart { transform-box: fill-box; transform-origin: center; }
-.gl-svg .d-heart, .gl-svg .d-shoot { opacity: 0; }
+.gl-svg .d-twk, .gl-svg .d-meteor, .gl-svg .d-glint, .gl-svg .d-flame, .gl-svg .d-ember { opacity: 0; }
+.gl-svg .d-twk, .gl-svg .d-ember, .gl-svg .d-flame { transform-box: fill-box; transform-origin: center; }
 .is-lit .gl-svg .d-halo { animation: glHalo .9s ease-out; }
 .is-dark .gl-svg .d-halo { animation: none; }
 @keyframes glHalo { 0% { transform: scale(.88); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
-@keyframes glHalo2 { 0%, 100% { transform: scale(1); } 30%, 60% { transform: scale(1.12); } }
+@keyframes glHalo2 { 0%, 100% { transform: scale(1); } 30%, 60% { transform: scale(1.1); } }
 
-/* rózsa: pillangó + szirom */
-.is-flap .gl-svg .d-wl, .is-flap .gl-svg .d-wr { animation: glFlap .3s ease-in-out 3; }
-.is-bloom .gl-svg .d-wl, .is-bloom .gl-svg .d-wr { animation: glFlap .28s ease-in-out 11; }
-.is-bloom .gl-svg .d-bfly { animation: glFly 3s ease-in-out; }
-.is-bloom .gl-svg .d-petal { animation: glPetal 3s ease-in; }
-.is-bloom .gl-svg .d-rose { animation: glRose 1.6s ease-in-out; }
-.is-bloom .gl-svg .d-halo { animation: glHalo2 1.6s ease-in-out; }
-@keyframes glFlap { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.18); } }
-@keyframes glFly { 0%, 100% { transform: none; } 14% { transform: translate(-9px, -8px) rotate(-14deg); } 34% { transform: translate(-22px, 4px) rotate(9deg); } 54% { transform: translate(-6px, 24px) rotate(-8deg) scale(1.08); } 74% { transform: translate(8px, 12px) rotate(10deg); } 90% { transform: translate(2px, 2px) rotate(-3deg); } }
-@keyframes glPetal { 0%, 14% { opacity: 0; transform: none; } 18% { opacity: 1; transform: none; } 55% { opacity: 1; transform: translate(-10px, 26px) rotate(120deg); } 100% { opacity: 0; transform: translate(-6px, 66px) rotate(250deg); } }
-@keyframes glRose { 0%, 100% { transform: none; } 30% { transform: scale(1.05); } 55% { transform: scale(.985); } 75% { transform: scale(1.02); } }
-
-/* vár: hullócsillag + szív + csillagok */
-.is-wish .gl-svg .d-shoot { animation: glShoot 1.5s .1s ease-in; }
-.is-wish .gl-svg .d-heart { animation: glHeart 2.4s .8s ease-out; }
-.is-wish .gl-svg .d-star { animation: glTwink 1.4s ease-in-out; }
-.is-wish .gl-svg .st2 { animation-delay: .15s; } .is-wish .gl-svg .st3 { animation-delay: .3s; } .is-wish .gl-svg .st4 { animation-delay: .45s; } .is-wish .gl-svg .st5 { animation-delay: .6s; } .is-wish .gl-svg .st6 { animation-delay: .75s; }
-.is-wish .gl-svg .d-win { animation: glWin 2.4s ease-in-out; }
+/* csillagos vár: hullócsillagok (jobbfelülről balra le, mint a nyomaton) + megcsillanó csillagok */
+.is-wish .gl-svg .d-meteor { animation: glMeteor 1.25s ease-in both; }
+.is-wish .gl-svg .m1 { animation-delay: .35s; } .is-wish .gl-svg .m2 { animation-delay: .75s; }
+.is-wish .gl-svg .d-twk, .is-twinkle .gl-svg .d-twk { animation: glTwk 1.1s var(--dl, 0s) ease-in-out both; }
 .is-wish .gl-svg .d-halo { animation: glHalo2 1.8s ease-in-out; }
-.is-twinkle .gl-svg .d-star { animation: glTwink 1.1s ease-in-out; }
-.is-twinkle .gl-svg .st2 { animation-delay: .2s; } .is-twinkle .gl-svg .st3 { animation-delay: .5s; } .is-twinkle .gl-svg .st4 { animation-delay: .1s; } .is-twinkle .gl-svg .st5 { animation-delay: .65s; } .is-twinkle .gl-svg .st6 { animation-delay: .35s; }
-@keyframes glShoot { 0% { opacity: 0; transform: translate(-16px, -10px); } 12% { opacity: 1; } 70% { opacity: 1; transform: translate(34px, 22px); } 100% { opacity: 0; transform: translate(46px, 30px); } }
-@keyframes glHeart { 0% { opacity: 0; transform: translateY(6px) scale(.4); } 25% { opacity: 1; transform: translateY(-2px) scale(1.2); } 45% { transform: translateY(-4px) scale(1); } 80% { opacity: 1; transform: translateY(-9px) scale(1.04); } 100% { opacity: 0; transform: translateY(-14px) scale(1); } }
-@keyframes glTwink { 0%, 100% { transform: none; opacity: 1; } 40% { transform: scale(1.55) rotate(20deg); } 70% { transform: scale(.8); opacity: .75; } }
-@keyframes glWin { 0%, 100% { opacity: 1; } 20% { opacity: .45; } 40% { opacity: 1; } 60% { opacity: .55; } 80% { opacity: 1; } }
+@keyframes glMeteor { 0% { opacity: 0; transform: translate(0, 0); } 12% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-150px, 230px); } }
+@keyframes glTwk { 0%, 100% { opacity: 0; transform: scale(.3); } 45% { opacity: 1; transform: scale(1.5); } 70% { opacity: .5; transform: scale(.9); } }
+
+/* rózsák: fényfoltsáv fut végig a fényes nyomaton */
+.is-glint .gl-svg .d-glint { animation: glGlint 1.7s ease-in-out both; }
+.is-glint .gl-svg .d-halo { animation: glHalo2 1.7s ease-in-out; }
+@keyframes glGlint { 0% { opacity: 0; transform: translateX(0) skewX(-16deg); } 15%, 80% { opacity: 1; } 100% { opacity: 0; transform: translateX(860px) skewX(-16deg); } }
+
+/* lángoló kard: a láng fellobban, a szikrák felszállnak */
+.is-blaze .gl-svg .d-flame, .is-flick .gl-svg .d-flame { animation: glFlame 1.5s var(--dl, 0s) ease-in-out both; }
+.is-blaze .gl-svg .d-ember { animation: glEmber 2.3s var(--dl, 0s) ease-out both; }
+.is-blaze .gl-svg .d-halo { animation: glHalo2 1.8s ease-in-out; }
+@keyframes glFlame { 0%, 100% { opacity: 0; transform: scale(.7); } 20% { opacity: 1; transform: scale(1.18, 1.3); } 40% { opacity: .75; transform: scale(.95, .9); } 60% { opacity: 1; transform: scale(1.08, 1.16); } 80% { opacity: .85; transform: scale(1, 1.02); } }
+@keyframes glEmber { 0% { opacity: 0; transform: translate(0, 0) scale(1); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.3); } }
 
 /* --- repülő sárkány + füstoszlop (2D kép; a rétegek a rajz csoportjai) --- */
 .fd-svg .fd-wingF { transform-box: view-box; transform-origin: 62px 171px; }
