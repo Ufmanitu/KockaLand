@@ -168,6 +168,12 @@ function settingsModal() {
     [['auto', 'Automatikus', 'sliders'], ['light', 'Világos', 'sun'], ['dark', 'Sötét', 'moon']].map(x => h('button', { type: 'button', role: 'radio', 'aria-checked': st.appearance === x[0], class: 'chip' + (st.appearance === x[0] ? ' on' : ''), onclick: e => { st.appearance = x[0]; applyAppearance(); persist(); $$('.chip', e.currentTarget.parentNode).forEach(c => { c.classList.remove('on'); c.setAttribute('aria-checked', 'false'); }); e.currentTarget.classList.add('on'); e.currentTarget.setAttribute('aria-checked', 'true'); } }, ic(x[2], 16), x[1])));
   const sw = (label, key, desc, cb) => h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !!st[key], onchange: e => { st[key] = e.target.checked; persist(); if (cb) cb(e.target.checked); } }), h('span', { class: 'tr' }), h('span', null, label)), desc ? h('span', { class: 'hint' }, desc) : null);
   const chaos = h('input', { type: 'range', min: '0', max: '1', step: '0.05', value: String(st.chaos), 'aria-label': 'Káosz mértéke', oninput: e => { st.chaos = +e.target.value; persist(); } });
+  const q3 = h('select', { id: 'set-q3d', 'aria-label': '3D minőség', disabled: !l3GL(), onchange: e => {
+    const v = e.target.value; if (v === 'auto') delete st.q3d; else st.q3d = v; delete st.perf3dAsked; persist();
+    if (typeof L3 !== 'undefined') { L3.slow = 0; L3.deg = L3.weak || v === 'fast' ? 1 : 0; l3SaveDeg(0); if (L3.r) l3Quality(); }
+    if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary();
+  } }, [['auto', 'Automatikus (ajánlott)'], ['high', 'Éles (szebb, de igényesebb)'], ['fast', 'Gyors (akadozó gépen)']].map(o => h('option', { value: o[0] }, o[1])));
+  q3.value = st.q3d === 'high' || st.q3d === 'fast' ? st.q3d : 'auto';
   openModal({
     title: 'Beállítások', wide: true,
     body: [
@@ -177,10 +183,13 @@ function settingsModal() {
         sw('Mozgás és animációk', 'motion', 'Kikapcsolva a kockák egyből a helyükre ugranak. A rendszer „csökkentett mozgás” beállítását mindig tiszteletben tartja.', () => applyMotionClasses()),
         sw('Kímélő mód', 'lite', 'Gyengébb gépen vagy telefonon, ha akadozik az oldal: rövidebb dobás, nincs háttérfény, nincsenek belépő animációk és konfetti.', () => applyMotionClasses())),
       h('div', { class: 'set-sec' }, h('h3', null, 'Könyvtár nézet'),
-        h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: st.view3d !== false, disabled: !l3GL(), onchange: e => { st.view3d = e.target.checked; if (e.target.checked) { delete st.perf3dAsked; if (typeof L3 !== 'undefined') { L3.deg = L3.weak ? 1 : 0; L3.slow = 0; if (L3.r) l3Quality(); } } persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, '3D könyvtár')),
+        h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: st.view3d !== false, disabled: !l3GL(), onchange: e => { st.view3d = e.target.checked; if (e.target.checked) { delete st.perf3dAsked; if (typeof L3 !== 'undefined') { L3.deg = L3.weak || l3Pref() === 'fast' ? 1 : 0; L3.slow = 0; l3SaveDeg(0); if (L3.r) l3Quality(); } } persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, '3D könyvtár')),
           h('span', { class: 'hint' }, l3GL() ? 'Valódi 3D polcok, könyvek és díszek fénnyel-árnyékkal. Gyengébb gépen kikapcsolva a gyorsabb 2D nézet látszik. Kímélő módban mindig 2D.' : 'Ez a böngésző nem támogatja a 3D-t (WebGL), ezért a 2D nézet látszik.')),
         h('div', { class: 'set-row' }, h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !st.flatDecor, disabled: !l3GL(), onchange: e => { st.flatDecor = !e.target.checked; if (!st.flatDecor) delete st.flatDecor; persist(); if (typeof drawLibrary === 'function' && location.hash === '#polc') drawLibrary(); } }), h('span', { class: 'tr' }), h('span', null, 'Díszek 3D modellként')),
           h('span', { class: 'hint' }, 'Kikapcsolva a díszek lapos képként állnak a 3D polcon: sokkal gyorsabb, ha akadozik az oldal. A könyvek és a polc ettől még 3D. Egyszerre ' + MAX_DECOR + ' dísz állhat kint.'))),
+      h('div', { class: 'set-sec' }, h('h3', null, '3D minőség'),
+        h('div', { class: 'set-row' }, h('div', { class: 'field' }, h('label', { for: 'set-q3d' }, 'Könyvtár: felbontás és árnyék'), q3),
+          h('span', { class: 'hint', style: 'padding-left:0' }, 'Automatikus: az oldal méri a sebességet, és ha akadozik, magától visszavesz, a következő alkalomra is megjegyzi. Éles: nagyobb felbontás és finomabb árnyék, erősebb gépre. Gyors: kisebb felbontás, olcsó árnyék, nincs mélység-parallax. Az élsimítás átváltása az oldal újratöltése után lép életbe.'))),
       h('div', { class: 'set-sec' }, h('h3', null, 'Szürreális mód'),
         sw('Szürreális mód bekapcsolva', 'surreal', 'Váratlan, vicces opciók és szabályszegő párosítások is kijöhetnek.'),
         h('div', { class: 'field' }, h('label', null, 'Káosz mértéke'), chaos)),

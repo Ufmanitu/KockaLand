@@ -48,10 +48,10 @@ function lnBuild(it) {
     blow() {
       ctl.stop();
       for (let i = 0; i < 6; i++) setTimeout(() => { if (L3.on) drParticle(root, 'smoke', new T.Vector3(0, 58 + i * 2, 0), { vx: (Math.random() - 0.3) * 6, vy: 18 + Math.random() * 8, vz: 0, life: 1.7, big: 0.7 }); }, 120 + i * 220);
-      ctl.seq = l3Seq().to(S, { lean: 0.5, flame: 0.0, fk: 0.2 }, 0.34, 'in').to(S, { lit: 0, lean: 0, fk: 0 }, 0.6, 'io').play();
+      ctl.seq = l3Seq().quiet().to(S, { lean: 0.5, flame: 0.0, fk: 0.2 }, 0.34, 'in').to(S, { lit: 0, lean: 0, fk: 0 }, 0.6, 'io').play();
     },
-    light() { ctl.stop(); S.lean = 0; ctl.seq = l3Seq().to(S, { flame: 1.25, lit: 1 }, 0.3, 'out').to(S, { flame: 1 }, 0.35, 'io').play(); },
-    idle() { if (it.d.off) return; l3Anim(1.7, u => { S.fk = kNoise(u * 14) * 0.7 * (1 - u * 0.6); S.__apply(); }, () => { S.fk = 0; S.__apply(); }); },
+    light() { ctl.stop(); S.lean = 0; ctl.seq = l3Seq().quiet().to(S, { flame: 1.25, lit: 1 }, 0.3, 'out').to(S, { flame: 1 }, 0.35, 'io').play(); },
+    idle() { if (it.d.off) return; l3Anim(1.7, u => { S.fk = kNoise(u * 14) * 0.7 * (1 - u * 0.6); S.__apply(); }, () => { S.fk = 0; S.__apply(); }, true); },
     stop() { if (ctl.seq) ctl.seq.stop(); }
   };
   return { grp: K.g, parts: parts, mats: kMatsAll(M), d: 70, ctl: ctl };
@@ -203,11 +203,11 @@ function glBuild3(it, k) {
   const play = (mode, dur) => {   // mode 1 = jelenet (a kattintásra), 2 = csendes (idle: csak a csillanás/villódzás)
     const id = ++run; S.mode = mode; S.t = 0;
     l3Anim(dur, u => { if (id !== run) return; S.t = u * dur; S.env = Math.sin(Math.min(1, u * 1.04) * Math.PI) ** 0.6; S.pulse = mode === 1 ? Math.sin(u * Math.PI) : 0; S.__apply(); },
-      () => { if (id !== run) return; S.t = 0; S.env = 0; S.pulse = 0; S.mode = 0; S.__apply(); });
+      () => { if (id !== run) return; S.t = 0; S.env = 0; S.pulse = 0; S.mode = 0; S.__apply(); }, true);   // csendes: nem mozog árnyékot vető geometria → nincs árnyék-újrarajzolás
   };
   const ctl = {
     S: S, root: root,
-    lit(on) { ctl.stop(); ctl.seq = l3Seq().to(S, { lit: on ? 1 : 0 }, on ? 0.55 : 0.4, 'io').play(); if (on) setTimeout(() => { if (L3.on) ctl.scene(); }, 450); },
+    lit(on) { ctl.stop(); ctl.seq = l3Seq().quiet().to(S, { lit: on ? 1 : 0 }, on ? 0.55 : 0.4, 'io').play(); if (on) setTimeout(() => { if (L3.on) ctl.scene(); }, 450); },
     scene() { play(1, k === 'night' ? 3.3 : k === 'rose' ? 2.4 : 3.0); },
     idle() { if (it.d.off) return; play(2, k === 'night' ? 1.9 : k === 'rose' ? 2.0 : 1.7); },
     stop() { if (ctl.seq) ctl.seq.stop(); }

@@ -142,14 +142,19 @@ function l3GpuClass() {
     return /SwiftShader|llvmpipe|Software|Basic Render|Intel(?!.*\bArc\b)/i.test(n) ? 'weak' : 'ok';
   } catch (e) { return 'ok'; }
 }
+/* a minőség kézi választása (Beállítások): 'auto' (alap, a lassúság-őrrel) | 'high' (éles: telefonon 2×, asztalin 1,5× felbontás, 2048-as árnyék) | 'fast' (gyors: 1× felbontás, olcsó árnyék, parallax nélkül) */
+const l3Pref = () => S.settings.q3d === 'high' || S.settings.q3d === 'fast' ? S.settings.q3d : 'auto';
+/* a lassúság-őr által megtanult fokozat eszközönként (nem része a mentésnek), 7 napig él: a következő látogatáskor már a megfelelő szinten indul, nem kell újra végigszenvedni */
+function l3LoadDeg() { try { const o = JSON.parse(localStorage.getItem('kockazzunk.l3deg') || 'null'); return o && o.d > 0 && Date.now() - o.t < 7 * 864e5 ? 1 : 0; } catch (e) { return 0; } }
+function l3SaveDeg(d) { try { if (d > 0) localStorage.setItem('kockazzunk.l3deg', JSON.stringify({ d: Math.min(1, d), t: Date.now() })); else localStorage.removeItem('kockazzunk.l3deg'); } catch (e) { } }
 /* ---------- színtér ---------- */
 function l3Init() {
   if (L3.r) return true;
   const T = THREE;
   try {
     const cv = document.createElement('canvas'); cv.id = 'l3'; cv.setAttribute('aria-hidden', 'true'); document.body.insertBefore(cv, $('#app'));
-    const lowq = !!window.__L3_LOWQ, cls = lowq ? 'ok' : l3GpuClass(), weak = cls === 'weak', r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq && !weak, alpha: true, powerPreference: 'high-performance' });
-    L3.lowq = lowq; L3.weak = weak; L3.mobile = cls === 'mobile'; if (weak) L3.deg = Math.max(L3.deg || 0, 1);
+    const lowq = !!window.__L3_LOWQ, cls = lowq ? 'ok' : l3GpuClass(), weak = cls === 'weak', r = new T.WebGLRenderer({ canvas: cv, antialias: !lowq && !weak && l3Pref() !== 'fast', alpha: true, powerPreference: 'high-performance' });
+    L3.lowq = lowq; L3.weak = weak; L3.mobile = cls === 'mobile'; L3.deg = Math.max(L3.deg || 0, weak || l3Pref() === 'fast' ? 1 : 0, lowq ? 0 : l3LoadDeg());
     r.setClearColor(0x000000, 0); r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = 1.0;
     r.shadowMap.enabled = true; r.shadowMap.type = T.VSMShadowMap; r.shadowMap.autoUpdate = false; r.setScissorTest(true);
     L3.cv = cv; L3.r = r; L3.scene = new T.Scene(); L3.cam = new T.PerspectiveCamera(L3K.FOV, 1, 10, 6000); L3.ray = new T.Raycaster();
@@ -170,16 +175,20 @@ function l3Init() {
     return true;
   } catch (e) { console.error(e); L3.st = 'failed'; return false; }
 }
-/* minőségi fokozat: 0 = alap (asztali gépen felbontás ≤ 1,25×, 2048-as árnyék; telefonon/táblán a kijelző élessége, legfeljebb 2×), 1 = 1× (telefonon 1,5×) és 1024-es árnyék (gyenge GPU-n ez az induló), 2 = vészfék: 0,75×, 512-es árnyék és lapos képként rajzolt díszek */
+/* minőségi fokozat: 0 = alap (telefonon/táblán 1,5×, asztali gépen ≤ 1,25× felbontás, 1024-es árnyék), 1 = 1× (telefonon 1,25×) és 512-es árnyék (gyenge GPU-n / „Gyors” módban ez az induló),
+   2 = vészfék: 0,75×, 512-es árnyék és lapos képként rajzolt díszek. „Éles” választással: telefonon (keskeny nézet) 2×, asztali gépen 1,5× + 2048-as árnyék. */
 function l3PixelRatio() {
-  const vw = innerWidth, d = L3.deg || 0, dpr = devicePixelRatio || 1;
-  return L3.lowq ? 1 : d >= 2 ? 0.75 : d === 1 ? (L3.mobile ? Math.min(dpr, 1.5) : 1) : Math.min(dpr, L3.mobile ? (vw < 700 ? 2 : 1.5) : vw < 700 ? 1.5 : 1.25);
+  const vw = innerWidth, d = L3.deg || 0, dpr = devicePixelRatio || 1, hi = l3Pref() === 'high';
+  if (L3.lowq) return 1;
+  if (d >= 2) return 0.75;
+  if (d === 1) return L3.mobile ? Math.min(dpr, 1.25) : 1;
+  return Math.min(dpr, L3.mobile ? (hi && vw < 700 ? 2 : 1.5) : hi ? 1.5 : vw < 700 ? 1.5 : 1.25);
 }
 function l3Quality() {
   const r = L3.r; if (!r) return;
   const vw = innerWidth, vh = innerHeight, d = L3.deg || 0, pr = l3PixelRatio();
   r.setPixelRatio(pr); r.setSize(vw, vh, false);
-  const sh = L3.key && L3.key.shadow, sm = L3.lowq || d >= 2 ? 512 : d === 1 || Math.min(vw, vh) < 700 ? 1024 : 2048;
+  const sh = L3.key && L3.key.shadow, sm = L3.lowq || d >= 1 ? 512 : l3Pref() === 'high' && !L3.mobile ? 2048 : 1024;
   if (sh && sh.mapSize.x !== sm) { sh.mapSize.set(sm, sm); if (sh.map) { sh.map.dispose(); sh.map = null; } }
   if (sh) { sh.radius = 9 * sm / 2048; sh.blurSamples = sm >= 2048 ? 12 : 8; }
   L3.sd = true;
@@ -209,7 +218,7 @@ function l3BuildCase(W, Hc, levels, lh) {
   g.box(K.SIDE - 5, -Hc, -D + 6, W - K.SIDE + 5, -(K.TOPH + levels * lh), 5, plinth); g.box(K.SIDE - 8, -Hc, -D + 6, K.SIDE - 2, -Hc + 6, 5, plinth); g.box(W - K.SIDE + 2, -Hc, -D + 6, W - K.SIDE + 8, -Hc + 6, 5, plinth);   // lábazat
   [[0, 0], [W - 3, 0]].forEach(p => g.box(p[0], -Hc + K.PLINTH, -1, p[0] + 3, -K.TOPH, 1.6, l3Col('#86583a')));   // élléc a szélén
   const mat = new T.MeshStandardMaterial({ map: l3Wood(), bumpMap: l3Wood(), bumpScale: 1.4, vertexColors: true, roughness: 0.6, metalness: 0, envMapIntensity: 0.55 });
-  const m = new T.Mesh(g.build(), mat); m.castShadow = m.receiveShadow = true; return m;
+  const m = new T.Mesh(g.build(), mat); m.castShadow = m.receiveShadow = true; m.renderOrder = 20; return m;   // a szekrény az utolsó átlátszatlan rajzolás: a könyvek által takart részére a mélységteszt már nem engedi a drága árnyalást
 }
 
 /* ---------- könyv ---------- */
@@ -309,7 +318,7 @@ function l3Cam() {
   cam.position.set(sx + L3.par.x, sy + L3.par.y, dist); cam.lookAt(sx, sy, 0); cam.near = dist * 0.25; cam.far = dist + 1600; cam.updateProjectionMatrix(); cam.updateMatrixWorld();
   return { cb: cb, sx: sx, sy: sy, vw: vw, vh: vh };
 }
-function l3Render() {
+function l3Render(anim) {   // anim: animáció közben hívva → az árnyék-térkép legfeljebb ~20 Hz-en frissül (a puha árnyék ezt nem mutatja meg, a képkocka kb. fele-harmada az árnyék-rajzolás)
   if (L3.hold) return;   // egy ráközelítés (pl. book nook) saját vásznon rajzol, közben a polc áll
   const r = L3.r, c = l3Cam(), x0 = Math.max(0, c.cb.left - 30), x1 = Math.min(c.vw, c.cb.right + 90), y0 = Math.max(0, c.cb.top - 20), y1 = Math.min(c.vh, c.cb.bottom + 130);
   r.setScissorTest(false); r.clear(); r.setScissorTest(true);
@@ -317,15 +326,20 @@ function l3Render() {
   r.setScissor(x0, c.vh - y1, x1 - x0, y1 - y0);
   const key = L3.key, half = Math.hypot(c.vw, c.vh) * 0.72, SN = 96, qx = Math.round(c.sx / SN) * SN, qy = Math.round(c.sy / SN) * SN, kk = qx + ',' + qy + ',' + Math.round(half);
   if (kk !== L3.sdK) {   // az árnyék-kamera 96 px-es rácson ugrik (a keret ≥ 0,2·átló ráhagyással), így görgetéskor nem kell újrarajzolni az árnyékot
-    L3.sdK = kk; L3.sd = true; const tgt = new THREE.Vector3(qx, qy, -70), dir = new THREE.Vector3(-0.3, 0.66, 1).normalize();
+    L3.sdK = kk; L3.sd = true; L3.sdF = true; const tgt = new THREE.Vector3(qx, qy, -70), dir = new THREE.Vector3(-0.3, 0.66, 1).normalize();
     key.target.position.copy(tgt); key.position.copy(tgt).addScaledVector(dir, 1500); key.target.updateMatrixWorld();
     const sc = key.shadow.camera; sc.left = -half; sc.right = half; sc.top = half; sc.bottom = -half; sc.near = 200; sc.far = 3300; sc.updateProjectionMatrix();
   }
-  r.shadowMap.needsUpdate = !!L3.sd; L3.sd = false;
+  const nw = performance.now(); let upd = !!L3.sd;
+  if (upd && anim && !L3.sdF && L3.sdT && nw - L3.sdT < 50) upd = false;   // marad L3.sd = true: a következő képkocka (vagy a záró) frissíti
+  if (upd) { L3.sd = false; L3.sdF = false; L3.sdT = nw; }
+  r.shadowMap.needsUpdate = upd;
   r.render(L3.scene, L3.cam);
 }
 function l3Frame(now) {
-  L3.raf = 0; const dt = Math.min(0.12, L3.t ? (now - L3.t) / 1000 : 0.016); L3.t = now;
+  L3.raf = 0;
+  if (L3.tr && now - L3.tr < 12) { L3.raf = requestAnimationFrame(l3Frame); return; }   // legfeljebb ~60 fps: 120/144 Hz-es kijelzőn minden második képkockát hagyjuk ki (a GPU fele-harmada)
+  L3.tr = now; const dt = Math.min(0.12, L3.t ? (now - L3.t) / 1000 : 0.016); L3.t = now;
   let busy = false;
   const P = L3.par; if (Math.abs(P.tx - P.x) > 0.05 || Math.abs(P.ty - P.y) > 0.05) { const k = 1 - Math.pow(0.002, dt); P.x += (P.tx - P.x) * k; P.y += (P.ty - P.y) * k; busy = true; }
   if (L3.hq) { L3.hq = false; l3Hover(); }
@@ -337,8 +351,9 @@ function l3Frame(now) {
     if (it.lt != null && Math.abs(lf - it.lf) > 0.05) { it.lf += (lf - it.lf) * (1 - Math.pow(0.0002, dt)); busy = true; l3Pose(it); }
   });
   if (DND.s && DND.s.l3 && DND.s.on) { l3DndStep(dt); busy = true; L3.sd = true; }
-  for (let i = L3.anims.length - 1; i >= 0; i--) { const a = L3.anims[i]; a.t += dt; const u = Math.min(1, a.t / a.d); a.fn(u, dt); busy = true; L3.sd = true; if (u >= 1) { L3.anims.splice(i, 1); if (a.done) a.done(); } }
-  l3Render(); l3Perf(now);
+  for (let i = L3.anims.length - 1; i >= 0; i--) { const a = L3.anims[i]; a.t += dt; const u = Math.min(1, a.t / a.d); a.fn(u, dt); busy = true; if (!a.q) L3.sd = true; if (u >= 1) { L3.anims.splice(i, 1); if (a.done) a.done(); } }
+  l3Render(busy); l3Perf(now);
+  if (L3.sd && !L3.hold) busy = true;   // függő (visszatartott) árnyék-frissítés: még egy képkocka
   if (busy) L3.raf = requestAnimationFrame(l3Frame); else { L3.t = 0; }
 }
 /* ---------- lassúság-őr: folyamatos animáció közben mért képkocka-idők; először csendben visszaveszünk (felbontás/árnyék), másodszor felajánljuk a 2D nézetet ---------- */
@@ -347,13 +362,13 @@ function l3Perf(now) {
   const pf = L3.pf || (L3.pf = { last: 0, d: [] });
   if (pf.last && now - pf.last < 250) pf.d.push(now - pf.last);
   pf.last = now;
-  if (pf.d.length >= 30) { const d = pf.d.slice(2).sort((x, y) => x - y); pf.d = []; l3PerfEval(d[d.length >> 1], d[Math.floor(d.length * 0.9)]); }
+  if (pf.d.length >= 20) { const d = pf.d.slice(2).sort((x, y) => x - y); pf.d = []; l3PerfEval(d[d.length >> 1], d[Math.floor(d.length * 0.9)]); }
 }
 function l3PerfEval(med, p90) {
   const slow = med > 20 || p90 > 42;   // 60 Hz-en a 2 vsync-es (33 ms) képkocka már lassú
   L3.slow = slow ? (L3.slow || 0) + 1 : Math.max(0, (L3.slow || 0) - 1);
   if (L3.slow >= 2 && (L3.deg || 0) < 2) {   // 1–2. lépcső: csendes visszavétel (felbontás + árnyék)
-    L3.deg = (L3.deg || 0) + 1; L3.slow = 0; l3Quality(); if (L3.deg >= 2 && $('.lb.l3')) l3Sync(); else l3Inv(); return 'deg';
+    L3.deg = (L3.deg || 0) + 1; L3.slow = 0; l3SaveDeg(L3.deg); l3Quality(); if (L3.deg >= 2 && $('.lb.l3')) l3Sync(); else l3Inv(); return 'deg';
   }
   if (L3.slow >= 2 && L3.deg >= 2 && !S.settings.perf3dAsked) {   // 3. lépcső: egyszer rákérdezünk
     S.settings.perf3dAsked = true; persist(); L3.slow = 0;
@@ -362,7 +377,8 @@ function l3PerfEval(med, p90) {
   }
   return slow ? 'slow' : 'ok';
 }
-const l3Anim = (d, fn, done) => { L3.anims.push({ t: 0, d: d, fn: fn, done: done }); l3Inv(); };
+/* quiet = true: az animáció nem mozgat árnyékot vető geometriát (fény, csillogás, láng, emissive) → nem rajzoltatja újra az árnyék-térképet */
+const l3Anim = (d, fn, done, quiet) => { L3.anims.push({ t: 0, d: d, fn: fn, done: done, q: !!quiet }); l3Inv(quiet ? 'v' : undefined); };
 
 /* ---------- egér: hover, kattintás, fókusz ---------- */
 function l3PickHit(x, y) {
@@ -512,7 +528,8 @@ const l3Ease = {
   wob: u => Math.sin(u * Math.PI * 6) * (1 - u)
 };
 function l3Seq() {   // sor.to(obj, {x: cél}, mp, könnyítés).wait(mp).call(fn).play()
-  const q = [], me = { dead: false };
+  const q = [], me = { dead: false, q: false };
+  me.quiet = () => { me.q = true; return me; };   // a lépések nem rajzoltatják újra az árnyékot (l3Anim quiet)
   me.to = (o, p, d, ez) => { q.push({ k: 'to', o: o, p: p, d: d, ez: l3Ease[ez || 'io'] }); return me; };
   me.wait = d => { q.push({ k: 'wait', d: d }); return me; };
   me.call = f => { q.push({ k: 'call', f: f }); return me; };
@@ -522,9 +539,9 @@ function l3Seq() {   // sor.to(obj, {x: cél}, mp, könnyítés).wait(mp).call(f
     const next = () => {
       if (me.dead) return; const s = q[i++]; if (!s) { if (done) done(); return; }
       if (s.k === 'call') { s.f(); next(); return; }
-      if (s.k === 'wait') { l3Anim(s.d, () => { }, next); return; }
+      if (s.k === 'wait') { l3Anim(s.d, () => { }, next, me.q); return; }
       const from = {}; for (const k in s.p) from[k] = s.o[k];
-      l3Anim(s.d, u => { if (me.dead) return; const v = s.ez(u); for (const k in s.p) s.o[k] = from[k] + (s.p[k] - from[k]) * v; if (s.o.__apply) s.o.__apply(); }, next);
+      l3Anim(s.d, u => { if (me.dead) return; const v = s.ez(u); for (const k in s.p) s.o[k] = from[k] + (s.p[k] - from[k]) * v; if (s.o.__apply) s.o.__apply(); }, next, me.q);
     };
     next(); return me;
   };
