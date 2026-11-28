@@ -67,7 +67,7 @@ function syncShelves() {
   else if (missing.length) { const last = S.shelves[S.shelves.length - 1]; missing.forEach(id => last.ids.push(id)); }
   if (firstTime && !S.decor.length && window.__STARTER) { const st = starterDecor(); S.decor = st.decor; placeDecor(st.place, 0); }   // (csak a tesztek kérnek kezdő díszeket; az oldal díszek nélkül indul)
   if (S.adopted) { const n = S.adopted; S.adopted = 0; persist(); setTimeout(() => toast('Felkerült a valódi könyvespolc: ' + n + ' könyv, a fotók szerinti polcokkal. A régi példakönyvek lecserélődtek.'), 900); }
-  if (wiped) { persist(); setTimeout(() => toast('A díszek lekerültek a polcról. A Díszek gombbal egyet felrakhatsz (egyszerre csak egy lehet kint).'), 700); }
+  if (wiped) { persist(); setTimeout(() => toast('A díszek lekerültek a polcról. A Díszek gombbal akár ' + MAX_DECOR + '-at is felrakhatsz.'), 700); }
   const cut = trimDecor(); if (cut > 0) { persist(); setTimeout(() => toast('Egyszerre csak ' + MAX_DECOR + ' dísz lehet kint, a többi lekerült a polcról. A Díszek gombbal bármikor cserélhetsz.'), 600); }
 }
 const shelfOf = id => S.shelves.find(s => s.ids.indexOf(id) >= 0);

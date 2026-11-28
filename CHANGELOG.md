@@ -1,5 +1,12 @@
 # Változásnapló
 
+## v16 — Bronz sárkány-szobor, a 3 lámpa együtt kitehető (2026-11-28)
+Visszajelzés: „a sárkány díszek borzasztóan élethűtlenek … csak az a 3 lámpa néz ki úgy, ahogy kértem … rakd vissza, hogy ezekből 3-at is ki lehessen tenni egyszerre”.
+- **Díszlimit: egyszerre legfeljebb 3** (`MAX_DECOR` 1 → 3; a tesztek `__MAX_DECOR`-rel emelik). A Díszek ablak számlálója: „Most kint van (n/3): …”; tele polcnál „Csere erre” (a legrégebbi dísz cserélődik), különben „Kirakom”. A régi mentések 1 dísze érintetlen. Súgó- és toast-szövegek frissítve.
+- **Fekvő sárkány = antik bronz-szobor** (`lib3d-dragons2.js`): a játékszerű, fényes vörös pikkelyek helyett fém anyag (`metal 0,88`, `rough 0,5`, erős környezet-visszaverődés), bronz paletta (`dgC`), zöldes patina-sötét a zugokban (AO), fém szárnyhártya, bronz szarvak/tüskék/karmok/fogak; a tűzokádás és a mozgás változatlan. A 2D tartalék (`decor-dragon.js`) ugyanezt a palettát kapta (a könyvek színe marad).
+- A repülő fekete sárkány + krémszínű füstoszlop (referencia alapján készült) és a többi dísz (lámpás, nook, macska, bagoly, szellem, növény) változatlan.
+- Tesztek: `decor-limit` átírva 3-ra (3 dísz együtt, a 4. a legrégebbit cseréli, mind a 3 lámpa együtt, modal számláló/gombfeliratok).
+
 ## v15 — Gyorsabb 3D polc: ritkább árnyék, 60 fps korlát, megjegyzett minőség, kézi választó (2026-11-27)
 Visszajelzés: „szürreálisan lassú az oldal 3D része”. Mérés (`SwiftShader`, szinkron `readPixels`): a főpassz ~ a pixelszámmal arányos (kitöltés-korlátos), az árnyék-térkép újrarajzolása (2048² VSM-elmosás) ugyanannyi, mint a teljes főpassz, és **minden animációs képkockán lefutott** (a lámpák/lángok csillogásánál is, ahol semmi nem mozgat árnyékot vető geometriát); 120/144 Hz-en a képkockaszám is korlátlan volt.
 - **Árnyék**: alap térkép 1024² (2048² helyett; a sugár világ-egységben változatlan, szemre azonos), gyors/vészfokozaton 512². Animáció közben a térkép legfeljebb ~20 Hz-en frissül (`l3Render(anim)`, `L3.sdT/sdF`), a záró frissítés mindig lefut (`l3Frame`: függő `L3.sd` → még egy képkocka); a kamera-rács ugrásakor azonnal frissül (különben elcsúszna).

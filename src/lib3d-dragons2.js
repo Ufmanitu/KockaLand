@@ -9,7 +9,7 @@ const DG_VH = 124;
 const dgC = {};
 function dgColInit() {
   if (dgC.back) return;
-  Object.assign(dgC, { back: lc('#150709'), body: lc('#560a15'), belly: lc('#55301f'), bellyD: lc('#744829'), mem0: lc('#1c050a'), mem1: lc('#5e0d1a'), memEdge: lc('#a3303a'), jawIn: lc('#6a1424'), hornB: lc('#241512'), hornT: lc('#c9b78e') });
+  Object.assign(dgC, { back: lc('#151a10'), body: lc('#5a4424'), belly: lc('#7c6434'), bellyD: lc('#9a7e42'), mem0: lc('#1f1c10'), mem1: lc('#54421f'), memEdge: lc('#a08a50'), jawIn: lc('#2e2010'), hornB: lc('#3a2c16'), hornT: lc('#bba064') });   // antik bronz
 }
 const dgMix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
 const dgSm = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -195,14 +195,14 @@ function dgJawGeo(cs, key) { dgColInit(); cs = cs || dgC; return drGeoOnce((key 
 function dgMats(bk) {   // bk: fekete (repülő) sárkány – sötét kék-szürke fényű színek, könyvek nélkül
   const T = THREE;
   const M = {
-    body: l3Skin({ color: '#ffffff', kind: 'scale', cell: 3.3, amt: 0.55, rough: 0.58, env: 0.5, vcol: true, clear: 0.25, clearR: 0.4 }),
-    skin: l3Skin({ color: bk ? '#17181f' : '#4c0a14', kind: 'scale', cell: 3.3, amt: 0.4, rough: 0.5, env: 0.6, clear: 0.4, clearR: 0.4 }),
-    horn: kVinyl('#ffffff', { roughness: 0.34, clearcoat: 0.6, vertexColors: true }), spike: kVinyl(bk ? '#0b0b0f' : '#1b0b0d', { roughness: 0.34, clearcoat: 0.5 }), claw: kVinyl('#d9cdb0', { roughness: 0.35 }), tooth: kVinyl('#efe4c8', { roughness: 0.3 }),
+    body: l3Skin({ color: '#ffffff', kind: 'scale', cell: 3.3, amt: 0.55, rough: 0.5, metal: 0.88, env: 1.15, vcol: true }),
+    skin: l3Skin({ color: bk ? '#17181f' : '#6a5028', kind: 'scale', cell: 3.3, amt: 0.4, rough: 0.46, metal: 0.9, env: 1.2 }),
+    horn: l3Skin({ color: '#ffffff', kind: 'grain', cell: 3, amt: 0.3, rough: 0.4, metal: 0.85, env: 1.2, vcol: true }), spike: l3Skin({ color: bk ? '#0b0b0f' : '#3e2e16', kind: 'grain', cell: 3, amt: 0.2, rough: 0.4, metal: 0.9, env: 1.2 }), claw: kVinyl('#c9b27a', { roughness: 0.32, metalness: 0.8 }), tooth: kVinyl('#d8c590', { roughness: 0.3, metalness: 0.8 }),
     iris: new T.MeshStandardMaterial({ map: dgIrisTex(), roughness: 0.18, metalness: 0, emissive: l3Col('#ff9a10'), emissiveMap: dgIrisTex(), emissiveIntensity: 0.28 }), rim: new T.MeshStandardMaterial({ color: l3Col('#241008'), roughness: 0.3 }),
     glint: new T.MeshBasicMaterial({ color: 0xffffff }), line: new T.MeshBasicMaterial({ color: 0x1a0507 }),
     lid: l3Skin({ color: bk ? '#0e0f14' : '#3a0910', kind: 'scale', cell: 2.6, amt: 0.45, rough: 0.5, env: 0.6 }),
-    mem: new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.72, side: T.DoubleSide, envMapIntensity: 0.3, emissive: l3Col(bk ? '#0a0a10' : '#2a040b'), emissiveIntensity: 0.3 }),
-    bone: kVinyl(bk ? '#0e0f13' : '#1c070b', { roughness: 0.4 }),
+    mem: new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.5, metalness: 0.85, side: T.DoubleSide, envMapIntensity: 1.0 }),
+    bone: kVinyl(bk ? '#0e0f13' : '#5a4220', { roughness: 0.4, metalness: 0.9 }),
     nos: new T.MeshBasicMaterial({ color: 0x0c0507 }), mouth: new T.MeshStandardMaterial({ color: l3Col('#7a1a2a'), roughness: 0.6 }), tongue: new T.MeshStandardMaterial({ color: l3Col('#c4546a'), roughness: 0.5 }),
     brow: kVinyl(bk ? '#0b0b0f' : '#1b0a0d', { roughness: 0.35 }),
     pages: bk ? null : new T.MeshStandardMaterial({ map: dgPagesTex(), roughness: 0.9 }),

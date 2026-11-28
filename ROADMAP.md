@@ -13,6 +13,7 @@
 - v13 (2026-11-25): a valódi könyvespolc (33 könyv, 5 polc, `Seed.library`/`adoptReal`), a fekvő és a fekete sárkány újraépítve (SDF, `lib3d-dragons2.js`/`lib3d-fly.js`), 2D tartalék-rajz újra, szellem-szegély redők
 - v14 (2026-11-26): üvegablak-lámpák a termékfotókból (csillagos vár, rózsák, lángoló kard; 3D + 2D), éles könyvek telefonon (mobil-GPU osztály, 2× felbontás, MSAA)
 - v15 (2026-11-27): gyorsabb 3D polc (árnyék 1024²/ritkított/csendes animációk, 60 fps korlát, megtanult minőségi fokozat, Beállítások › 3D minőség)
+- v16 (2026-11-28): díszlimit 3 (a 3 lámpa együtt), a fekvő sárkány bronz-szoborrá festve (3D + 2D)
 
 ## Következő (javaslatok, a user döntése szerint)
 1. Book nook bővítés: több tárgy a szobában (teáscsésze, madaras ablak), szobák cseréje (pl. tetőtér, konyha), hang
